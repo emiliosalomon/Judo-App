@@ -25,6 +25,13 @@ japanischen Symbol/Schriftzeichen dafuer:
 
 Farbgestaltung: Rot, Weiss, Schwarz — angelehnt an das Budokan-Logo.
 
+**Regelwerk-Referenz:** Inhalte (Guertelpruefung, Techniken, Kata,
+Standardsituationen) richten sich nach der **OeJV-Ordnung** (Oesterreichischer
+Judo-Verband) und den **IJF-Regeln** (International Judo Federation) — nicht
+nach DJB (Deutscher Judo-Bund). Vor dem Befuellen einer Inhalts-Sektion mit
+Pruefungsanforderungen/Terminologie erst die aktuellen OeJV/IJF-Dokumente
+pruefen statt Annahmen aus anderen Verbaenden zu uebernehmen.
+
 ## Tech-Stack & Werkzeuge
 
 - Sprache / Framework: Flutter (Dart) — eine Codebasis fuer Android und iOS
