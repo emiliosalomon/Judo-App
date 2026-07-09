@@ -143,7 +143,14 @@ class _TrackableSection extends StatelessWidget {
                 activeColor: beltColor,
                 onChanged: (_) => progress.toggle('$idPrefix$item'),
               ),
-              title: Text(item),
+              title: Text(
+                item,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: JudoColors.black,
+                ),
+              ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(

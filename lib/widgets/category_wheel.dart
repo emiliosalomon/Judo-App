@@ -5,10 +5,10 @@ import '../theme/judo_theme.dart';
 import 'judo_logo.dart';
 
 /// Kreisfoermiges Auswahlrad: Logo in der Mitte, Kategorien drumherum.
-/// Ziehen dreht das Rad - die Kreis-Buttons wandern mit, das Icon/Kanji
-/// darin bleibt dabei per Gegendrehung immer aufrecht und lesbar. Die
-/// Beschriftung aussen bleibt ortsfest stehen. Antippen einer Kategorie
-/// waehlt sie aus.
+/// Ziehen dreht das Rad - die Kreis-Buttons (mit deutscher Beschriftung und
+/// Icon) wandern mit und bleiben dabei per Gegendrehung immer aufrecht und
+/// lesbar. Das japanische Schriftzeichen aussen bleibt ortsfest stehen.
+/// Antippen einer Kategorie waehlt sie aus.
 class CategoryWheel extends StatefulWidget {
   final List<JudoCategory> categories;
   final ValueChanged<JudoCategory> onSelect;
@@ -92,8 +92,8 @@ class _CategoryWheelState extends State<CategoryWheel> {
     required double radius,
     required Offset center,
   }) {
-    const bubbleSize = 108.0;
-    const labelWidth = 96.0;
+    const bubbleSize = 124.0;
+    const labelWidth = 60.0;
     const labelGap = 8.0;
     // Die Kreis-Buttons wandern beim Ziehen mit (angle, inkl. _rotation).
     final dx = center.dx + radius * math.cos(angle) - bubbleSize / 2;
@@ -126,14 +126,14 @@ class _CategoryWheelState extends State<CategoryWheel> {
         width: labelWidth,
         child: IgnorePointer(
           child: Text(
-            category.titleDe,
+            category.kanji,
             textAlign: TextAlign.center,
-            maxLines: 2,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w800,
-              color: JudoColors.black,
+              fontSize: 32,
+              fontWeight: FontWeight.w900,
+              color: JudoColors.red,
               height: 1.15,
             ),
           ),
@@ -224,20 +224,27 @@ class _CategoryBubbleState extends State<_CategoryBubble>
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(category.icon, color: JudoColors.white, size: size * 0.40),
-              const SizedBox(height: 2),
-              Text(
-                category.kanji,
-                style: TextStyle(
-                  color: const Color(0xFFFF5C77),
-                  fontSize: size * 0.25,
-                  fontWeight: FontWeight.w900,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: size * 0.12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(category.icon, color: JudoColors.white, size: size * 0.28),
+                const SizedBox(height: 4),
+                Text(
+                  category.titleDe,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: JudoColors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    height: 1.1,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

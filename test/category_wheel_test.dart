@@ -5,9 +5,8 @@ import 'package:judo_app/widgets/category_wheel.dart';
 
 void main() {
   testWidgets(
-    'Beim Ziehen wandern die Kreis-Buttons mit, die Beschriftung bleibt '
-    'ortsfest stehen (Icon/Kanji im Kreis bleiben aufrecht - siehe '
-    'Gegendrehung in category_wheel.dart)',
+    'Beim Ziehen wandern die Kreis-Buttons (mit deutscher Beschriftung) '
+    'mit, das japanische Zeichen aussen bleibt ortsfest stehen',
     (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -29,8 +28,8 @@ void main() {
       await tester.pump(const Duration(milliseconds: 600));
 
       final category = judoCategories.first;
-      final labelBefore = tester.getTopLeft(find.text(category.titleDe));
-      final bubbleBefore = tester.getTopLeft(find.text(category.kanji));
+      final kanjiLabelBefore = tester.getTopLeft(find.text(category.kanji));
+      final bubbleBefore = tester.getTopLeft(find.text(category.titleDe));
 
       // Rad um ein Viertel Umdrehung ziehen (Startpunkt bewusst abseits des
       // Mittelpunkts, sonst ist der Drehwinkel am Anfang undefiniert).
@@ -42,10 +41,10 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
 
-      final labelAfter = tester.getTopLeft(find.text(category.titleDe));
-      final bubbleAfter = tester.getTopLeft(find.text(category.kanji));
+      final kanjiLabelAfter = tester.getTopLeft(find.text(category.kanji));
+      final bubbleAfter = tester.getTopLeft(find.text(category.titleDe));
 
-      expect(labelAfter, labelBefore);
+      expect(kanjiLabelAfter, kanjiLabelBefore);
       expect(bubbleAfter, isNot(bubbleBefore));
     },
   );

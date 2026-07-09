@@ -61,7 +61,14 @@ class DanGradeDetailScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 dense: true,
                 leading: BeltKnotIcon(colors: beltColors, size: 30),
-                title: Text(technik),
+                title: Text(
+                  technik,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: JudoColors.black,
+                  ),
+                ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(

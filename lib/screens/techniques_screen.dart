@@ -92,7 +92,14 @@ class TechniquesScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            title: Text(technik),
+                            title: Text(
+                              technik,
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                color: JudoColors.black,
+                              ),
+                            ),
                             trailing: const Icon(Icons.chevron_right),
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
@@ -191,7 +198,16 @@ class _TechniqueRow extends StatelessWidget {
       ),
       title: Row(
         children: [
-          Expanded(child: Text(name)),
+          Expanded(
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: JudoColors.black,
+              ),
+            ),
+          ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(

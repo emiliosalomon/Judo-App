@@ -4,6 +4,7 @@ import '../l10n/strings.dart';
 import '../theme/belt_colors.dart';
 import '../theme/judo_theme.dart';
 import '../widgets/belt_knot_icon.dart';
+import 'technique_media_screen.dart';
 
 /// Grad-uebergreifende Sicht auf die "Anwendungsaufgaben" aus dem
 /// Kyu-Pruefungsprogramm — dieselben Daten wie in der Guertelpruefung,
@@ -34,15 +35,23 @@ class StandardSituationsScreen extends StatelessWidget {
                   collapsedIconColor: JudoColors.black,
                   children: [
                     for (final aufgabe in grade.anwendungsaufgaben)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            BeltKnotIcon(colors: beltColors, size: 26),
-                            const SizedBox(width: 10),
-                            Expanded(child: Text(aufgabe)),
-                          ],
+                      ListTile(
+                        contentPadding: const EdgeInsets.fromLTRB(16, 0, 8, 0),
+                        leading: BeltKnotIcon(colors: beltColors, size: 26),
+                        title: Text(
+                          aufgabe,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: JudoColors.black,
+                          ),
+                        ),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                TechniqueMediaScreen(technique: aufgabe),
+                          ),
                         ),
                       ),
                   ],

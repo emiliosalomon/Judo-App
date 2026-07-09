@@ -22,4 +22,21 @@ void main() {
       expect(find.text('1. Kyu – Braun'), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'Antippen einer Anwendungsaufgabe oeffnet die Medien-Detailseite',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(home: StandardSituationsScreen()),
+      );
+
+      await tester.tap(find.text('10. Kyu – Weiß-Gelb'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Nage-waza → Osae-komi-waza'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Auf YouTube ansehen'), findsOneWidget);
+    },
+  );
 }

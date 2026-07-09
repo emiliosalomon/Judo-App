@@ -18,11 +18,21 @@ void main() {
         ),
       );
 
-      await tester.dragUntilVisible(
-        find.text(question.question),
-        find.byType(ListView),
-        const Offset(0, -300),
-      );
+      Future<void> scrollQuestionIntoView() async {
+        await tester.dragUntilVisible(
+          find.text(question.question),
+          find.byType(ListView),
+          const Offset(0, -100),
+        );
+        // dragUntilVisible haelt an, sobald irgendein Teil des Ziels im
+        // Viewport liegt - das kann noch knapp am unteren Rand sein, wo
+        // tap() (zielt auf den Mittelpunkt) danebengreift. Ein kleiner
+        // Nachschlag stellt sicher, dass der Mittelpunkt sicher im Bild ist.
+        await tester.drag(find.byType(ListView), const Offset(0, -80));
+        await tester.pumpAndSettle();
+      }
+
+      await scrollQuestionIntoView();
       expect(find.text(question.question), findsOneWidget);
       expect(find.text(question.answer!), findsNothing);
 
@@ -30,6 +40,9 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text(question.answer!), findsOneWidget);
 
+      // Die aufgeklappte Antwort verschiebt die Frage im Layout - erneut
+      // sichtbar scrollen, bevor sie ein zweites Mal angetippt wird.
+      await scrollQuestionIntoView();
       await tester.tap(find.text(question.question));
       await tester.pumpAndSettle();
       expect(find.text(question.answer!), findsNothing);
