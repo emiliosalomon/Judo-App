@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/judo_theme.dart';
+import 'judo_throw_painter.dart';
 
-/// Platzhalter fuer das finale Logo (zwei Judoka im Wurf, blauer/weisser
-/// Kimono). Sobald die Grafik vorliegt, hier durch Image.asset ersetzen.
+/// App-Logo: zwei Judoka im Wurf (Tori blau, Uke weiss/schwarz umrandet),
+/// als eigene Vektor-Illustration gezeichnet (siehe JudoThrowPainter).
 class JudoLogo extends StatelessWidget {
   final double size;
 
@@ -25,24 +26,13 @@ class JudoLogo extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.sports_martial_arts,
-            color: JudoColors.black,
-            size: size * 0.42,
+      child: ClipOval(
+        child: Padding(
+          padding: EdgeInsets.all(size * 0.12),
+          child: SizedBox.expand(
+            child: CustomPaint(painter: const JudoThrowPainter()),
           ),
-          const SizedBox(height: 2),
-          Text(
-            '柔道',
-            style: TextStyle(
-              color: JudoColors.red,
-              fontWeight: FontWeight.bold,
-              fontSize: size * 0.16,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
