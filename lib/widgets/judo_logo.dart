@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../theme/judo_theme.dart';
-import 'judo_throw_painter.dart';
 
-/// App-Logo: stilisierter Judoka, der beim Drehen des Auswahlrads einen
-/// Wurfansatz zeigt (inkl. Uke), danach wieder aufrecht steht und sich
-/// verbeugt. Reagiert auf [isDragging]/[wheelRotation] von CategoryWheel.
+/// App-Logo: eigenes Bild (Wurfszene, vom Nutzer per KI-Bildtool erstellt).
+/// Dreht sich mit dem Auswahlrad mit, solange gezogen wird, und macht
+/// danach ein kurzes Verbeugungs-"Nicken" (Skalier-Bounce, da ein
+/// statisches Bild keine Pose wechseln kann wie die vorherige
+/// Vektor-Illustration).
 class JudoLogo extends StatefulWidget {
   final double size;
   final bool isDragging;
@@ -22,34 +23,31 @@ class JudoLogo extends StatefulWidget {
 }
 
 class _JudoLogoState extends State<JudoLogo> with TickerProviderStateMixin {
-  late final AnimationController _throwController;
+  late final AnimationController _rotationSettleController;
   late final AnimationController _bowController;
+  double _rotationAtRelease = 0;
 
   @override
   void initState() {
     super.initState();
-    _throwController = AnimationController(
+    _rotationSettleController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 250),
-      value: widget.isDragging ? 1 : 0,
+      duration: const Duration(milliseconds: 350),
     );
     _bowController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 450),
+      duration: const Duration(milliseconds: 220),
     );
   }
 
   @override
   void didUpdateWidget(covariant JudoLogo oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.isDragging && !oldWidget.isDragging) {
-      _bowController.stop();
-      _bowController.value = 0;
-      _throwController.animateTo(1, curve: Curves.easeOut);
-    } else if (!widget.isDragging && oldWidget.isDragging) {
-      _throwController
-          .animateTo(0, curve: Curves.easeIn)
-          .then((_) => _playBow());
+    if (!widget.isDragging && oldWidget.isDragging) {
+      _rotationAtRelease = oldWidget.wheelRotation;
+      _rotationSettleController
+        ..value = 0
+        ..forward().then((_) => _playBow());
     }
   }
 
@@ -62,7 +60,7 @@ class _JudoLogoState extends State<JudoLogo> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _throwController.dispose();
+    _rotationSettleController.dispose();
     _bowController.dispose();
     super.dispose();
   }
@@ -74,8 +72,6 @@ class _JudoLogoState extends State<JudoLogo> with TickerProviderStateMixin {
       height: widget.size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: JudoColors.white,
-        border: Border.all(color: JudoColors.red, width: widget.size * 0.05),
         boxShadow: [
           BoxShadow(
             color: JudoColors.black.withValues(alpha: 0.15),
@@ -85,24 +81,26 @@ class _JudoLogoState extends State<JudoLogo> with TickerProviderStateMixin {
         ],
       ),
       child: ClipOval(
-        child: Padding(
-          padding: EdgeInsets.all(widget.size * 0.12),
-          child: SizedBox.expand(
-            child: AnimatedBuilder(
-              animation: Listenable.merge([_throwController, _bowController]),
-              builder: (context, _) {
-                return Transform.rotate(
-                  angle: widget.isDragging ? widget.wheelRotation : 0,
-                  child: CustomPaint(
-                    painter: JudoThrowPainter(
-                      throwBlend: _throwController.value,
-                      bowBlend: _bowController.value,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+        child: AnimatedBuilder(
+          animation: Listenable.merge([
+            _rotationSettleController,
+            _bowController,
+          ]),
+          builder: (context, child) {
+            final settleT = Curves.easeOut.transform(
+              _rotationSettleController.value,
+            );
+            final angle = widget.isDragging
+                ? widget.wheelRotation
+                : _rotationAtRelease * (1 - settleT);
+            final bowScale =
+                1 - (Curves.easeInOut.transform(_bowController.value) * 0.08);
+            return Transform.rotate(
+              angle: angle,
+              child: Transform.scale(scaleY: bowScale, child: child),
+            );
+          },
+          child: Image.asset('assets/images/judo_logo.png', fit: BoxFit.cover),
         ),
       ),
     );

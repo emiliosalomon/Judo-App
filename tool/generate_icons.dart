@@ -1,14 +1,12 @@
-// Hilfsskript, um App-Icons aus JudoThrowPainter zu rendern/neu zu rendern.
-// Kein regulaerer Test - ausfuehren mit:
+// Hilfsskript, um App-Icons aus assets/images/judo_logo.png zu rendern/neu
+// zu rendern (zentrierter quadratischer Ausschnitt, wie CSS "object-fit:
+// cover"). Kein regulaerer Test - ausfuehren mit:
 //   flutter test tool/generate_icons.dart
-// Sobald echtes Logo-Artwork vorliegt, wird dieses Skript ueberfluessig.
 import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:judo_app/theme/judo_theme.dart';
-import 'package:judo_app/widgets/judo_throw_painter.dart';
 
 class _IconSpec {
   final String path;
@@ -92,28 +90,29 @@ const _specs = <_IconSpec>[
   _IconSpec('web/favicon.png', 64),
 ];
 
-Future<void> _renderIcon(
-  _IconSpec spec, {
-  bool maskableSafeZone = false,
-}) async {
+Future<void> _renderIcon(ui.Image source, _IconSpec spec) async {
   final size = spec.size.toDouble();
   final recorder = ui.PictureRecorder();
   final canvas = Canvas(recorder);
 
-  // Voller roter Hintergrund (kein Weiss/Ring wie im In-App-Logo, damit es
-  // als App-Icon auf jedem Homescreen-Hintergrund funktioniert).
-  canvas.drawRect(
-    Rect.fromLTWH(0, 0, size, size),
-    Paint()..color = JudoColors.red,
+  // Zentrierter quadratischer Ausschnitt aus dem (nicht-quadratischen)
+  // Quellbild, analog zu CSS object-fit: cover.
+  final srcW = source.width.toDouble();
+  final srcH = source.height.toDouble();
+  final cropSide = srcW < srcH ? srcW : srcH;
+  final srcRect = Rect.fromLTWH(
+    (srcW - cropSide) / 2,
+    (srcH - cropSide) / 2,
+    cropSide,
+    cropSide,
   );
 
-  // Maskable-Icons brauchen mehr Rand (sichere Zone ca. 20%), normale Icons
-  // duerfen randnaeher gehen.
-  final pad = size * (maskableSafeZone ? 0.22 : 0.1);
-  canvas.save();
-  canvas.translate(pad, pad);
-  const JudoThrowPainter().paint(canvas, Size(size - 2 * pad, size - 2 * pad));
-  canvas.restore();
+  canvas.drawImageRect(
+    source,
+    srcRect,
+    Rect.fromLTWH(0, 0, size, size),
+    Paint()..filterQuality = FilterQuality.high,
+  );
 
   final picture = recorder.endRecording();
   final image = await picture.toImage(spec.size, spec.size);
@@ -124,10 +123,15 @@ Future<void> _renderIcon(
 }
 
 void main() {
-  test('generate app icons from JudoThrowPainter', () async {
+  test('generate app icons from judo_logo.png', () async {
     TestWidgetsFlutterBinding.ensureInitialized();
+    final bytes = await File('assets/images/judo_logo.png').readAsBytes();
+    final codec = await ui.instantiateImageCodec(bytes);
+    final frame = await codec.getNextFrame();
+    final source = frame.image;
+
     for (final spec in _specs) {
-      await _renderIcon(spec, maskableSafeZone: spec.path.contains('maskable'));
+      await _renderIcon(source, spec);
     }
     // ignore: avoid_print
     print('Generated ${_specs.length} icon files.');
