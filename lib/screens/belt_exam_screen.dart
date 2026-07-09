@@ -44,7 +44,7 @@ class BeltExamScreen extends StatelessWidget {
                     return ListTile(
                       leading: BeltKnotIcon(
                         colors: beltColorsFromName(grade.beltName),
-                        size: 30,
+                        size: 36,
                       ),
                       title: Text(grade.title),
                       subtitle: grade.minAge != null
@@ -82,7 +82,7 @@ class BeltExamScreen extends StatelessWidget {
                     return ListTile(
                       leading: BeltKnotIcon(
                         colors: beltColorsFromName(grade.beltDescription),
-                        size: 30,
+                        size: 36,
                       ),
                       title: Text(grade.title),
                       subtitle: Text(grade.kata ?? grade.beltDescription),
@@ -133,7 +133,7 @@ class _ProgressTrailing extends StatelessWidget {
             child: const Icon(
               Icons.emoji_events_rounded,
               color: JudoColors.gold,
-              size: 26,
+              size: 34,
             ),
           ),
         Text(AppStrings.progressFraction(done, total)),

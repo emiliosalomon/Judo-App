@@ -17,7 +17,7 @@ class CategoryPlaceholderScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(category.icon, size: 64),
+              Icon(category.icon, size: 88),
               const SizedBox(height: 16),
               Text(
                 '${category.titleDe} (${category.kanji})',

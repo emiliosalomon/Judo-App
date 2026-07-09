@@ -68,13 +68,16 @@ class _CelebratingCheckboxState extends State<CelebratingCheckbox>
     widget.onChanged(newValue);
   }
 
+  // Groesserer, besser lesbarer/tippbarer Haken als das Material-Default.
+  static const _baseScale = 1.5;
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       key: _boxKey,
       animation: _scale,
       builder: (context, child) =>
-          Transform.scale(scale: _scale.value, child: child),
+          Transform.scale(scale: _baseScale * _scale.value, child: child),
       child: Checkbox(
         value: widget.value,
         activeColor: widget.activeColor,

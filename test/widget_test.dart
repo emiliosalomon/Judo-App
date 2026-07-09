@@ -14,7 +14,10 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
-    await tester.pumpAndSettle();
+    // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
+    // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
 
     expect(find.text('Judo App'), findsOneWidget);
     for (final category in judoCategories) {
@@ -33,11 +36,17 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
-    await tester.pumpAndSettle();
+    // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
+    // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
 
     final techniques = judoCategories.firstWhere((c) => c.id == 'techniques');
     await tester.tap(find.text(techniques.kanji));
-    await tester.pumpAndSettle();
+    // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
+    // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
 
     expect(
       find.descendant(
@@ -53,11 +62,17 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
-    await tester.pumpAndSettle();
+    // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
+    // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
 
     final beltExam = judoCategories.firstWhere((c) => c.id == 'belt-exam');
     await tester.tap(find.text(beltExam.kanji));
-    await tester.pumpAndSettle();
+    // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
+    // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
 
     expect(find.text('Kyu (Schülergrade)'), findsOneWidget);
     expect(find.text('Dan (Meistergrade)'), findsOneWidget);

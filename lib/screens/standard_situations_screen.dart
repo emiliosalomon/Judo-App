@@ -28,7 +28,7 @@ class StandardSituationsScreen extends StatelessWidget {
               builder: (context) {
                 final beltColors = beltColorsFromName(grade.beltName);
                 return ExpansionTile(
-                  leading: BeltKnotIcon(colors: beltColors, size: 26),
+                  leading: BeltKnotIcon(colors: beltColors, size: 32),
                   title: Text(grade.title),
                   iconColor: JudoColors.red,
                   collapsedIconColor: JudoColors.black,
@@ -39,7 +39,7 @@ class StandardSituationsScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            BeltKnotIcon(colors: beltColors, size: 20),
+                            BeltKnotIcon(colors: beltColors, size: 26),
                             const SizedBox(width: 10),
                             Expanded(child: Text(aufgabe)),
                           ],

@@ -25,7 +25,7 @@ class KataDetailScreen extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: JudoColors.red,
-              fontSize: 16,
+              fontSize: 20,
             ),
           ),
           const SizedBox(height: 4),

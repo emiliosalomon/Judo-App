@@ -32,6 +32,7 @@ class _ConfettiBurstState extends State<_ConfettiBurst>
   static const _colors = [
     JudoColors.red,
     JudoColors.blue,
+    JudoColors.gold,
     Color(0xFFFFD500),
     Color(0xFF2E9E4C),
     JudoColors.black,
@@ -43,19 +44,19 @@ class _ConfettiBurstState extends State<_ConfettiBurst>
   void initState() {
     super.initState();
     final random = math.Random();
-    _particles = List.generate(14, (i) {
+    _particles = List.generate(26, (i) {
       final angle = random.nextDouble() * 2 * math.pi;
-      final speed = 36 + random.nextDouble() * 34;
+      final speed = 55 + random.nextDouble() * 55;
       return _Particle(
         direction: Offset(math.cos(angle), math.sin(angle)) * speed,
         color: _colors[random.nextInt(_colors.length)],
-        size: 5 + random.nextDouble() * 4,
+        size: 7 + random.nextDouble() * 6,
       );
     });
     _controller =
         AnimationController(
             vsync: this,
-            duration: const Duration(milliseconds: 650),
+            duration: const Duration(milliseconds: 800),
           )
           ..addStatusListener((status) {
             if (status == AnimationStatus.completed) widget.onDone();
@@ -88,7 +89,7 @@ class _ConfettiBurstState extends State<_ConfettiBurst>
                   top:
                       widget.position.dy +
                       particle.direction.dy * t +
-                      60 * t * t -
+                      90 * t * t -
                       particle.size / 2,
                   child: Opacity(
                     opacity: fade,

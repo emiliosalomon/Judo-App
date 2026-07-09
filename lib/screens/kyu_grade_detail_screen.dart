@@ -35,7 +35,7 @@ class KyuGradeDetailScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              BeltKnotIcon(colors: beltColors, size: 34),
+              BeltKnotIcon(colors: beltColors, size: 42),
               const SizedBox(width: 10),
               if (grade.minAge != null)
                 Text(
@@ -237,7 +237,7 @@ class _Section extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BeltKnotIcon(colors: beltColors, size: 22),
+                  BeltKnotIcon(colors: beltColors, size: 28),
                   const SizedBox(width: 10),
                   Expanded(child: Text(item)),
                 ],

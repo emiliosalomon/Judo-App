@@ -17,7 +17,10 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
+    // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
 
     final category = judoCategories.first;
     final labelBefore = tester.getTopLeft(find.text(category.titleDe));
@@ -30,7 +33,10 @@ void main() {
       wheelCenter + const Offset(0, -100),
       const Offset(150, 0),
     );
-    await tester.pumpAndSettle();
+    // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
+    // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
 
     final labelAfter = tester.getTopLeft(find.text(category.titleDe));
     final bubbleAfter = tester.getTopLeft(find.text(category.kanji));

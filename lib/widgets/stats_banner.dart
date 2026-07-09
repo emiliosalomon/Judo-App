@@ -92,11 +92,18 @@ class _StatPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pill = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.45), width: 1.5),
+        color: color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: color.withValues(alpha: 0.55), width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.35),
+            blurRadius: 10,
+            spreadRadius: 0.5,
+          ),
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -104,12 +111,12 @@ class _StatPill extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: color, size: 26),
-              const SizedBox(width: 4),
+              Icon(icon, color: color, size: 36),
+              const SizedBox(width: 6),
               Text(
                 '$value',
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 26,
                   fontWeight: FontWeight.w900,
                   color: JudoColors.black,
                 ),
@@ -119,7 +126,7 @@ class _StatPill extends StatelessWidget {
           Text(
             label,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.w700,
               color: JudoColors.black,
             ),

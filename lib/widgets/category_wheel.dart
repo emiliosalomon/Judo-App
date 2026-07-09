@@ -31,7 +31,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final diameter = math.min(constraints.maxWidth, constraints.maxHeight);
-        final radius = diameter / 2 * 0.58;
+        final radius = diameter / 2 * 0.60;
         final center = Offset(diameter / 2, diameter / 2);
         final count = widget.categories.length;
         final anglePer = (2 * math.pi) / count;
@@ -62,7 +62,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
               clipBehavior: Clip.none,
               children: [
                 JudoLogo(
-                  size: 122,
+                  size: 136,
                   isDragging: _isDragging,
                   wheelRotation: _rotation,
                 ),
@@ -89,9 +89,9 @@ class _CategoryWheelState extends State<CategoryWheel> {
     required double radius,
     required Offset center,
   }) {
-    const bubbleSize = 90.0;
-    const labelWidth = 84.0;
-    const labelGap = 6.0;
+    const bubbleSize = 108.0;
+    const labelWidth = 96.0;
+    const labelGap = 8.0;
     final dx = center.dx + radius * math.cos(angle) - bubbleSize / 2;
     final dy = center.dy + radius * math.sin(angle) - bubbleSize / 2;
 
@@ -101,7 +101,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
     final labelRadius = radius + bubbleSize / 2 + labelGap;
     final labelDx =
         center.dx + labelRadius * math.cos(baseAngle) - labelWidth / 2;
-    final labelDy = center.dy + labelRadius * math.sin(baseAngle) - 17;
+    final labelDy = center.dy + labelRadius * math.sin(baseAngle) - 20;
 
     return [
       Positioned(
@@ -127,8 +127,8 @@ class _CategoryWheelState extends State<CategoryWheel> {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 12.5,
-              fontWeight: FontWeight.w700,
+              fontSize: 15,
+              fontWeight: FontWeight.w800,
               color: JudoColors.black,
               height: 1.15,
             ),
@@ -139,38 +139,71 @@ class _CategoryWheelState extends State<CategoryWheel> {
   }
 }
 
-class _CategoryBubble extends StatelessWidget {
+/// Rad-Button mit sanft pulsierendem Leucht-Rand (Arcade-/Slotmachine-Feel).
+class _CategoryBubble extends StatefulWidget {
   final JudoCategory category;
   final double size;
 
   const _CategoryBubble({required this.category, required this.size});
 
   @override
+  State<_CategoryBubble> createState() => _CategoryBubbleState();
+}
+
+class _CategoryBubbleState extends State<_CategoryBubble>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulse = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: const RadialGradient(
-          center: Alignment(-0.3, -0.3),
-          radius: 0.95,
-          colors: [Color(0xFF2E2E2E), JudoColors.black],
-        ),
-        border: Border.all(color: JudoColors.red, width: 3),
-        boxShadow: [
-          BoxShadow(
-            color: JudoColors.red.withValues(alpha: 0.55),
-            blurRadius: 14,
-            spreadRadius: 1,
+    final size = widget.size;
+    final category = widget.category;
+    return AnimatedBuilder(
+      animation: _pulse,
+      builder: (context, child) {
+        final glow = Curves.easeInOut.transform(_pulse.value);
+        return Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: const RadialGradient(
+              center: Alignment(-0.3, -0.3),
+              radius: 0.95,
+              colors: [Color(0xFF2E2E2E), JudoColors.black],
+            ),
+            border: Border.all(color: JudoColors.red, width: 3),
+            boxShadow: [
+              BoxShadow(
+                color: JudoColors.red.withValues(alpha: 0.4 + glow * 0.4),
+                blurRadius: 12 + glow * 12,
+                spreadRadius: 1 + glow * 2,
+              ),
+              const BoxShadow(
+                color: Colors.black45,
+                blurRadius: 6,
+                offset: Offset(0, 3),
+              ),
+            ],
           ),
-          const BoxShadow(
-            color: Colors.black45,
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
+          child: child,
+        );
+      },
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -190,13 +223,13 @@ class _CategoryBubble extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(category.icon, color: JudoColors.white, size: size * 0.38),
+              Icon(category.icon, color: JudoColors.white, size: size * 0.40),
               const SizedBox(height: 2),
               Text(
                 category.kanji,
                 style: TextStyle(
                   color: const Color(0xFFFF5C77),
-                  fontSize: size * 0.24,
+                  fontSize: size * 0.25,
                   fontWeight: FontWeight.w900,
                 ),
               ),

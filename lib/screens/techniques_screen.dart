@@ -88,7 +88,7 @@ class TechniquesScreen extends StatelessWidget {
                                   colors: beltColorsFromName(
                                     grade.beltDescription,
                                   ),
-                                  size: 22,
+                                  size: 28,
                                 ),
                               ],
                             ),
@@ -186,23 +186,27 @@ class _TechniqueRow extends StatelessWidget {
             onChanged: (_) => progress.toggle(id),
           ),
           const SizedBox(width: 4),
-          BeltKnotIcon(colors: beltColors, size: 22),
+          BeltKnotIcon(colors: beltColors, size: 28),
         ],
       ),
       title: Row(
         children: [
           Expanded(child: Text(name)),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
               color: covered ? JudoColors.black : JudoColors.red,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
             ),
             child: Text(
               covered
                   ? AppStrings.coveredFromGrade(coveringGrade!.kyu)
                   : AppStrings.notCoveredLabel,
-              style: const TextStyle(color: JudoColors.white, fontSize: 11),
+              style: const TextStyle(
+                color: JudoColors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],

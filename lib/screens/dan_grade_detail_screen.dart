@@ -22,7 +22,7 @@ class DanGradeDetailScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              BeltKnotIcon(colors: beltColors, size: 34),
+              BeltKnotIcon(colors: beltColors, size: 42),
               const SizedBox(width: 10),
               Text(
                 AppStrings.beltLabel(grade.beltDescription),
@@ -60,7 +60,7 @@ class DanGradeDetailScreen extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
-                leading: BeltKnotIcon(colors: beltColors, size: 24),
+                leading: BeltKnotIcon(colors: beltColors, size: 30),
                 title: Text(technik),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => Navigator.of(context).push(
@@ -85,7 +85,7 @@ class DanGradeDetailScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BeltKnotIcon(colors: beltColors, size: 22),
+                  BeltKnotIcon(colors: beltColors, size: 28),
                   const SizedBox(width: 10),
                   Expanded(child: Text(thema)),
                 ],
