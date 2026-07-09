@@ -21,6 +21,12 @@ void main() {
       expect(find.text(category.kanji), findsOneWidget);
       expect(find.text(category.titleDe), findsOneWidget);
     }
+    // Lernanreiz-Leiste (Serie/Sterne/Pokale).
+    expect(find.byIcon(Icons.local_fire_department_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.star_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.emoji_events_rounded), findsOneWidget);
+    // Erster Besuch heute -> Serie beginnt bei 1.
+    expect(find.text('1'), findsOneWidget);
   });
 
   testWidgets('Antippen von Weiterführende Techniken zeigt den Gokyo-Katalog', (

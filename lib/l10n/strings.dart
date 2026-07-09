@@ -11,6 +11,14 @@ class AppStrings {
   static const appTitle = 'Judo App';
   static const wheelHint = 'Ziehen zum Drehen, antippen zum Auswählen';
 
+  // Lernanreiz (Streak/Sterne/Pokale)
+  static const streakLabel = 'Serie';
+  static const starsLabel = 'Sterne';
+  static const trophiesLabel = 'Pokale';
+  static String streakDaysTooltip(int days) =>
+      days == 1 ? '1 Tag in Folge aktiv' : '$days Tage in Folge aktiv';
+  static const beltCompleteBadge = 'Gürtel komplett!';
+
   // Platzhalter
   static const contentComingSoon = 'Inhalte folgen.';
 
