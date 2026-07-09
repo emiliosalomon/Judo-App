@@ -5,8 +5,8 @@ import 'package:judo_app/widgets/category_wheel.dart';
 
 void main() {
   testWidgets(
-    'Beim Ziehen wandern die Kreis-Buttons (mit deutscher Beschriftung) '
-    'mit, das japanische Zeichen aussen bleibt ortsfest stehen',
+    'Beim Ziehen wandern Kreis-Button und zugehoeriges japanisches Zeichen '
+    'gemeinsam auf der Kreisbahn mit (Zuordnung bleibt erhalten)',
     (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -44,7 +44,9 @@ void main() {
       final kanjiLabelAfter = tester.getTopLeft(find.text(category.kanji));
       final bubbleAfter = tester.getTopLeft(find.text(category.titleDe));
 
-      expect(kanjiLabelAfter, kanjiLabelBefore);
+      // Beide wandern gemeinsam auf der Kreisbahn mit - die Zuordnung
+      // Zeichen <-> Kategorie darf sich beim Drehen nie loesen.
+      expect(kanjiLabelAfter, isNot(kanjiLabelBefore));
       expect(bubbleAfter, isNot(bubbleBefore));
     },
   );
