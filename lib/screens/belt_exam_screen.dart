@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/dan_grades_data.dart';
 import '../data/kyu_grades_data.dart';
+import '../l10n/strings.dart';
 import '../models/kyu_grade.dart';
 import '../services/progress_scope.dart';
 import 'dan_grade_detail_screen.dart';
@@ -21,9 +22,12 @@ class BeltExamScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Gürtelprüfung'),
+          title: const Text(AppStrings.beltExamTitle),
           bottom: const TabBar(
-            tabs: [Tab(text: 'Kyu (Schülergrade)'), Tab(text: 'Dan (Meistergrade)')],
+            tabs: [
+              Tab(text: AppStrings.tabKyu),
+              Tab(text: AppStrings.tabDan),
+            ],
           ),
         ),
         body: TabBarView(
@@ -42,10 +46,10 @@ class BeltExamScreen extends StatelessWidget {
                     return ListTile(
                       title: Text(grade.title),
                       subtitle: grade.minAge != null
-                          ? Text('ab ${grade.minAge} Jahren')
+                          ? Text(AppStrings.minAgeSubtitle(grade.minAge!))
                           : null,
                       trailing: total > 0
-                          ? Text('$done/$total')
+                          ? Text(AppStrings.progressFraction(done, total))
                           : const Icon(Icons.chevron_right),
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(

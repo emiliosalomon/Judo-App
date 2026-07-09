@@ -49,12 +49,18 @@ pruefen statt Annahmen aus anderen Verbaenden zu uebernehmen.
   Kyu-/Dan-Detail, Kata, Standardsituationen, Suche)
 - `lib/widgets/` — wiederverwendbare UI-Bausteine (Auswahlrad, Logo)
 - `lib/theme/` — Farben/ThemeData
+- `lib/l10n/strings.dart` — alle Nutzer-sichtbaren UI-Texte (feste
+  Beschriftungen/Hinweise, nicht die OeJV-Inhaltsdaten aus `lib/data/`)
+- `lib/services/` — App-weiter Zustand (z.B. Lernfortschritt via
+  ProgressController/ProgressScope, lokal persistiert)
 
 ## Konventionen (bitte einhalten)
 
 - Schreib Code im Stil der umliegenden Dateien (gleiche Benennung, gleiche Struktur).
 - Keine neuen Abhaengigkeiten ohne kurze Rueckfrage.
-- Texte, die der Nutzer sieht, zentral halten (Lokalisierung vorbereiten), nichts hart im Code verstreuen.
+- Texte, die der Nutzer sieht, zentral in `lib/l10n/strings.dart` (Klasse
+  `AppStrings`) halten, nichts hart im Code verstreuen. Neue UI-Texte dort
+  ergaenzen statt als Literal in ein Widget zu schreiben.
 - Neue Funktionen bekommen, wo sinnvoll, einen Test.
 - **OeJV-Inhalte in `lib/data/`:** Technik-/Begriffsnamen (japanische
   Fachbegriffe wie Nage-waza, Kesa-gatame etc.) sind Standardvokabular und

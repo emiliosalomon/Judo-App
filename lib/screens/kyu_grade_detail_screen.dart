@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/strings.dart';
 import '../models/kyu_grade.dart';
 import '../services/progress_scope.dart';
 import '../theme/judo_theme.dart';
@@ -25,13 +26,13 @@ class KyuGradeDetailScreen extends StatelessWidget {
         children: [
           if (grade.minAge != null)
             Text(
-              'Mindestalter: ${grade.minAge} Jahre',
+              AppStrings.minAgeLabel(grade.minAge!),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           if (trackableCount > 0) ...[
             const SizedBox(height: 8),
             Text(
-              '$completedCount von $trackableCount Punkten als gelernt markiert',
+              AppStrings.learnedProgress(completedCount, trackableCount),
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 color: JudoColors.red,
@@ -43,27 +44,33 @@ class KyuGradeDetailScreen extends StatelessWidget {
             Text(grade.hinweis!, style: Theme.of(context).textTheme.bodyLarge),
           ],
           _TrackableSection(
-            title: 'Ukemi-waza (Falltechnik)',
+            title: AppStrings.sectionUkemiWaza,
             items: grade.ukemiWaza,
             idPrefix: 'kyu:${grade.kyu}:',
           ),
           _TrackableSection(
-            title: 'Nage-waza (Wurftechnik)',
+            title: AppStrings.sectionNageWaza,
             items: grade.nageWaza,
             idPrefix: 'kyu:${grade.kyu}:',
           ),
           _TrackableSection(
-            title: 'Katame-waza (Bodentechnik)',
+            title: AppStrings.sectionKatameWaza,
             items: grade.katameWaza,
             idPrefix: 'kyu:${grade.kyu}:',
           ),
           _TrackableSection(
-            title: 'Anwendungsaufgaben (Standardsituationen)',
+            title: AppStrings.sectionAnwendungsaufgaben,
             items: grade.anwendungsaufgaben,
             idPrefix: 'kyu:${grade.kyu}:',
           ),
-          _Section(title: 'Theorie-Themen', items: grade.theorieThemen),
-          _Section(title: 'Zusatzbegriffe', items: grade.zusatzbegriffe),
+          _Section(
+            title: AppStrings.sectionTheorieThemen,
+            items: grade.theorieThemen,
+          ),
+          _Section(
+            title: AppStrings.sectionZusatzbegriffe,
+            items: grade.zusatzbegriffe,
+          ),
         ],
       ),
     );
@@ -138,7 +145,7 @@ class _Section extends StatelessWidget {
           for (final item in items)
             Padding(
               padding: const EdgeInsets.only(bottom: 4),
-              child: Text('•  $item'),
+              child: Text('${AppStrings.bullet}$item'),
             ),
         ],
       ),

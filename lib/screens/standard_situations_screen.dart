@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/kyu_grades_data.dart';
+import '../l10n/strings.dart';
 import '../theme/judo_theme.dart';
 
 /// Grad-uebergreifende Sicht auf die "Anwendungsaufgaben" aus dem
@@ -15,15 +16,11 @@ class StandardSituationsScreen extends StatelessWidget {
         .toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Standardsituationen')),
+      appBar: AppBar(title: const Text(AppStrings.standardSituationsTitle)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text(
-            'Anwendungsaufgaben aus dem OeJV-Kyu-Programm, gebündelt über '
-            'alle Gürtelstufen. Dieselben Inhalte findest du auch direkt bei '
-            'der jeweiligen Gürtelstufe.',
-          ),
+          const Text(AppStrings.standardSituationsIntro),
           for (final grade in gradesWithTasks)
             ExpansionTile(
               title: Text(grade.title),
@@ -36,7 +33,7 @@ class StandardSituationsScreen extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('•  '),
+                        const Text(AppStrings.bullet),
                         Expanded(child: Text(aufgabe)),
                       ],
                     ),

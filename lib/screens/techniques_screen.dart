@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/dan_grades_data.dart';
 import '../data/kyu_grades_data.dart';
 import '../data/techniques_data.dart';
+import '../l10n/strings.dart';
 import '../models/kyu_grade.dart';
 import '../services/progress_scope.dart';
 import '../theme/judo_theme.dart';
@@ -15,31 +16,36 @@ class TechniquesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Weiterführende Techniken')),
+      appBar: AppBar(title: const Text(AppStrings.techniquesTitle)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text(
-            'Vollständiger Technik-Katalog nach dem klassischen Kodokan-'
-            'Gokyo. Techniken, die schon Teil deines Kyu-Programms sind, '
-            'sind entsprechend markiert.',
+          const Text(AppStrings.techniquesIntro),
+          _TechniqueSection(
+            title: AppStrings.nageWazaGokyoSection,
+            techniques: kodokanGokyoNageWaza,
           ),
-          _TechniqueSection(title: 'Nage-waza (Kodokan Gokyo)', techniques: kodokanGokyoNageWaza),
-          _TechniqueSection(title: 'Osae-komi-waza', techniques: osaeKomiWaza),
-          _TechniqueSection(title: 'Shime-waza', techniques: shimeWaza),
-          _TechniqueSection(title: 'Kansetsu-waza', techniques: kansetsuWaza),
+          _TechniqueSection(
+            title: AppStrings.osaeKomiWazaSection,
+            techniques: osaeKomiWaza,
+          ),
+          _TechniqueSection(
+            title: AppStrings.shimeWazaSection,
+            techniques: shimeWaza,
+          ),
+          _TechniqueSection(
+            title: AppStrings.kansetsuWazaSection,
+            techniques: kansetsuWaza,
+          ),
           const SizedBox(height: 12),
           const Divider(),
           const SizedBox(height: 12),
           Text(
-            'Zusatztechniken je Dan-Grad',
+            AppStrings.zusatztechnikenPerDanTitle,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Weitere anerkannte Techniken (Shinmeisho-no-waza u.a.), die erst '
-            'ab bestimmten Dan-Prüfungen dazukommen.',
-          ),
+          const Text(AppStrings.zusatztechnikenPerDanIntro),
           Builder(
             builder: (context) {
               final progress = ProgressScope.of(context);
@@ -49,7 +55,9 @@ class TechniquesScreen extends StatelessWidget {
                     (g) => g.zusatztechniken.isNotEmpty,
                   ))
                     ExpansionTile(
-                      title: Text('${grade.title} – Zusatztechniken'),
+                      title: Text(
+                        AppStrings.zusatztechnikenSectionTitle(grade.title),
+                      ),
                       iconColor: JudoColors.red,
                       collapsedIconColor: JudoColors.black,
                       children: [
@@ -105,7 +113,7 @@ class _TechniqueSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '$title (${techniques.length})',
+            AppStrings.techniqueSectionTitle(title, techniques.length),
             style: const TextStyle(fontWeight: FontWeight.bold, color: JudoColors.red),
           ),
           const SizedBox(height: 8),
@@ -144,7 +152,9 @@ class _TechniqueRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              covered ? 'ab ${coveringGrade!.kyu}. Kyu' : 'weiterführend',
+              covered
+                  ? AppStrings.coveredFromGrade(coveringGrade!.kyu)
+                  : AppStrings.notCoveredLabel,
               style: const TextStyle(color: JudoColors.white, fontSize: 11),
             ),
           ),

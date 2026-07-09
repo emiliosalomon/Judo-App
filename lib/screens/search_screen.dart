@@ -3,6 +3,7 @@ import '../data/kyu_grades_data.dart';
 import '../data/dan_grades_data.dart';
 import '../data/search_index.dart';
 import '../data/search_normalize.dart';
+import '../l10n/strings.dart';
 import '../models/category.dart';
 import '../models/search_entry.dart';
 import '../theme/judo_theme.dart';
@@ -27,7 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
         judoCategories.where((c) => c.id != 'search').toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Suche')),
+      appBar: AppBar(title: const Text(AppStrings.searchTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -53,7 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   controller: controller,
                   focusNode: focusNode,
                   decoration: const InputDecoration(
-                    hintText: 'Technik, Kata, Begriff ... (z.B. "osotogari")',
+                    hintText: AppStrings.searchHint,
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(),
                   ),
@@ -86,7 +87,10 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             ),
             const SizedBox(height: 16),
-            const Text('Kategorien', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              AppStrings.categoriesLabel,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -110,7 +114,7 @@ class _SearchScreenState extends State<SearchScreen> {
             const Expanded(
               child: Center(
                 child: Text(
-                  'Tippe einen Begriff ein — Vorschläge erscheinen automatisch.',
+                  AppStrings.searchEmptyState,
                   style: TextStyle(color: JudoColors.black),
                   textAlign: TextAlign.center,
                 ),

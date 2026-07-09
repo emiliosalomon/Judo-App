@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/strings.dart';
 import '../models/kata_info.dart';
 import '../theme/judo_theme.dart';
 
@@ -28,18 +29,18 @@ class KataDetailScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text('Pflicht-Kata für den $requiredForGrade'),
+          Text(AppStrings.requiredForGrade(requiredForGrade)),
           const SizedBox(height: 16),
           Text(info.description),
           const SizedBox(height: 20),
           if (info.sectionsAreSummaryOnly)
             const Text(
-              'Struktur (ausführliche Technik-Liste folgt):',
+              AppStrings.kataStructureSummaryOnly,
               style: TextStyle(fontWeight: FontWeight.bold),
             )
           else
             const Text(
-              'Techniken',
+              AppStrings.kataTechniquesLabel,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           const SizedBox(height: 8),
@@ -56,7 +57,7 @@ class KataDetailScreen extends StatelessWidget {
                   for (final technique in section.techniques)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 4, 0, 0),
-                      child: Text('•  $technique'),
+                      child: Text('${AppStrings.bullet}$technique'),
                     ),
                 ],
               ),

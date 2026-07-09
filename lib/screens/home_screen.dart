@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/strings.dart';
 import '../models/category.dart';
 import '../widgets/category_wheel.dart';
 import 'belt_exam_screen.dart';
@@ -14,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Judo App')),
+      appBar: AppBar(title: const Text(AppStrings.appTitle)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -22,7 +23,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 8),
               Text(
-                'Ziehen zum Drehen, antippen zum Auswählen',
+                AppStrings.wheelHint,
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.center,
               ),

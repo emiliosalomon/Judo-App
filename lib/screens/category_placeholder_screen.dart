@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/strings.dart';
 import '../models/category.dart';
 
 class CategoryPlaceholderScreen extends StatelessWidget {
@@ -24,7 +25,10 @@ class CategoryPlaceholderScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              const Text('Inhalte folgen.', textAlign: TextAlign.center),
+              const Text(
+                AppStrings.contentComingSoon,
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ),

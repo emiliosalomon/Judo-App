@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'l10n/strings.dart';
 import 'screens/home_screen.dart';
 import 'services/progress_controller.dart';
 import 'services/progress_scope.dart';
@@ -27,7 +28,7 @@ class JudoApp extends StatelessWidget {
         return ProgressScope(
           controller: ProgressController(store),
           child: MaterialApp(
-            title: 'Judo App',
+            title: AppStrings.appTitle,
             debugShowCheckedModeBanner: false,
             theme: judoTheme,
             home: const HomeScreen(),
