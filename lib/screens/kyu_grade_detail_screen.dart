@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/strings.dart';
 import '../models/kyu_grade.dart';
+import '../models/theory_question.dart';
 import '../services/progress_scope.dart';
 import '../theme/judo_theme.dart';
 import 'technique_media_screen.dart';
@@ -66,9 +67,9 @@ class KyuGradeDetailScreen extends StatelessWidget {
             items: grade.anwendungsaufgaben,
             idPrefix: 'kyu:${grade.kyu}:',
           ),
-          _Section(
+          _TheorySection(
             title: AppStrings.sectionTheorieThemen,
-            items: grade.theorieThemen,
+            questions: grade.theorieThemen,
           ),
           _Section(
             title: AppStrings.sectionZusatzbegriffe,
@@ -123,6 +124,53 @@ class _TrackableSection extends StatelessWidget {
                   builder: (_) => TechniqueMediaScreen(technique: item),
                 ),
               ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Theorie-Fragen als Karteikarten: antippen zeigt die Antwort, nochmal
+/// antippen blendet sie wieder aus (Lernprinzip).
+class _TheorySection extends StatelessWidget {
+  final String title;
+  final List<TheoryQuestion> questions;
+
+  const _TheorySection({required this.title, required this.questions});
+
+  @override
+  Widget build(BuildContext context) {
+    if (questions.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: JudoColors.red,
+            ),
+          ),
+          for (final q in questions)
+            ExpansionTile(
+              title: Text(q.question),
+              tilePadding: EdgeInsets.zero,
+              iconColor: JudoColors.red,
+              collapsedIconColor: JudoColors.black,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
+                  child: Text(
+                    q.answer ?? AppStrings.answerPending,
+                    style: q.answer == null
+                        ? const TextStyle(fontStyle: FontStyle.italic)
+                        : null,
+                  ),
+                ),
+              ],
             ),
         ],
       ),

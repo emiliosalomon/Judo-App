@@ -1,3 +1,5 @@
+import 'theory_question.dart';
+
 /// Eine Kyu-Guertelstufe nach OeJV-Pruefungsprogramm (11. bis 1. Kyu).
 class KyuGrade {
   final int kyu;
@@ -7,7 +9,7 @@ class KyuGrade {
   final List<String> nageWaza;
   final List<String> katameWaza;
   final List<String> anwendungsaufgaben;
-  final List<String> theorieThemen;
+  final List<TheoryQuestion> theorieThemen;
   final List<String> zusatzbegriffe;
 
   /// Freitext-Hinweis fuer Grade ohne eigenes Technikprogramm (z.B. 11. Kyu).
