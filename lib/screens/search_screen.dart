@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
+import '../data/kyu_grades_data.dart';
+import '../data/dan_grades_data.dart';
+import '../data/search_index.dart';
+import '../data/search_normalize.dart';
 import '../models/category.dart';
+import '../models/search_entry.dart';
+import '../theme/judo_theme.dart';
+import 'dan_grade_detail_screen.dart';
+import 'kata_screen.dart';
+import 'kyu_grade_detail_screen.dart';
+import 'techniques_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -9,14 +19,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final _query = TextEditingController();
   final Set<String> _selectedCategoryIds = {};
-
-  @override
-  void dispose() {
-    _query.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +33,57 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _query,
-              decoration: const InputDecoration(
-                hintText: 'Technik, Kata, Begriff ...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
+            Autocomplete<SearchEntry>(
+              displayStringForOption: (entry) => entry.title,
+              optionsBuilder: (textEditingValue) {
+                final query = normalizeForSearch(textEditingValue.text);
+                if (query.isEmpty) return const Iterable<SearchEntry>.empty();
+                return judoSearchIndex.where((entry) {
+                  final matchesCategory =
+                      _selectedCategoryIds.isEmpty ||
+                      _selectedCategoryIds.contains(entry.categoryId);
+                  if (!matchesCategory) return false;
+                  return normalizeForSearch(entry.title).contains(query) ||
+                      normalizeForSearch(entry.contextLabel).contains(query);
+                });
+              },
+              onSelected: (entry) => _openEntry(context, entry),
+              fieldViewBuilder: (context, controller, focusNode, onSubmitted) {
+                return TextField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  decoration: const InputDecoration(
+                    hintText: 'Technik, Kata, Begriff ... (z.B. "osotogari")',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(),
+                  ),
+                );
+              },
+              optionsViewBuilder: (context, onSelected, options) {
+                final list = options.toList();
+                return Align(
+                  alignment: Alignment.topLeft,
+                  child: Material(
+                    elevation: 4,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width - 32,
+                      height: (list.length * 56).clamp(0, 280).toDouble(),
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: list.length,
+                        itemBuilder: (context, index) {
+                          final entry = list[index];
+                          return ListTile(
+                            title: Text(entry.title),
+                            subtitle: Text(entry.contextLabel),
+                            onTap: () => onSelected(entry),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 16),
             const Text('Kategorien', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -62,12 +109,30 @@ class _SearchScreenState extends State<SearchScreen> {
             const SizedBox(height: 24),
             const Expanded(
               child: Center(
-                child: Text('Ergebnisse erscheinen hier, sobald Inhalte hinterlegt sind.'),
+                child: Text(
+                  'Tippe einen Begriff ein — Vorschläge erscheinen automatisch.',
+                  style: TextStyle(color: JudoColors.black),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _openEntry(BuildContext context, SearchEntry entry) {
+    final Widget screen = switch (entry.targetType) {
+      SearchTargetType.kyuGrade => KyuGradeDetailScreen(
+        grade: judoKyuGrades.firstWhere((g) => g.kyu == entry.gradeNumber),
+      ),
+      SearchTargetType.danGrade => DanGradeDetailScreen(
+        grade: judoDanGrades.firstWhere((g) => g.dan == entry.gradeNumber),
+      ),
+      SearchTargetType.techniqueCatalog => const TechniquesScreen(),
+      SearchTargetType.kata => const KataScreen(),
+    };
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
   }
 }
