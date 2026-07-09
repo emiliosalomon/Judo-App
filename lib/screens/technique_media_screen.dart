@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/technique_media_data.dart';
+import '../data/technique_video_data.dart';
 import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
 import '../theme/judo_theme.dart';
@@ -58,7 +59,10 @@ class TechniqueMediaScreen extends StatelessWidget {
   }
 
   Future<void> _openYoutube(BuildContext context) async {
-    final uri = youtubeSearchUrl(technique);
+    final curated = findTechniqueVideo(technique);
+    final uri = curated != null
+        ? Uri.parse(curated)
+        : youtubeSearchUrl(technique);
     final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!opened && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -3,6 +3,7 @@ import '../data/dan_grades_data.dart';
 import '../l10n/strings.dart';
 import '../models/dan_grade.dart';
 import '../theme/judo_theme.dart';
+import 'technique_media_screen.dart';
 
 class DanGradeDetailScreen extends StatelessWidget {
   final DanGrade grade;
@@ -47,9 +48,16 @@ class DanGradeDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             for (final technik in grade.zusatztechniken)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Text('${AppStrings.bullet}$technik'),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: Text('${AppStrings.bullet}$technik'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => TechniqueMediaScreen(technique: technik),
+                  ),
+                ),
               ),
           ],
           const SizedBox(height: 20),

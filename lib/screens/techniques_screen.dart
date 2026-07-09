@@ -6,6 +6,7 @@ import '../l10n/strings.dart';
 import '../models/kyu_grade.dart';
 import '../services/progress_scope.dart';
 import '../theme/judo_theme.dart';
+import 'technique_media_screen.dart';
 
 /// Kompletter Technik-Katalog (Kodokan-Gokyo + Katame-waza), mit Kennzeichnung
 /// welche Technik schon Teil des Kyu-Pruefungsprogramms ist ("bereits im
@@ -62,16 +63,24 @@ class TechniquesScreen extends StatelessWidget {
                       collapsedIconColor: JudoColors.black,
                       children: [
                         for (final technik in grade.zusatztechniken)
-                          CheckboxListTile(
+                          ListTile(
                             contentPadding: const EdgeInsets.only(left: 16),
-                            controlAffinity: ListTileControlAffinity.leading,
                             dense: true,
-                            title: Text(technik),
-                            value: progress.isCompleted(
-                              'dan:${grade.dan}:$technik',
+                            leading: Checkbox(
+                              value: progress.isCompleted(
+                                'dan:${grade.dan}:$technik',
+                              ),
+                              onChanged: (_) =>
+                                  progress.toggle('dan:${grade.dan}:$technik'),
                             ),
-                            onChanged: (_) =>
-                                progress.toggle('dan:${grade.dan}:$technik'),
+                            title: Text(technik),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    TechniqueMediaScreen(technique: technik),
+                              ),
+                            ),
                           ),
                       ],
                     ),
@@ -143,12 +152,13 @@ class _TechniqueRow extends StatelessWidget {
     final covered = coveringGrade != null;
     final progress = ProgressScope.of(context);
     final id = 'gokyo:$name';
-    return CheckboxListTile(
+    return ListTile(
       contentPadding: EdgeInsets.zero,
-      controlAffinity: ListTileControlAffinity.leading,
       dense: true,
-      value: progress.isCompleted(id),
-      onChanged: (_) => progress.toggle(id),
+      leading: Checkbox(
+        value: progress.isCompleted(id),
+        onChanged: (_) => progress.toggle(id),
+      ),
       title: Row(
         children: [
           Expanded(child: Text(name)),
@@ -166,6 +176,12 @@ class _TechniqueRow extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => TechniqueMediaScreen(technique: name),
+        ),
       ),
     );
   }
