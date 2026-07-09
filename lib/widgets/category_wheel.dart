@@ -70,6 +70,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
                   ..._wheelItem(
                     category: widget.categories[i],
                     angle: _rotation + anglePer * i - math.pi / 2,
+                    baseAngle: anglePer * i - math.pi / 2,
                     radius: radius,
                     center: center,
                   ),
@@ -84,6 +85,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
   List<Widget> _wheelItem({
     required JudoCategory category,
     required double angle,
+    required double baseAngle,
     required double radius,
     required Offset center,
   }) {
@@ -93,9 +95,13 @@ class _CategoryWheelState extends State<CategoryWheel> {
     final dx = center.dx + radius * math.cos(angle) - bubbleSize / 2;
     final dy = center.dy + radius * math.sin(angle) - bubbleSize / 2;
 
+    // Beschriftung bleibt an einer festen Position stehen (baseAngle, ohne
+    // _rotation) - beim Ziehen bewegt sich nur das innere Symbol (die
+    // Buttons), die Schrift drumherum bleibt waagrecht und ortsfest.
     final labelRadius = radius + bubbleSize / 2 + labelGap;
-    final labelDx = center.dx + labelRadius * math.cos(angle) - labelWidth / 2;
-    final labelDy = center.dy + labelRadius * math.sin(angle) - 17;
+    final labelDx =
+        center.dx + labelRadius * math.cos(baseAngle) - labelWidth / 2;
+    final labelDy = center.dy + labelRadius * math.sin(baseAngle) - 17;
 
     return [
       Positioned(
@@ -114,22 +120,17 @@ class _CategoryWheelState extends State<CategoryWheel> {
         left: labelDx,
         top: labelDy,
         width: labelWidth,
-        child: Transform.rotate(
-          // Gegendrehung, damit die Beschriftung beim Rad-Drehen aufrecht
-          // bleibt, statt sich mit dem Rad mitzudrehen.
-          angle: -_rotation,
-          child: IgnorePointer(
-            child: Text(
-              category.titleDe,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 12.5,
-                fontWeight: FontWeight.w700,
-                color: JudoColors.black,
-                height: 1.15,
-              ),
+        child: IgnorePointer(
+          child: Text(
+            category.titleDe,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+              color: JudoColors.black,
+              height: 1.15,
             ),
           ),
         ),
