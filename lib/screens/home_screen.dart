@@ -6,6 +6,7 @@ import 'category_placeholder_screen.dart';
 import 'kata_screen.dart';
 import 'search_screen.dart';
 import 'standard_situations_screen.dart';
+import 'techniques_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -47,6 +48,7 @@ class HomeScreen extends StatelessWidget {
   void _openCategory(BuildContext context, JudoCategory category) {
     final Widget screen = switch (category.id) {
       'belt-exam' => const BeltExamScreen(),
+      'techniques' => const TechniquesScreen(),
       'kata' => const KataScreen(),
       'standard-situations' => const StandardSituationsScreen(),
       'search' => const SearchScreen(),
