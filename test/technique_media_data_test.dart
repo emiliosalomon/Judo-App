@@ -19,4 +19,16 @@ void main() {
       'Kyu-Programm', () {
     expect(findTechniqueImage('Prinzip „Kesa" RL'), isNotNull);
   });
+
+  test('jeder kuratierte Schluessel findet beim exakten Suchen sich selbst '
+      '(keine Verwechslung mit einem anderen, aehnlich benannten Schluessel, '
+      'z.B. O-uchi-gari vs. Ko-uchi-gari)', () {
+    for (final key in techniqueImages.keys) {
+      expect(
+        findTechniqueImage(key),
+        techniqueImages[key],
+        reason: '"$key" findet nicht seinen eigenen Eintrag',
+      );
+    }
+  });
 }

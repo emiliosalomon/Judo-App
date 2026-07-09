@@ -6,9 +6,10 @@ import 'judo_logo.dart';
 
 /// Kreisfoermiges Auswahlrad: Logo in der Mitte, Kategorien drumherum.
 /// Ziehen dreht das Rad - die Kreis-Buttons (mit deutscher Beschriftung und
-/// Icon) wandern mit und bleiben dabei per Gegendrehung immer aufrecht und
-/// lesbar. Das japanische Schriftzeichen aussen bleibt ortsfest stehen.
-/// Antippen einer Kategorie waehlt sie aus.
+/// Icon) wandern auf der Kreisbahn mit, bleiben dabei aber immer aufrecht
+/// und waagrecht lesbar (wie eine Wasserwaage). Das japanische
+/// Schriftzeichen aussen bleibt ortsfest stehen. Antippen einer Kategorie
+/// waehlt sie aus.
 class CategoryWheel extends StatefulWidget {
   final List<JudoCategory> categories;
   final ValueChanged<JudoCategory> onSelect;
@@ -110,14 +111,14 @@ class _CategoryWheelState extends State<CategoryWheel> {
       Positioned(
         left: dx,
         top: dy,
-        child: Transform.rotate(
-          // Gegendrehung, damit Icon/Kanji beim Rad-Drehen aufrecht und
-          // lesbar bleiben, auch wenn der Button selbst mitwandert.
-          angle: -_rotation,
-          child: GestureDetector(
-            onTap: () => widget.onSelect(category),
-            child: _CategoryBubble(category: category, size: bubbleSize),
-          ),
+        // Keine Rotation hier: Positioned verschiebt nur die Position (per
+        // cos/sin berechnet), es dreht den Inhalt nie von sich aus. Icon
+        // und Beschriftung bleiben dadurch immer aufrecht/waagrecht lesbar,
+        // egal wie das Rad gezogen wird (wie eine Wasserwaage) - nur der
+        // Button selbst wandert auf der Kreisbahn mit.
+        child: GestureDetector(
+          onTap: () => widget.onSelect(category),
+          child: _CategoryBubble(category: category, size: bubbleSize),
         ),
       ),
       Positioned(

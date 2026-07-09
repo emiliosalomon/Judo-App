@@ -1,3 +1,5 @@
+import 'fuzzy_technique_match.dart';
+
 /// Kuratierte YouTube-Links zu einzelnen Techniken.
 ///
 /// Quelle: eine vom Nutzer selbst zusammengestellte OeJV-Pruefungsunterlage
@@ -105,12 +107,8 @@ const techniqueVideos = <String, String>{
   'Hane-goshi-gaeshi': 'https://www.youtube.com/watch?v=9bZAZSBtnGs',
 };
 
-/// Sucht per Teilstring-Abgleich (gleiches Prinzip wie findTechniqueImage in
-/// technique_media_data.dart), da Programmnamen oft Suffixe/Varianten haben.
-String? findTechniqueVideo(String technique) {
-  final normalized = technique.toLowerCase();
-  for (final entry in techniqueVideos.entries) {
-    if (normalized.contains(entry.key.toLowerCase())) return entry.value;
-  }
-  return null;
-}
+/// Sucht per wortgrenzen-bewusstem Teilstring-Abgleich (siehe
+/// fuzzy_technique_match.dart), da Programmnamen oft Suffixe/Varianten
+/// haben.
+String? findTechniqueVideo(String technique) =>
+    findBestTechniqueMatch(technique, techniqueVideos);

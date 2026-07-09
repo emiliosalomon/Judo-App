@@ -14,6 +14,43 @@ void main() {
     expect(findTechniqueVideo('Voellig-unbekannte-Technik'), isNull);
   });
 
+  test('findTechniqueVideo verwechselt aehnlich klingende Techniken nicht '
+      '(z.B. Yoko-guruma darf nicht auf O-guruma anschlagen)', () {
+    expect(findTechniqueVideo('Yoko-guruma'), techniqueVideos['Yoko-guruma']);
+    expect(findTechniqueVideo('O-guruma'), techniqueVideos['O-guruma']);
+    expect(
+      findTechniqueVideo('O-soto-guruma'),
+      techniqueVideos['O-soto-guruma'],
+    );
+    expect(
+      findTechniqueVideo('Ko-soto-gari RL'),
+      techniqueVideos['Ko-soto-gari'],
+    );
+    expect(
+      findTechniqueVideo('O-soto-gari RL'),
+      techniqueVideos['O-soto-gari'],
+    );
+    expect(
+      findTechniqueVideo('Ko-uchi-gari RL'),
+      techniqueVideos['Ko-uchi-gari'],
+    );
+    expect(
+      findTechniqueVideo('O-uchi-gari RL'),
+      techniqueVideos['O-uchi-gari'],
+    );
+    expect(findTechniqueVideo('Ushiro-goshi'), techniqueVideos['Ushiro-goshi']);
+    expect(findTechniqueVideo('Tsuri-goshi'), techniqueVideos['Tsuri-goshi']);
+    expect(findTechniqueVideo('Utsuri-goshi'), techniqueVideos['Utsuri-goshi']);
+    expect(
+      findTechniqueVideo('Ko-uchi-gaeshi'),
+      techniqueVideos['Ko-uchi-gaeshi'],
+    );
+    expect(
+      findTechniqueVideo('O-uchi-gaeshi'),
+      techniqueVideos['O-uchi-gaeshi'],
+    );
+  });
+
   test('findTechniqueVideo findet die "Prinzip"-Uebungen aus dem '
       'Kyu-Programm trotz Anfuehrungszeichen und RL-Suffix', () {
     expect(findTechniqueVideo('Prinzip „Kesa" RL'), isNotNull);
@@ -21,6 +58,20 @@ void main() {
     expect(findTechniqueVideo('Prinzip „Tate"'), isNotNull);
     expect(findTechniqueVideo('Prinzip „Kami"'), isNotNull);
   });
+
+  test(
+    'jeder kuratierte Schluessel findet beim exakten Suchen sich selbst '
+    '(keine Verwechslung mit einem anderen, aehnlich benannten Schluessel)',
+    () {
+      for (final key in techniqueVideos.keys) {
+        expect(
+          findTechniqueVideo(key),
+          techniqueVideos[key],
+          reason: '"$key" findet nicht seinen eigenen Eintrag',
+        );
+      }
+    },
+  );
 
   test('alle kuratierten Links sind gueltige YouTube-URLs', () {
     for (final url in techniqueVideos.values) {

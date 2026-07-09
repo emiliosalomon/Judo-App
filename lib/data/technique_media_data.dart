@@ -1,3 +1,5 @@
+import 'fuzzy_technique_match.dart';
+
 /// Zuordnung Technik-Name -> frei lizenzierte, gezeichnete Illustration von
 /// Wikimedia Commons. Alle hier verlinkten Bilder sind Strichzeichnungen
 /// (keine Fotos echter Menschen) von Michael Hultström, CC BY-SA 3.0.
@@ -130,12 +132,8 @@ const techniqueImages = <String, TechniqueImage>{
   ),
 };
 
-/// Sucht per Teilstring-Abgleich (Kyu-Programm-Namen haben oft Suffixe wie
+/// Sucht per wortgrenzen-bewusstem Teilstring-Abgleich (siehe
+/// fuzzy_technique_match.dart; Kyu-Programm-Namen haben oft Suffixe wie
 /// " RL" oder "oder ..."), nicht per exaktem Schluessel.
-TechniqueImage? findTechniqueImage(String technique) {
-  final normalized = technique.toLowerCase();
-  for (final entry in techniqueImages.entries) {
-    if (normalized.contains(entry.key.toLowerCase())) return entry.value;
-  }
-  return null;
-}
+TechniqueImage? findTechniqueImage(String technique) =>
+    findBestTechniqueMatch(technique, techniqueImages);
