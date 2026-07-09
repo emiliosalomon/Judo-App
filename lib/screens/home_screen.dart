@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import '../models/category.dart';
 import '../widgets/category_wheel.dart';
+import 'belt_exam_screen.dart';
 import 'category_placeholder_screen.dart';
+import 'kata_screen.dart';
 import 'search_screen.dart';
+import 'standard_situations_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -42,16 +45,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _openCategory(BuildContext context, JudoCategory category) {
-    if (category.id == 'search') {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const SearchScreen()),
-      );
-    } else {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => CategoryPlaceholderScreen(category: category),
-        ),
-      );
-    }
+    final Widget screen = switch (category.id) {
+      'belt-exam' => const BeltExamScreen(),
+      'kata' => const KataScreen(),
+      'standard-situations' => const StandardSituationsScreen(),
+      'search' => const SearchScreen(),
+      _ => CategoryPlaceholderScreen(category: category),
+    };
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
   }
 }

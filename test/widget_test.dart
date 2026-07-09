@@ -15,7 +15,22 @@ void main() {
     }
   });
 
-  testWidgets('Antippen einer Kategorie oeffnet die Detailseite', (
+  testWidgets('Antippen einer Platzhalter-Kategorie oeffnet die Detailseite', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const JudoApp());
+
+    final techniques = judoCategories.firstWhere((c) => c.id == 'techniques');
+    await tester.tap(find.text(techniques.kanji));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('${techniques.titleDe} (${techniques.kanji})'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('Antippen von Guertelpruefung oeffnet Kyu/Dan-Uebersicht', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
@@ -24,6 +39,8 @@ void main() {
     await tester.tap(find.text(beltExam.kanji));
     await tester.pumpAndSettle();
 
-    expect(find.text('${beltExam.titleDe} (${beltExam.kanji})'), findsOneWidget);
+    expect(find.text('Kyu (Schülergrade)'), findsOneWidget);
+    expect(find.text('Dan (Meistergrade)'), findsOneWidget);
+    expect(find.text('10. Kyu – Weiß-Gelb'), findsOneWidget);
   });
 }

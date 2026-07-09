@@ -36,8 +36,10 @@ const judoCategories = <JudoCategory>[
   JudoCategory(
     id: 'standard-situations',
     titleDe: 'Standardsituationen',
-    kanji: '護身',
-    icon: Icons.shield_outlined,
+    // 応用 (ōyō, "Anwendung") — eigene Bezeichnung fuer die OeJV-
+    // "Anwendungsaufgaben", kein offizieller Kodokan-Fachbegriff.
+    kanji: '応用',
+    icon: Icons.compare_arrows,
   ),
   JudoCategory(
     id: 'search',

@@ -42,7 +42,13 @@ pruefen statt Annahmen aus anderen Verbaenden zu uebernehmen.
 
 ## So ist der Code aufgebaut
 
-<!-- Wird ausgefuellt, sobald das Flutter-Grundgeruest steht. -->
+- `lib/models/` — Datenklassen (`JudoCategory`, `KyuGrade`, `DanGrade`)
+- `lib/data/` — die eigentlichen OeJV-Pruefungsinhalte als const-Listen
+  (`kyu_grades_data.dart`, `dan_grades_data.dart`)
+- `lib/screens/` — je Bildschirm eine Datei (Home, Guertelpruefung inkl.
+  Kyu-/Dan-Detail, Kata, Standardsituationen, Suche)
+- `lib/widgets/` — wiederverwendbare UI-Bausteine (Auswahlrad, Logo)
+- `lib/theme/` — Farben/ThemeData
 
 ## Konventionen (bitte einhalten)
 
@@ -50,6 +56,12 @@ pruefen statt Annahmen aus anderen Verbaenden zu uebernehmen.
 - Keine neuen Abhaengigkeiten ohne kurze Rueckfrage.
 - Texte, die der Nutzer sieht, zentral halten (Lokalisierung vorbereiten), nichts hart im Code verstreuen.
 - Neue Funktionen bekommen, wo sinnvoll, einen Test.
+- **OeJV-Inhalte in `lib/data/`:** Technik-/Begriffsnamen (japanische
+  Fachbegriffe wie Nage-waza, Kesa-gatame etc.) sind Standardvokabular und
+  unproblematisch. Die ausfuehrlichen Beschreibungstexte/Fotos aus den
+  Original-OeJV-PDFs sind OeJV-Eigentum (Kyu-Hefte: Copyright Erwin
+  Schoen/OeJV) — nicht wortwoertlich uebernehmen, sondern fuer App-Inhalte
+  eigenstaendig neu formulieren bzw. eigenes Bild-/Videomaterial erstellen.
 
 ## Arbeitsweise mit Claude (wichtig)
 
