@@ -14,4 +14,9 @@ void main() {
   test('findTechniqueImage liefert null fuer unbekannte Technik', () {
     expect(findTechniqueImage('Voellig-unbekannte-Technik'), isNull);
   });
+
+  test('findTechniqueImage findet die "Prinzip Kesa"-Uebung aus dem '
+      'Kyu-Programm', () {
+    expect(findTechniqueImage('Prinzip „Kesa" RL'), isNotNull);
+  });
 }

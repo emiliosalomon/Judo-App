@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:judo_app/data/technique_video_data.dart';
 import 'package:judo_app/data/techniques_data.dart';
 import 'package:judo_app/data/dan_grades_data.dart';
+import 'package:judo_app/data/kyu_grades_data.dart';
 
 void main() {
   test('findTechniqueVideo findet Treffer trotz Suffixen wie " RL"', () {
@@ -11,6 +12,14 @@ void main() {
 
   test('findTechniqueVideo liefert null fuer unbekannte Technik', () {
     expect(findTechniqueVideo('Voellig-unbekannte-Technik'), isNull);
+  });
+
+  test('findTechniqueVideo findet die "Prinzip"-Uebungen aus dem '
+      'Kyu-Programm trotz Anfuehrungszeichen und RL-Suffix', () {
+    expect(findTechniqueVideo('Prinzip „Kesa" RL'), isNotNull);
+    expect(findTechniqueVideo('Prinzip „Yoko" RL'), isNotNull);
+    expect(findTechniqueVideo('Prinzip „Tate"'), isNotNull);
+    expect(findTechniqueVideo('Prinzip „Kami"'), isNotNull);
   });
 
   test('alle kuratierten Links sind gueltige YouTube-URLs', () {
@@ -29,6 +38,8 @@ void main() {
       ...shimeWaza,
       ...kansetsuWaza,
       for (final grade in judoDanGrades) ...grade.zusatztechniken,
+      for (final grade in judoKyuGrades) ...grade.nageWaza,
+      for (final grade in judoKyuGrades) ...grade.katameWaza,
     ];
     for (final key in techniqueVideos.keys) {
       expect(

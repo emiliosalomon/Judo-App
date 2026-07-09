@@ -58,6 +58,13 @@ const techniqueVideos = <String, String>{
   'Uki-gatame': 'https://www.youtube.com/watch?v=e_lAjik1SUM',
   'Ura-gatame': 'https://www.youtube.com/watch?v=eeAHZB0v3XY',
 
+  // OeJV-Kyu-Programm "Prinzip"-Uebungen (10./9. Kyu): Positions-Grundprinzip
+  // der jeweiligen Shiho-gatame-Familie, daher auf die Basistechnik verlinkt.
+  'Prinzip „Kesa"': 'https://www.youtube.com/watch?v=NDaQuJOFBYk',
+  'Prinzip „Yoko"': 'https://www.youtube.com/watch?v=TT7XJVSEQxA',
+  'Prinzip „Tate"': 'https://www.youtube.com/watch?v=55-rFmBx53g',
+  'Prinzip „Kami"': 'https://www.youtube.com/watch?v=HFuMjOv0WN8',
+
   // Katame-waza: Shime-waza (Wuergetechniken)
   'Nami-juji-jime': 'https://www.youtube.com/watch?v=k2cHry9HByQ',
   'Gyaku-juji-jime': 'https://www.youtube.com/watch?v=t3tQriIPdlI',

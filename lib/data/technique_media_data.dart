@@ -121,6 +121,13 @@ const techniqueImages = <String, TechniqueImage>{
         'https://commons.wikimedia.org/wiki/Special:FilePath/Makura-kesa-gatame.gif',
     attribution: _hultstroem,
   ),
+  // OeJV-Kyu-Programm "Prinzip"-Uebung (10. Kyu): Positions-Grundprinzip der
+  // Kesa-gatame-Familie, daher dieselbe Illustration wie 'Kesa-gatame'.
+  'Prinzip „Kesa"': TechniqueImage(
+    url:
+        'https://commons.wikimedia.org/wiki/Special:FilePath/Hon-kesa-gatame.jpg',
+    attribution: _hultstroem,
+  ),
 };
 
 /// Sucht per Teilstring-Abgleich (Kyu-Programm-Namen haben oft Suffixe wie
