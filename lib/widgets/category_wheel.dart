@@ -5,7 +5,8 @@ import '../theme/judo_theme.dart';
 import 'judo_logo.dart';
 
 /// Kreisfoermiges Auswahlrad: Logo in der Mitte, Kategorien drumherum.
-/// Ziehen dreht das Rad, Antippen einer Kategorie waehlt sie aus.
+/// Ziehen dreht nur das Logo im Innenkreis, die Symbole im Aussenkreis
+/// bleiben ortsfest stehen. Antippen einer Kategorie waehlt sie aus.
 class CategoryWheel extends StatefulWidget {
   final List<JudoCategory> categories;
   final ValueChanged<JudoCategory> onSelect;
@@ -69,7 +70,6 @@ class _CategoryWheelState extends State<CategoryWheel> {
                 for (var i = 0; i < count; i++)
                   ..._wheelItem(
                     category: widget.categories[i],
-                    angle: _rotation + anglePer * i - math.pi / 2,
                     baseAngle: anglePer * i - math.pi / 2,
                     radius: radius,
                     center: center,
@@ -84,7 +84,6 @@ class _CategoryWheelState extends State<CategoryWheel> {
 
   List<Widget> _wheelItem({
     required JudoCategory category,
-    required double angle,
     required double baseAngle,
     required double radius,
     required Offset center,
@@ -92,12 +91,12 @@ class _CategoryWheelState extends State<CategoryWheel> {
     const bubbleSize = 108.0;
     const labelWidth = 96.0;
     const labelGap = 8.0;
-    final dx = center.dx + radius * math.cos(angle) - bubbleSize / 2;
-    final dy = center.dy + radius * math.sin(angle) - bubbleSize / 2;
+    // Symbole und Beschriftung im Aussenkreis bleiben an einer festen
+    // Position stehen (baseAngle) und drehen sich beim Ziehen nicht mit -
+    // nur das Logo im Innenkreis dreht sich.
+    final dx = center.dx + radius * math.cos(baseAngle) - bubbleSize / 2;
+    final dy = center.dy + radius * math.sin(baseAngle) - bubbleSize / 2;
 
-    // Beschriftung bleibt an einer festen Position stehen (baseAngle, ohne
-    // _rotation) - beim Ziehen bewegt sich nur das innere Symbol (die
-    // Buttons), die Schrift drumherum bleibt waagrecht und ortsfest.
     final labelRadius = radius + bubbleSize / 2 + labelGap;
     final labelDx =
         center.dx + labelRadius * math.cos(baseAngle) - labelWidth / 2;
@@ -107,13 +106,9 @@ class _CategoryWheelState extends State<CategoryWheel> {
       Positioned(
         left: dx,
         top: dy,
-        child: Transform.rotate(
-          // Gegendrehung, damit Icon/Kanji beim Rad-Drehen aufrecht bleiben.
-          angle: -_rotation,
-          child: GestureDetector(
-            onTap: () => widget.onSelect(category),
-            child: _CategoryBubble(category: category, size: bubbleSize),
-          ),
+        child: GestureDetector(
+          onTap: () => widget.onSelect(category),
+          child: _CategoryBubble(category: category, size: bubbleSize),
         ),
       ),
       Positioned(

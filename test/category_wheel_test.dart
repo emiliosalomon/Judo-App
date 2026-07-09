@@ -4,8 +4,9 @@ import 'package:judo_app/models/category.dart';
 import 'package:judo_app/widgets/category_wheel.dart';
 
 void main() {
-  testWidgets('Beim Ziehen bewegt sich nur das innere Symbol, die Beschriftung '
-      'bleibt an ihrer Position stehen', (WidgetTester tester) async {
+  testWidgets('Beim Ziehen bleiben die Symbole/Beschriftungen im Aussenkreis '
+      'ortsfest stehen (nur das Logo in der Mitte dreht sich - siehe '
+      'judo_logo_animation_test.dart)', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -33,8 +34,6 @@ void main() {
       wheelCenter + const Offset(0, -100),
       const Offset(150, 0),
     );
-    // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
-    // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
@@ -42,6 +41,6 @@ void main() {
     final bubbleAfter = tester.getTopLeft(find.text(category.kanji));
 
     expect(labelAfter, labelBefore);
-    expect(bubbleAfter, isNot(bubbleBefore));
+    expect(bubbleAfter, bubbleBefore);
   });
 }
