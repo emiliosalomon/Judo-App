@@ -5,11 +5,29 @@ import '../theme/judo_theme.dart';
 /// Tori (blauer Kimono) gebeugt nach vorn, Uke (weisser Kimono, schwarze
 /// Kontur) wird ueber die Schulter geworfen. Eigene Vektor-Illustration
 /// (kein Fremdmaterial), Koordinaten in einem 100x100-Raster.
+///
+/// Koerper werden vor den Koepfen gezeichnet, damit sich ueberlappende
+/// Gliedmassen nie einen Kopf verdecken.
 class JudoThrowPainter extends CustomPainter {
   const JudoThrowPainter();
 
   static const _limbWidthFactor = 0.09;
   static const _headRadiusFactor = 0.08;
+
+  static const _toriHead = Offset(44, 34);
+  static const _toriShoulder = Offset(46, 44);
+  static const _toriHip = Offset(52, 60);
+  static const _toriFootLeft = Offset(34, 90);
+  static const _toriFootRight = Offset(66, 88);
+  static const _toriGripHand = Offset(72, 22);
+
+  static const _ukeHead = Offset(18, 42);
+  static const _ukeHip = Offset(36, 18);
+  static const _ukeKneeA = Offset(58, 8);
+  static const _ukeFootA = Offset(80, 14);
+  static const _ukeKneeB = Offset(54, 22);
+  static const _ukeFootB = Offset(76, 30);
+  static const _ukeTrailingArm = Offset(28, 34);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -17,39 +35,40 @@ class JudoThrowPainter extends CustomPainter {
     canvas.save();
     canvas.scale(scale, scale);
 
-    _paintTori(canvas);
-    _paintUke(canvas);
+    _paintToriBody(canvas);
+    _paintUkeBody(canvas);
+    // Koepfe zuletzt, damit sie nie von Gliedmassen verdeckt werden.
+    _paintToriHead(canvas);
+    _paintUkeHead(canvas);
 
     canvas.restore();
   }
 
-  void _paintTori(Canvas canvas) {
+  void _paintToriBody(Canvas canvas) {
     final limb = Paint()
       ..color = JudoColors.blue
       ..strokeWidth = 100 * _limbWidthFactor
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
-    final head = Paint()..color = JudoColors.blue;
-
-    const headCenter = Offset(35, 30);
-    const shoulder = Offset(40, 42);
-    const hip = Offset(52, 65);
-    const footLeft = Offset(25, 95);
-    const footRight = Offset(68, 92);
-    const gripHand = Offset(78, 20);
 
     // Beine (stabiler Stand)
-    canvas.drawLine(hip, footLeft, limb);
-    canvas.drawLine(hip, footRight, limb);
+    canvas.drawLine(_toriHip, _toriFootLeft, limb);
+    canvas.drawLine(_toriHip, _toriFootRight, limb);
     // Rumpf + Greifarm nach oben zu Uke
-    canvas.drawLine(hip, shoulder, limb);
-    canvas.drawLine(shoulder, headCenter, limb);
-    canvas.drawLine(shoulder, gripHand, limb);
-
-    canvas.drawCircle(headCenter, 100 * _headRadiusFactor, head);
+    canvas.drawLine(_toriHip, _toriShoulder, limb);
+    canvas.drawLine(_toriShoulder, _toriHead, limb);
+    canvas.drawLine(_toriShoulder, _toriGripHand, limb);
   }
 
-  void _paintUke(Canvas canvas) {
+  void _paintToriHead(Canvas canvas) {
+    canvas.drawCircle(
+      _toriHead,
+      100 * _headRadiusFactor,
+      Paint()..color = JudoColors.blue,
+    );
+  }
+
+  void _paintUkeBody(Canvas canvas) {
     final outline = Paint()
       ..color = JudoColors.black
       ..strokeWidth = 100 * _limbWidthFactor + 2.5
@@ -60,35 +79,35 @@ class JudoThrowPainter extends CustomPainter {
       ..strokeWidth = 100 * _limbWidthFactor
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
-    final headFill = Paint()..color = JudoColors.white;
-    final headOutline = Paint()
-      ..color = JudoColors.black
-      ..strokeWidth = 2.5
-      ..style = PaintingStyle.stroke;
-
-    // Uke fliegt im Bogen ueber Tori, Beine nach oben geschleudert.
-    const headCenter = Offset(10, 55);
-    const hip = Offset(30, 15);
-    const kneeA = Offset(55, 3);
-    const footA = Offset(78, 8);
-    const kneeB = Offset(50, 18);
-    const footB = Offset(72, 25);
-    const trailingArm = Offset(20, 40);
 
     void boneLine(Offset a, Offset b) {
       canvas.drawLine(a, b, outline);
       canvas.drawLine(a, b, limb);
     }
 
-    boneLine(headCenter, hip);
-    boneLine(hip, kneeA);
-    boneLine(kneeA, footA);
-    boneLine(hip, kneeB);
-    boneLine(kneeB, footB);
-    boneLine(hip, trailingArm);
+    // Uke fliegt im Bogen ueber Tori, Beine nach oben geschleudert.
+    boneLine(_ukeHead, _ukeHip);
+    boneLine(_ukeHip, _ukeKneeA);
+    boneLine(_ukeKneeA, _ukeFootA);
+    boneLine(_ukeHip, _ukeKneeB);
+    boneLine(_ukeKneeB, _ukeFootB);
+    boneLine(_ukeHip, _ukeTrailingArm);
+  }
 
-    canvas.drawCircle(headCenter, 100 * _headRadiusFactor, headFill);
-    canvas.drawCircle(headCenter, 100 * _headRadiusFactor, headOutline);
+  void _paintUkeHead(Canvas canvas) {
+    canvas.drawCircle(
+      _ukeHead,
+      100 * _headRadiusFactor,
+      Paint()..color = JudoColors.white,
+    );
+    canvas.drawCircle(
+      _ukeHead,
+      100 * _headRadiusFactor,
+      Paint()
+        ..color = JudoColors.black
+        ..strokeWidth = 2.5
+        ..style = PaintingStyle.stroke,
+    );
   }
 
   @override
