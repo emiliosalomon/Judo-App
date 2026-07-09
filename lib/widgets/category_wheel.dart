@@ -24,6 +24,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
   double _rotation = 0;
   double _dragStartRotation = 0;
   Offset? _dragStartFocal;
+  bool _isDragging = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +43,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
             onPanStart: (details) {
               _dragStartRotation = _rotation;
               _dragStartFocal = details.localPosition - center;
+              setState(() => _isDragging = true);
             },
             onPanUpdate: (details) {
               final focal = _dragStartFocal;
@@ -53,10 +55,16 @@ class _CategoryWheelState extends State<CategoryWheel> {
                 _rotation = _dragStartRotation + (currentAngle - startAngle);
               });
             },
+            onPanEnd: (_) => setState(() => _isDragging = false),
+            onPanCancel: () => setState(() => _isDragging = false),
             child: Stack(
               alignment: Alignment.center,
               children: [
-                const JudoLogo(size: 108),
+                JudoLogo(
+                  size: 108,
+                  isDragging: _isDragging,
+                  wheelRotation: _rotation,
+                ),
                 for (var i = 0; i < count; i++)
                   _wheelItem(
                     category: widget.categories[i],
