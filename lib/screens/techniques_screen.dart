@@ -3,6 +3,7 @@ import '../data/dan_grades_data.dart';
 import '../data/kyu_grades_data.dart';
 import '../data/techniques_data.dart';
 import '../models/kyu_grade.dart';
+import '../services/progress_scope.dart';
 import '../theme/judo_theme.dart';
 
 /// Kompletter Technik-Katalog (Kodokan-Gokyo + Katame-waza), mit Kennzeichnung
@@ -39,22 +40,37 @@ class TechniquesScreen extends StatelessWidget {
             'Weitere anerkannte Techniken (Shinmeisho-no-waza u.a.), die erst '
             'ab bestimmten Dan-Prüfungen dazukommen.',
           ),
-          for (final grade in judoDanGrades.where((g) => g.zusatztechniken.isNotEmpty))
-            ExpansionTile(
-              title: Text('${grade.title} – Zusatztechniken'),
-              iconColor: JudoColors.red,
-              collapsedIconColor: JudoColors.black,
-              children: [
-                for (final technik in grade.zusatztechniken)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [const Text('•  '), Expanded(child: Text(technik))],
+          Builder(
+            builder: (context) {
+              final progress = ProgressScope.of(context);
+              return Column(
+                children: [
+                  for (final grade in judoDanGrades.where(
+                    (g) => g.zusatztechniken.isNotEmpty,
+                  ))
+                    ExpansionTile(
+                      title: Text('${grade.title} – Zusatztechniken'),
+                      iconColor: JudoColors.red,
+                      collapsedIconColor: JudoColors.black,
+                      children: [
+                        for (final technik in grade.zusatztechniken)
+                          CheckboxListTile(
+                            contentPadding: const EdgeInsets.only(left: 16),
+                            controlAffinity: ListTileControlAffinity.leading,
+                            dense: true,
+                            title: Text(technik),
+                            value: progress.isCompleted(
+                              'dan:${grade.dan}:$technik',
+                            ),
+                            onChanged: (_) =>
+                                progress.toggle('dan:${grade.dan}:$technik'),
+                          ),
+                      ],
                     ),
-                  ),
-              ],
-            ),
+                ],
+              );
+            },
+          ),
         ],
       ),
     );
@@ -110,9 +126,15 @@ class _TechniqueRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final covered = coveringGrade != null;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
+    final progress = ProgressScope.of(context);
+    final id = 'gokyo:$name';
+    return CheckboxListTile(
+      contentPadding: EdgeInsets.zero,
+      controlAffinity: ListTileControlAffinity.leading,
+      dense: true,
+      value: progress.isCompleted(id),
+      onChanged: (_) => progress.toggle(id),
+      title: Row(
         children: [
           Expanded(child: Text(name)),
           Container(

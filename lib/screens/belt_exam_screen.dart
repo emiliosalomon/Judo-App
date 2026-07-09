@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import '../data/dan_grades_data.dart';
 import '../data/kyu_grades_data.dart';
+import '../models/kyu_grade.dart';
+import '../services/progress_scope.dart';
 import 'dan_grade_detail_screen.dart';
 import 'kyu_grade_detail_screen.dart';
+
+int _trackableCount(KyuGrade grade) =>
+    grade.ukemiWaza.length +
+    grade.nageWaza.length +
+    grade.katameWaza.length +
+    grade.anwendungsaufgaben.length;
 
 class BeltExamScreen extends StatelessWidget {
   const BeltExamScreen({super.key});
@@ -20,21 +28,32 @@ class BeltExamScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            ListView.builder(
-              itemCount: judoKyuGrades.length,
-              itemBuilder: (context, index) {
-                final grade = judoKyuGrades[index];
-                return ListTile(
-                  title: Text(grade.title),
-                  subtitle: grade.minAge != null
-                      ? Text('ab ${grade.minAge} Jahren')
-                      : null,
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => KyuGradeDetailScreen(grade: grade),
-                    ),
-                  ),
+            Builder(
+              builder: (context) {
+                final progress = ProgressScope.of(context);
+                return ListView.builder(
+                  itemCount: judoKyuGrades.length,
+                  itemBuilder: (context, index) {
+                    final grade = judoKyuGrades[index];
+                    final total = _trackableCount(grade);
+                    final done = progress.countCompletedWithPrefix(
+                      'kyu:${grade.kyu}:',
+                    );
+                    return ListTile(
+                      title: Text(grade.title),
+                      subtitle: grade.minAge != null
+                          ? Text('ab ${grade.minAge} Jahren')
+                          : null,
+                      trailing: total > 0
+                          ? Text('$done/$total')
+                          : const Icon(Icons.chevron_right),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => KyuGradeDetailScreen(grade: grade),
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),

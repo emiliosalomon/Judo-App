@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
+import 'services/progress_controller.dart';
+import 'services/progress_scope.dart';
+import 'services/progress_store.dart';
 import 'theme/judo_theme.dart';
 
 void main() {
@@ -11,11 +14,26 @@ class JudoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Judo App',
-      debugShowCheckedModeBanner: false,
-      theme: judoTheme,
-      home: const HomeScreen(),
+    return FutureBuilder<ProgressStore>(
+      future: ProgressStore.load(),
+      builder: (context, snapshot) {
+        final store = snapshot.data;
+        if (store == null) {
+          return const MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: Scaffold(body: Center(child: CircularProgressIndicator())),
+          );
+        }
+        return ProgressScope(
+          controller: ProgressController(store),
+          child: MaterialApp(
+            title: 'Judo App',
+            debugShowCheckedModeBanner: false,
+            theme: judoTheme,
+            home: const HomeScreen(),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,13 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:judo_app/main.dart';
 import 'package:judo_app/models/category.dart';
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   testWidgets('Home zeigt Titel und alle Kategorien im Auswahlrad', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
+    await tester.pumpAndSettle();
 
     expect(find.text('Judo App'), findsOneWidget);
     for (final category in judoCategories) {
@@ -19,6 +25,7 @@ void main() {
     'Antippen von Weiterführende Techniken zeigt den Gokyo-Katalog',
     (WidgetTester tester) async {
       await tester.pumpWidget(const JudoApp());
+      await tester.pumpAndSettle();
 
       final techniques = judoCategories.firstWhere(
         (c) => c.id == 'techniques',
@@ -35,6 +42,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
+    await tester.pumpAndSettle();
 
     final beltExam = judoCategories.firstWhere((c) => c.id == 'belt-exam');
     await tester.tap(find.text(beltExam.kanji));
