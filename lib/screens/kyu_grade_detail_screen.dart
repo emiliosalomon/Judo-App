@@ -3,6 +3,7 @@ import '../l10n/strings.dart';
 import '../models/kyu_grade.dart';
 import '../services/progress_scope.dart';
 import '../theme/judo_theme.dart';
+import 'technique_media_screen.dart';
 
 class KyuGradeDetailScreen extends StatelessWidget {
   final KyuGrade grade;
@@ -108,13 +109,20 @@ class _TrackableSection extends StatelessWidget {
             ),
           ),
           for (final item in items)
-            CheckboxListTile(
+            ListTile(
               contentPadding: EdgeInsets.zero,
-              controlAffinity: ListTileControlAffinity.leading,
               dense: true,
+              leading: Checkbox(
+                value: progress.isCompleted('$idPrefix$item'),
+                onChanged: (_) => progress.toggle('$idPrefix$item'),
+              ),
               title: Text(item),
-              value: progress.isCompleted('$idPrefix$item'),
-              onChanged: (_) => progress.toggle('$idPrefix$item'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => TechniqueMediaScreen(technique: item),
+                ),
+              ),
             ),
         ],
       ),

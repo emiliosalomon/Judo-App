@@ -83,4 +83,11 @@ class AppStrings {
   static const categoriesLabel = 'Kategorien';
   static const searchEmptyState =
       'Tippe einen Begriff ein — Vorschläge erscheinen automatisch.';
+
+  // Technik-Medien (Bild + YouTube-Link)
+  static const watchOnYoutube = 'Auf YouTube ansehen';
+  static const noIllustrationYet =
+      'Noch keine Illustration hinterlegt — nutze den YouTube-Link.';
+  static const imageAttributionPrefix = 'Bild: ';
+  static const couldNotOpenLink = 'Link konnte nicht geöffnet werden.';
 }
