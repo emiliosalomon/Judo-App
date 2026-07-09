@@ -31,7 +31,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final diameter = math.min(constraints.maxWidth, constraints.maxHeight);
-        final radius = diameter / 2 * 0.72;
+        final radius = diameter / 2 * 0.66;
         final center = Offset(diameter / 2, diameter / 2);
         final count = widget.categories.length;
         final anglePer = (2 * math.pi) / count;
@@ -61,7 +61,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
               alignment: Alignment.center,
               children: [
                 JudoLogo(
-                  size: 108,
+                  size: 122,
                   isDragging: _isDragging,
                   wheelRotation: _rotation,
                 ),
@@ -86,7 +86,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
     required double radius,
     required Offset center,
   }) {
-    const bubbleSize = 68.0;
+    const bubbleSize = 90.0;
     final dx = center.dx + radius * math.cos(angle) - bubbleSize / 2;
     final dy = center.dy + radius * math.sin(angle) - bubbleSize / 2;
 
@@ -118,20 +118,55 @@ class _CategoryBubble extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: JudoColors.black,
-        border: Border.all(color: JudoColors.red, width: 2),
+        gradient: const RadialGradient(
+          center: Alignment(-0.3, -0.3),
+          radius: 0.95,
+          colors: [Color(0xFF2E2E2E), JudoColors.black],
+        ),
+        border: Border.all(color: JudoColors.red, width: 3),
+        boxShadow: [
+          BoxShadow(
+            color: JudoColors.red.withValues(alpha: 0.55),
+            blurRadius: 14,
+            spreadRadius: 1,
+          ),
+          const BoxShadow(
+            color: Colors.black45,
+            blurRadius: 6,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Icon(category.icon, color: JudoColors.white, size: size * 0.32),
-          Text(
-            category.kanji,
-            style: TextStyle(
-              color: JudoColors.red,
-              fontSize: size * 0.2,
-              fontWeight: FontWeight.bold,
+          // Glanzlicht oben links fuer den "Arcade-Button"-Look.
+          Positioned(
+            top: size * 0.1,
+            left: size * 0.16,
+            child: Container(
+              width: size * 0.34,
+              height: size * 0.2,
+              decoration: BoxDecoration(
+                color: JudoColors.white.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(size),
+              ),
             ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(category.icon, color: JudoColors.white, size: size * 0.38),
+              const SizedBox(height: 2),
+              Text(
+                category.kanji,
+                style: TextStyle(
+                  color: const Color(0xFFFF5C77),
+                  fontSize: size * 0.24,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ],
           ),
         ],
       ),

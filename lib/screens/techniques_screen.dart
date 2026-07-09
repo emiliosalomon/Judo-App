@@ -5,7 +5,10 @@ import '../data/techniques_data.dart';
 import '../l10n/strings.dart';
 import '../models/kyu_grade.dart';
 import '../services/progress_scope.dart';
+import '../theme/belt_colors.dart';
 import '../theme/judo_theme.dart';
+import '../widgets/belt_knot_icon.dart';
+import '../widgets/celebrating_checkbox.dart';
 import 'technique_media_screen.dart';
 
 /// Kompletter Technik-Katalog (Kodokan-Gokyo + Katame-waza), mit Kennzeichnung
@@ -66,12 +69,28 @@ class TechniquesScreen extends StatelessWidget {
                           ListTile(
                             contentPadding: const EdgeInsets.only(left: 16),
                             dense: true,
-                            leading: Checkbox(
-                              value: progress.isCompleted(
-                                'dan:${grade.dan}:$technik',
-                              ),
-                              onChanged: (_) =>
-                                  progress.toggle('dan:${grade.dan}:$technik'),
+                            leading: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CelebratingCheckbox(
+                                  value: progress.isCompleted(
+                                    'dan:${grade.dan}:$technik',
+                                  ),
+                                  activeColor: beltColorsFromName(
+                                    grade.beltDescription,
+                                  ).first,
+                                  onChanged: (_) => progress.toggle(
+                                    'dan:${grade.dan}:$technik',
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                BeltKnotIcon(
+                                  colors: beltColorsFromName(
+                                    grade.beltDescription,
+                                  ),
+                                  size: 22,
+                                ),
+                              ],
                             ),
                             title: Text(technik),
                             trailing: const Icon(Icons.chevron_right),
@@ -152,12 +171,23 @@ class _TechniqueRow extends StatelessWidget {
     final covered = coveringGrade != null;
     final progress = ProgressScope.of(context);
     final id = 'gokyo:$name';
+    final beltColors = covered
+        ? beltColorsFromName(coveringGrade!.beltName)
+        : const [Color(0xFF9E9E9E)];
     return ListTile(
       contentPadding: EdgeInsets.zero,
       dense: true,
-      leading: Checkbox(
-        value: progress.isCompleted(id),
-        onChanged: (_) => progress.toggle(id),
+      leading: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CelebratingCheckbox(
+            value: progress.isCompleted(id),
+            activeColor: beltColors.first,
+            onChanged: (_) => progress.toggle(id),
+          ),
+          const SizedBox(width: 4),
+          BeltKnotIcon(colors: beltColors, size: 22),
+        ],
       ),
       title: Row(
         children: [

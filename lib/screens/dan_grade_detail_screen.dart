@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../data/dan_grades_data.dart';
 import '../l10n/strings.dart';
 import '../models/dan_grade.dart';
+import '../theme/belt_colors.dart';
 import '../theme/judo_theme.dart';
+import '../widgets/belt_knot_icon.dart';
 import 'technique_media_screen.dart';
 
 class DanGradeDetailScreen extends StatelessWidget {
@@ -12,14 +14,21 @@ class DanGradeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final beltColors = beltColorsFromName(grade.beltDescription);
     return Scaffold(
       appBar: AppBar(title: Text(grade.title)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text(
-            AppStrings.beltLabel(grade.beltDescription),
-            style: Theme.of(context).textTheme.bodyMedium,
+          Row(
+            children: [
+              BeltKnotIcon(colors: beltColors, size: 34),
+              const SizedBox(width: 10),
+              Text(
+                AppStrings.beltLabel(grade.beltDescription),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
           ),
           if (grade.kata != null) ...[
             const SizedBox(height: 12),
@@ -51,7 +60,8 @@ class DanGradeDetailScreen extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
-                title: Text('${AppStrings.bullet}$technik'),
+                leading: BeltKnotIcon(colors: beltColors, size: 24),
+                title: Text(technik),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -71,8 +81,15 @@ class DanGradeDetailScreen extends StatelessWidget {
           const SizedBox(height: 8),
           for (final thema in danTheorieThemenbereiche)
             Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Text('${AppStrings.bullet}$thema'),
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BeltKnotIcon(colors: beltColors, size: 22),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text(thema)),
+                ],
+              ),
             ),
         ],
       ),

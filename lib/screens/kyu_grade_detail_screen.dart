@@ -3,7 +3,11 @@ import '../l10n/strings.dart';
 import '../models/kyu_grade.dart';
 import '../models/theory_question.dart';
 import '../services/progress_scope.dart';
+import '../theme/belt_colors.dart';
 import '../theme/judo_theme.dart';
+import '../widgets/belt_knot_icon.dart';
+import '../widgets/belt_progress_bar.dart';
+import '../widgets/celebrating_checkbox.dart';
 import 'technique_media_screen.dart';
 
 class KyuGradeDetailScreen extends StatelessWidget {
@@ -14,6 +18,7 @@ class KyuGradeDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = ProgressScope.of(context);
+    final beltColors = beltColorsFromName(grade.beltName);
     final trackableCount =
         grade.ukemiWaza.length +
         grade.nageWaza.length +
@@ -28,19 +33,32 @@ class KyuGradeDetailScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          if (grade.minAge != null)
-            Text(
-              AppStrings.minAgeLabel(grade.minAge!),
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+          Row(
+            children: [
+              BeltKnotIcon(colors: beltColors, size: 34),
+              const SizedBox(width: 10),
+              if (grade.minAge != null)
+                Text(
+                  AppStrings.minAgeLabel(grade.minAge!),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+            ],
+          ),
           if (trackableCount > 0) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               AppStrings.learnedProgress(completedCount, trackableCount),
               style: const TextStyle(
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
                 color: JudoColors.red,
               ),
+            ),
+            const SizedBox(height: 6),
+            BeltProgressBar(
+              progress: trackableCount == 0
+                  ? 0
+                  : completedCount / trackableCount,
+              color: beltColors.first,
             ),
           ],
           if (grade.hinweis != null) ...[
@@ -51,21 +69,25 @@ class KyuGradeDetailScreen extends StatelessWidget {
             title: AppStrings.sectionUkemiWaza,
             items: grade.ukemiWaza,
             idPrefix: 'kyu:${grade.kyu}:',
+            beltColor: beltColors.first,
           ),
           _TrackableSection(
             title: AppStrings.sectionNageWaza,
             items: grade.nageWaza,
             idPrefix: 'kyu:${grade.kyu}:',
+            beltColor: beltColors.first,
           ),
           _TrackableSection(
             title: AppStrings.sectionKatameWaza,
             items: grade.katameWaza,
             idPrefix: 'kyu:${grade.kyu}:',
+            beltColor: beltColors.first,
           ),
           _TrackableSection(
             title: AppStrings.sectionAnwendungsaufgaben,
             items: grade.anwendungsaufgaben,
             idPrefix: 'kyu:${grade.kyu}:',
+            beltColor: beltColors.first,
           ),
           _TheorySection(
             title: AppStrings.sectionTheorieThemen,
@@ -74,6 +96,7 @@ class KyuGradeDetailScreen extends StatelessWidget {
           _Section(
             title: AppStrings.sectionZusatzbegriffe,
             items: grade.zusatzbegriffe,
+            beltColors: beltColors,
           ),
         ],
       ),
@@ -86,11 +109,13 @@ class _TrackableSection extends StatelessWidget {
   final String title;
   final List<String> items;
   final String idPrefix;
+  final Color beltColor;
 
   const _TrackableSection({
     required this.title,
     required this.items,
     required this.idPrefix,
+    required this.beltColor,
   });
 
   @override
@@ -113,8 +138,9 @@ class _TrackableSection extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               dense: true,
-              leading: Checkbox(
+              leading: CelebratingCheckbox(
                 value: progress.isCompleted('$idPrefix$item'),
+                activeColor: beltColor,
                 onChanged: (_) => progress.toggle('$idPrefix$item'),
               ),
               title: Text(item),
@@ -181,8 +207,13 @@ class _TheorySection extends StatelessWidget {
 class _Section extends StatelessWidget {
   final String title;
   final List<String> items;
+  final List<Color> beltColors;
 
-  const _Section({required this.title, required this.items});
+  const _Section({
+    required this.title,
+    required this.items,
+    required this.beltColors,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -202,8 +233,15 @@ class _Section extends StatelessWidget {
           const SizedBox(height: 8),
           for (final item in items)
             Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Text('${AppStrings.bullet}$item'),
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BeltKnotIcon(colors: beltColors, size: 22),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text(item)),
+                ],
+              ),
             ),
         ],
       ),
