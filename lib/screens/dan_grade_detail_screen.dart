@@ -40,7 +40,10 @@ class DanGradeDetailScreen extends StatelessWidget {
             const SizedBox(height: 20),
             const Text(
               AppStrings.zusatztechnikenLabel,
-              style: TextStyle(fontWeight: FontWeight.bold, color: JudoColors.red),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: JudoColors.red,
+              ),
             ),
             const SizedBox(height: 8),
             for (final technik in grade.zusatztechniken)
@@ -52,7 +55,10 @@ class DanGradeDetailScreen extends StatelessWidget {
           const SizedBox(height: 20),
           const Text(
             AppStrings.theorieThemenbereicheLabel,
-            style: TextStyle(fontWeight: FontWeight.bold, color: JudoColors.red),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: JudoColors.red,
+            ),
           ),
           const SizedBox(height: 8),
           for (final thema in danTheorieThemenbereiche)

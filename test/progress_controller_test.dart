@@ -8,38 +8,44 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  test('toggle markiert und entmarkiert eine ID, notifiziert Listener', () async {
-    final store = await ProgressStore.load();
-    final controller = ProgressController(store);
-    var notifications = 0;
-    controller.addListener(() => notifications++);
+  test(
+    'toggle markiert und entmarkiert eine ID, notifiziert Listener',
+    () async {
+      final store = await ProgressStore.load();
+      final controller = ProgressController(store);
+      var notifications = 0;
+      controller.addListener(() => notifications++);
 
-    expect(controller.isCompleted('kyu:5:O-soto-gari'), isFalse);
+      expect(controller.isCompleted('kyu:5:O-soto-gari'), isFalse);
 
-    controller.toggle('kyu:5:O-soto-gari');
-    expect(controller.isCompleted('kyu:5:O-soto-gari'), isTrue);
-    expect(notifications, 1);
+      controller.toggle('kyu:5:O-soto-gari');
+      expect(controller.isCompleted('kyu:5:O-soto-gari'), isTrue);
+      expect(notifications, 1);
 
-    controller.toggle('kyu:5:O-soto-gari');
-    expect(controller.isCompleted('kyu:5:O-soto-gari'), isFalse);
-    expect(notifications, 2);
-  });
+      controller.toggle('kyu:5:O-soto-gari');
+      expect(controller.isCompleted('kyu:5:O-soto-gari'), isFalse);
+      expect(notifications, 2);
+    },
+  );
 
-  test('Fortschritt bleibt ueber einen Neustart (neue ProgressStore-Instanz) erhalten', () async {
-    final store1 = await ProgressStore.load();
-    final controller1 = ProgressController(store1);
-    controller1.toggle('kyu:5:O-soto-gari');
-    controller1.toggle('kyu:5:Harai-goshi');
+  test(
+    'Fortschritt bleibt ueber einen Neustart (neue ProgressStore-Instanz) erhalten',
+    () async {
+      final store1 = await ProgressStore.load();
+      final controller1 = ProgressController(store1);
+      controller1.toggle('kyu:5:O-soto-gari');
+      controller1.toggle('kyu:5:Harai-goshi');
 
-    // Simuliert App-Neustart: neue Store-Instanz liest denselben
-    // SharedPreferences-Zustand.
-    final store2 = await ProgressStore.load();
-    final controller2 = ProgressController(store2);
+      // Simuliert App-Neustart: neue Store-Instanz liest denselben
+      // SharedPreferences-Zustand.
+      final store2 = await ProgressStore.load();
+      final controller2 = ProgressController(store2);
 
-    expect(controller2.isCompleted('kyu:5:O-soto-gari'), isTrue);
-    expect(controller2.isCompleted('kyu:5:Harai-goshi'), isTrue);
-    expect(controller2.countCompletedWithPrefix('kyu:5:'), 2);
-  });
+      expect(controller2.isCompleted('kyu:5:O-soto-gari'), isTrue);
+      expect(controller2.isCompleted('kyu:5:Harai-goshi'), isTrue);
+      expect(controller2.countCompletedWithPrefix('kyu:5:'), 2);
+    },
+  );
 
   test('countCompletedWithPrefix zaehlt nur passende IDs', () async {
     final store = await ProgressStore.load();

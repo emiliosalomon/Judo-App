@@ -24,8 +24,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final searchableCategories =
-        judoCategories.where((c) => c.id != 'search').toList();
+    final searchableCategories = judoCategories
+        .where((c) => c.id != 'search')
+        .toList();
 
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.searchTitle)),

@@ -41,10 +41,5 @@ const judoCategories = <JudoCategory>[
     kanji: '応用',
     icon: Icons.compare_arrows,
   ),
-  JudoCategory(
-    id: 'search',
-    titleDe: 'Suche',
-    kanji: '検索',
-    icon: Icons.search,
-  ),
+  JudoCategory(id: 'search', titleDe: 'Suche', kanji: '検索', icon: Icons.search),
 ];

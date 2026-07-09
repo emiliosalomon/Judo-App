@@ -10,8 +10,7 @@ class ProgressScope extends InheritedNotifier<ProgressController> {
   }) : super(notifier: controller);
 
   static ProgressController of(BuildContext context) {
-    final scope = context
-        .dependOnInheritedWidgetOfExactType<ProgressScope>();
+    final scope = context.dependOnInheritedWidgetOfExactType<ProgressScope>();
     assert(scope != null, 'No ProgressScope found in context');
     return scope!.notifier!;
   }

@@ -21,22 +21,19 @@ void main() {
     }
   });
 
-  testWidgets(
-    'Antippen von Weiterführende Techniken zeigt den Gokyo-Katalog',
-    (WidgetTester tester) async {
-      await tester.pumpWidget(const JudoApp());
-      await tester.pumpAndSettle();
+  testWidgets('Antippen von Weiterführende Techniken zeigt den Gokyo-Katalog', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const JudoApp());
+    await tester.pumpAndSettle();
 
-      final techniques = judoCategories.firstWhere(
-        (c) => c.id == 'techniques',
-      );
-      await tester.tap(find.text(techniques.kanji));
-      await tester.pumpAndSettle();
+    final techniques = judoCategories.firstWhere((c) => c.id == 'techniques');
+    await tester.tap(find.text(techniques.kanji));
+    await tester.pumpAndSettle();
 
-      expect(find.text('Weiterführende Techniken'), findsOneWidget);
-      expect(find.text('De-ashi-barai'), findsOneWidget);
-    },
-  );
+    expect(find.text('Weiterführende Techniken'), findsOneWidget);
+    expect(find.text('De-ashi-barai'), findsOneWidget);
+  });
 
   testWidgets('Antippen von Guertelpruefung oeffnet Kyu/Dan-Uebersicht', (
     WidgetTester tester,

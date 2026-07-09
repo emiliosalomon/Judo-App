@@ -17,7 +17,9 @@ class KyuGradeDetailScreen extends StatelessWidget {
         grade.nageWaza.length +
         grade.katameWaza.length +
         grade.anwendungsaufgaben.length;
-    final completedCount = progress.countCompletedWithPrefix('kyu:${grade.kyu}:');
+    final completedCount = progress.countCompletedWithPrefix(
+      'kyu:${grade.kyu}:',
+    );
 
     return Scaffold(
       appBar: AppBar(title: Text(grade.title)),

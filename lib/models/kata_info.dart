@@ -48,11 +48,7 @@ const judoKataInfos = <String, KataInfo>{
       ),
       KataSection(
         title: 'Ashi-waza (Beintechniken)',
-        techniques: [
-          'Okuri-ashi-barai',
-          'Sasae-tsuri-komi-ashi',
-          'Uchi-mata',
-        ],
+        techniques: ['Okuri-ashi-barai', 'Sasae-tsuri-komi-ashi', 'Uchi-mata'],
       ),
       KataSection(
         title: 'Ma-sutemi-waza (Opfertechniken rückwärts)',
@@ -114,18 +110,10 @@ const judoKataInfos = <String, KataInfo>{
         'mit Messer (Tanto), Stock (Jo) und Pistole (Kenju) ein.',
     sectionsAreSummaryOnly: true,
     sections: [
-      KataSection(
-        title: 'Kumitsuki (Angriffe im Griff, 5 Techniken)',
-      ),
-      KataSection(
-        title: 'Hanarete (Angriffe auf Abstand, 7 Techniken)',
-      ),
-      KataSection(
-        title: 'Tanto-Dori (Verteidigung gegen Messer, 3 Techniken)',
-      ),
-      KataSection(
-        title: 'Jo-Dori (Verteidigung gegen Stock, 3 Techniken)',
-      ),
+      KataSection(title: 'Kumitsuki (Angriffe im Griff, 5 Techniken)'),
+      KataSection(title: 'Hanarete (Angriffe auf Abstand, 7 Techniken)'),
+      KataSection(title: 'Tanto-Dori (Verteidigung gegen Messer, 3 Techniken)'),
+      KataSection(title: 'Jo-Dori (Verteidigung gegen Stock, 3 Techniken)'),
       KataSection(
         title: 'Kenju-Dori (Verteidigung gegen Pistole, 3 Techniken)',
       ),

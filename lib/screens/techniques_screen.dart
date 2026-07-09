@@ -91,9 +91,10 @@ class TechniquesScreen extends StatelessWidget {
 KyuGrade? _firstKyuGradeCovering(String techniqueName) {
   final needle = techniqueName.toLowerCase();
   for (final grade in judoKyuGrades) {
-    final haystack = [...grade.nageWaza, ...grade.katameWaza]
-        .map((t) => t.toLowerCase())
-        .join(' | ');
+    final haystack = [
+      ...grade.nageWaza,
+      ...grade.katameWaza,
+    ].map((t) => t.toLowerCase()).join(' | ');
     if (haystack.contains(needle)) return grade;
   }
   return null;
@@ -114,11 +115,17 @@ class _TechniqueSection extends StatelessWidget {
         children: [
           Text(
             AppStrings.techniqueSectionTitle(title, techniques.length),
-            style: const TextStyle(fontWeight: FontWeight.bold, color: JudoColors.red),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: JudoColors.red,
+            ),
           ),
           const SizedBox(height: 8),
           for (final technique in techniques)
-            _TechniqueRow(name: technique, coveringGrade: _firstKyuGradeCovering(technique)),
+            _TechniqueRow(
+              name: technique,
+              coveringGrade: _firstKyuGradeCovering(technique),
+            ),
         ],
       ),
     );

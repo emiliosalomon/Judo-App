@@ -92,14 +92,20 @@ const _specs = <_IconSpec>[
   _IconSpec('web/favicon.png', 64),
 ];
 
-Future<void> _renderIcon(_IconSpec spec, {bool maskableSafeZone = false}) async {
+Future<void> _renderIcon(
+  _IconSpec spec, {
+  bool maskableSafeZone = false,
+}) async {
   final size = spec.size.toDouble();
   final recorder = ui.PictureRecorder();
   final canvas = Canvas(recorder);
 
   // Voller roter Hintergrund (kein Weiss/Ring wie im In-App-Logo, damit es
   // als App-Icon auf jedem Homescreen-Hintergrund funktioniert).
-  canvas.drawRect(Rect.fromLTWH(0, 0, size, size), Paint()..color = JudoColors.red);
+  canvas.drawRect(
+    Rect.fromLTWH(0, 0, size, size),
+    Paint()..color = JudoColors.red,
+  );
 
   // Maskable-Icons brauchen mehr Rand (sichere Zone ca. 20%), normale Icons
   // duerfen randnaeher gehen.
