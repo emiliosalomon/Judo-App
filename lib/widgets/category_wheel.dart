@@ -31,7 +31,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final diameter = math.min(constraints.maxWidth, constraints.maxHeight);
-        final radius = diameter / 2 * 0.66;
+        final radius = diameter / 2 * 0.58;
         final center = Offset(diameter / 2, diameter / 2);
         final count = widget.categories.length;
         final anglePer = (2 * math.pi) / count;
@@ -59,6 +59,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
             onPanCancel: () => setState(() => _isDragging = false),
             child: Stack(
               alignment: Alignment.center,
+              clipBehavior: Clip.none,
               children: [
                 JudoLogo(
                   size: 122,
@@ -66,7 +67,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
                   wheelRotation: _rotation,
                 ),
                 for (var i = 0; i < count; i++)
-                  _wheelItem(
+                  ..._wheelItem(
                     category: widget.categories[i],
                     angle: _rotation + anglePer * i - math.pi / 2,
                     radius: radius,
@@ -80,28 +81,60 @@ class _CategoryWheelState extends State<CategoryWheel> {
     );
   }
 
-  Widget _wheelItem({
+  List<Widget> _wheelItem({
     required JudoCategory category,
     required double angle,
     required double radius,
     required Offset center,
   }) {
     const bubbleSize = 90.0;
+    const labelWidth = 84.0;
+    const labelGap = 6.0;
     final dx = center.dx + radius * math.cos(angle) - bubbleSize / 2;
     final dy = center.dy + radius * math.sin(angle) - bubbleSize / 2;
 
-    return Positioned(
-      left: dx,
-      top: dy,
-      child: Transform.rotate(
-        // Gegendrehung, damit Icon/Kanji beim Rad-Drehen aufrecht bleiben.
-        angle: -_rotation,
-        child: GestureDetector(
-          onTap: () => widget.onSelect(category),
-          child: _CategoryBubble(category: category, size: bubbleSize),
+    final labelRadius = radius + bubbleSize / 2 + labelGap;
+    final labelDx = center.dx + labelRadius * math.cos(angle) - labelWidth / 2;
+    final labelDy = center.dy + labelRadius * math.sin(angle) - 17;
+
+    return [
+      Positioned(
+        left: dx,
+        top: dy,
+        child: Transform.rotate(
+          // Gegendrehung, damit Icon/Kanji beim Rad-Drehen aufrecht bleiben.
+          angle: -_rotation,
+          child: GestureDetector(
+            onTap: () => widget.onSelect(category),
+            child: _CategoryBubble(category: category, size: bubbleSize),
+          ),
         ),
       ),
-    );
+      Positioned(
+        left: labelDx,
+        top: labelDy,
+        width: labelWidth,
+        child: Transform.rotate(
+          // Gegendrehung, damit die Beschriftung beim Rad-Drehen aufrecht
+          // bleibt, statt sich mit dem Rad mitzudrehen.
+          angle: -_rotation,
+          child: IgnorePointer(
+            child: Text(
+              category.titleDe,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w700,
+                color: JudoColors.black,
+                height: 1.15,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 }
 

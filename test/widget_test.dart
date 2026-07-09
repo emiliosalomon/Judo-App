@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +19,7 @@ void main() {
     expect(find.text('Judo App'), findsOneWidget);
     for (final category in judoCategories) {
       expect(find.text(category.kanji), findsOneWidget);
+      expect(find.text(category.titleDe), findsOneWidget);
     }
   });
 
@@ -31,7 +33,13 @@ void main() {
     await tester.tap(find.text(techniques.kanji));
     await tester.pumpAndSettle();
 
-    expect(find.text('Weiterführende Techniken'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Weiterführende Techniken'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('De-ashi-barai'), findsOneWidget);
   });
 
