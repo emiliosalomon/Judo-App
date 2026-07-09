@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:judo_app/l10n/strings.dart';
 import 'package:judo_app/screens/kata_screen.dart';
 
 void main() {
@@ -21,4 +22,22 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets(
+    'Kata-Detailseite zeigt oben einen Button fuer den gesamten Ablauf und '
+    'jede Einzeltechnik ist antippbar (Kodokan-Kanalsuche)',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: KataScreen()));
+      await tester.tap(find.text('Nage-no-Kata'));
+      await tester.pumpAndSettle();
+
+      expect(find.text(AppStrings.watchFullKataOnYoutube), findsOneWidget);
+
+      final techniqueRow = find.ancestor(
+        of: find.textContaining('Seoi-nage', skipOffstage: false),
+        matching: find.byType(InkWell),
+      );
+      expect(techniqueRow, findsOneWidget);
+    },
+  );
 }

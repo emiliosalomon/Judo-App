@@ -58,6 +58,11 @@ class AppStrings {
   static const kataStructureSummaryOnly =
       'Struktur (ausführliche Technik-Liste folgt):';
   static const kataTechniquesLabel = 'Techniken';
+  static const watchFullKataOnYoutube = 'Gesamten Ablauf ansehen';
+  static const kataVideoAttribution =
+      'Video: offizieller YouTube-Kanal des Kodokan';
+  static const kataTechniqueVideoHint =
+      'Antippen öffnet eine Suche im offiziellen Kodokan-YouTube-Kanal.';
 
   // Standardsituationen
   static const standardSituationsTitle = 'Standardsituationen';

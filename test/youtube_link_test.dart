@@ -16,4 +16,12 @@ void main() {
     final uri = youtubeSearchUrl('Real-Technik RL');
     expect(uri.queryParameters['search_query'], 'Real-Technik judo');
   });
+
+  test('Kodokan-Kanalsuche zeigt auf den Kodokan-Kanal und uebergibt die '
+      'bereinigte Suchanfrage', () {
+    final uri = kodokanChannelSearchUrl('Uchi-mata Nage-no-Kata');
+    expect(uri.host, 'www.youtube.com');
+    expect(uri.path, '/channel/UCtF6tu7GuZYkZzht5MIv8UQ/search');
+    expect(uri.queryParameters['query'], 'Uchi-mata Nage-no-Kata');
+  });
 }
