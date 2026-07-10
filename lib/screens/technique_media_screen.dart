@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../data/anwendungsaufgabe_description_data.dart';
 import '../data/technique_media_data.dart';
 import '../data/technique_video_data.dart';
 import '../data/youtube_link.dart';
@@ -7,7 +8,8 @@ import '../l10n/strings.dart';
 import '../theme/judo_theme.dart';
 
 /// Zeigt zu einer einzelnen Technik/Aufgabe eine Illustration (falls
-/// vorhanden) und einen Link zu einer YouTube-Suche dafuer.
+/// vorhanden), eine kurze Erklaerung (falls vorhanden) und einen Link zu
+/// einer YouTube-Suche dafuer.
 class TechniqueMediaScreen extends StatelessWidget {
   final String technique;
 
@@ -16,12 +18,17 @@ class TechniqueMediaScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = findTechniqueImage(technique);
+    final description = findAnwendungsaufgabeDescription(technique);
 
     return Scaffold(
       appBar: AppBar(title: Text(technique)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          if (description != null) ...[
+            Text(description, style: Theme.of(context).textTheme.bodyLarge),
+            const SizedBox(height: 16),
+          ],
           if (image != null) ...[
             ClipRRect(
               borderRadius: BorderRadius.circular(12),

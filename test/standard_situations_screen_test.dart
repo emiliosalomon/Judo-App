@@ -24,7 +24,9 @@ void main() {
   );
 
   testWidgets(
-    'Antippen einer Anwendungsaufgabe oeffnet die Medien-Detailseite',
+    'Antippen einer Anwendungsaufgabe mit hinterlegter Erklaerung klappt '
+    'diese zuerst inline auf, erst ein zweites Antippen oeffnet die '
+    'Medien-Detailseite',
     (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(home: StandardSituationsScreen()),
@@ -34,9 +36,16 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Nage-waza → Osae-komi-waza'));
+      await tester.pump();
+
+      expect(find.text('Auf YouTube ansehen'), findsNothing);
+      expect(find.textContaining('Stand-Boden-Übergang'), findsOneWidget);
+
+      await tester.tap(find.text('Nage-waza → Osae-komi-waza'));
       await tester.pumpAndSettle();
 
       expect(find.text('Auf YouTube ansehen'), findsOneWidget);
+      expect(find.textContaining('Stand-Boden-Übergang'), findsOneWidget);
     },
   );
 }
