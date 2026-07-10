@@ -137,6 +137,25 @@ KyuGrade? _firstKyuGradeCovering(String techniqueName) {
   return null;
 }
 
+/// Sortiert Techniken nach Guertelfarbe/Kyu-Fortschritt: Techniken aus
+/// niedrigeren Guertelstufen (hohe Kyu-Zahl, z.B. 11. Kyu) zuerst, dann
+/// aufsteigend Richtung 1. Kyu, "weiterfuehrende" Techniken ohne
+/// zugeordnete Guertelstufe zuletzt. Innerhalb derselben Stufe bleibt die
+/// urspruengliche Reihenfolge erhalten.
+List<String> _sortedByBelt(List<String> techniques) {
+  final indexed = techniques.indexed.toList();
+  indexed.sort((a, b) {
+    final gradeA = _firstKyuGradeCovering(a.$2);
+    final gradeB = _firstKyuGradeCovering(b.$2);
+    if (gradeA == null && gradeB == null) return a.$1.compareTo(b.$1);
+    if (gradeA == null) return 1;
+    if (gradeB == null) return -1;
+    final cmp = gradeB.kyu.compareTo(gradeA.kyu);
+    return cmp != 0 ? cmp : a.$1.compareTo(b.$1);
+  });
+  return [for (final entry in indexed) entry.$2];
+}
+
 class _TechniqueSection extends StatelessWidget {
   final String title;
   final List<String> techniques;
@@ -158,7 +177,7 @@ class _TechniqueSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          for (final technique in techniques)
+          for (final technique in _sortedByBelt(techniques))
             _TechniqueRow(
               name: technique,
               coveringGrade: _firstKyuGradeCovering(technique),

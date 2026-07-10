@@ -20,12 +20,31 @@ void main() {
   );
 
   testWidgets(
+    'Techniken sind nach Guertelfarbe sortiert (fruehere Kyu-Stufe zuerst), '
+    'nicht nach der rohen Gokyo-Reihenfolge',
+    (WidgetTester tester) async {
+      // In der rohen Gokyo-Liste steht O-soto-gari (ab 5. Kyu) VOR O-goshi
+      // (ab 9. Kyu) - nach Guertelfarbe sortiert muss O-goshi (fruehere,
+      // niedrigere Stufe) aber zuerst erscheinen.
+      await tester.pumpWidget(
+        await wrapWithProgress(const MaterialApp(home: TechniquesScreen())),
+      );
+
+      final oGoshiY = tester.getTopLeft(find.text('O-goshi')).dy;
+      final oSotoGariY = tester.getTopLeft(find.text('O-soto-gari')).dy;
+      expect(oGoshiY, lessThan(oSotoGariY));
+    },
+  );
+
+  testWidgets(
     'Antippen von O-uchi-gari klappt zuerst das Bild inline auf, erst ein '
     'zweites Antippen oeffnet die Medien-Detailseite',
     (WidgetTester tester) async {
       // Grosses Testfenster, damit O-uchi-gari in der langen Gokyo-Liste
-      // ohne Scrollen erreichbar ist.
-      tester.view.physicalSize = const Size(400, 4000);
+      // ohne Scrollen erreichbar ist. O-uchi-gari ist "weiterfuehrend"
+      // (keiner Kyu-Stufe zugeordnet) und landet durch die Sortierung nach
+      // Guertelfarbe entsprechend weit unten in der Liste.
+      tester.view.physicalSize = const Size(400, 8000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
