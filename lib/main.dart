@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'l10n/strings.dart';
 import 'screens/home_screen.dart';
+import 'services/firestore_leaderboard_repository.dart';
+import 'services/leaderboard_scope.dart';
 import 'services/progress_controller.dart';
 import 'services/progress_scope.dart';
 import 'services/progress_store.dart';
@@ -9,6 +11,14 @@ import 'services/streak_scope.dart';
 import 'services/streak_store.dart';
 import 'theme/judo_theme.dart';
 
+// TODO(rangliste): Sobald `flutterfire configure` gelaufen ist und
+// lib/firebase_options.dart existiert, hier ergaenzen:
+//   import 'firebase_options.dart';
+//   ...
+//   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+// Bis dahin bleibt Firebase.apps leer, FirestoreLeaderboardRepository.isAvailable
+// liefert false und die Rangliste zeigt einen Hinweis statt Daten - der Rest
+// der App funktioniert unveraendert.
 void main() {
   runApp(const JudoApp());
 }
@@ -39,11 +49,14 @@ class JudoApp extends StatelessWidget {
           controller: ProgressController(progressStore),
           child: StreakScope(
             controller: StreakController(streakStore),
-            child: MaterialApp(
-              title: AppStrings.appTitle,
-              debugShowCheckedModeBanner: false,
-              theme: judoTheme,
-              home: const HomeScreen(),
+            child: LeaderboardScope(
+              repository: FirestoreLeaderboardRepository(),
+              child: MaterialApp(
+                title: AppStrings.appTitle,
+                debugShowCheckedModeBanner: false,
+                theme: judoTheme,
+                home: const HomeScreen(),
+              ),
             ),
           ),
         );

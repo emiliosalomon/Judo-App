@@ -8,6 +8,7 @@ import '../widgets/stats_banner.dart';
 import 'belt_exam_screen.dart';
 import 'category_placeholder_screen.dart';
 import 'kata_screen.dart';
+import 'leaderboard_screen.dart';
 import 'search_screen.dart';
 import 'standard_situations_screen.dart';
 import 'techniques_screen.dart';
@@ -34,7 +35,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.appTitle)),
+      appBar: AppBar(
+        title: const Text(AppStrings.appTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.leaderboard),
+            tooltip: AppStrings.leaderboardTitle,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const LeaderboardScreen()),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),

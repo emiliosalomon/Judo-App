@@ -107,4 +107,16 @@ class AppStrings {
   static const imageAttributionPrefix = 'Bild: ';
   static const couldNotOpenLink = 'Link konnte nicht geöffnet werden.';
   static const tapAgainForVideoHint = 'Nochmal antippen fürs Video';
+
+  // Rangliste
+  static const leaderboardTitle = 'Rangliste';
+  static const leaderboardUnavailable =
+      'Die Rangliste ist aktuell nicht verfügbar.';
+  static const leaderboardEmpty =
+      'Noch niemand auf der Rangliste — sei die/der Erste!';
+  static const leaderboardJoinButton = 'Bei der Rangliste mitmachen';
+  static const nicknamePromptTitle = 'Wie sollen wir dich nennen?';
+  static const nicknamePromptHint = 'Spitzname';
+  static const nicknamePromptConfirm = 'Speichern';
+  static const nicknamePromptCancel = 'Abbrechen';
 }
