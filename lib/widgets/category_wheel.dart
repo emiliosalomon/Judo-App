@@ -11,7 +11,9 @@ import 'judo_logo.dart';
 const _bubbleLabelBreaks = <String, String>{
   'belt-exam': 'Gürtel-\nprüfung',
   'standard-situations': 'Standard-\nsituationen',
-  'techniques': 'Weiterführende\nTechniken',
+  // "Weiterführende" allein ist selbst nach einem Umbruch noch zu breit fuer
+  // den Button, deshalb hier zusaetzlich am Wort selbst getrennt (3 Zeilen).
+  'techniques': 'Weiter-\nführende\nTechniken',
 };
 
 /// Text, wie er im Rad-Button tatsaechlich angezeigt wird (mit manuellem
@@ -256,24 +258,28 @@ class _CategoryBubbleState extends State<_CategoryBubble>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (category.id == 'belt-exam')
-                  CategoryBeltIcon(size: size * 0.22)
+                  CategoryBeltIcon(size: size * 0.19)
                 else
                   Icon(
                     category.icon,
                     color: JudoColors.white,
-                    size: size * 0.2,
+                    size: size * 0.17,
                   ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Text(
                   bubbleLabelForCategory(category),
                   textAlign: TextAlign.center,
-                  maxLines: 2,
+                  // Bis zu 3 Zeilen: "Weiterführende Techniken" braucht
+                  // sowohl einen Umbruch zwischen den Woertern als auch
+                  // innerhalb von "Weiterführende" selbst, um lesbar zu
+                  // bleiben statt mitten im Wort abgeschnitten zu werden.
+                  maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: JudoColors.white,
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
-                    height: 1.08,
+                    height: 1.05,
                   ),
                 ),
               ],

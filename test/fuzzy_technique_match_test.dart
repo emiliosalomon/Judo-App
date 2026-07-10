@@ -22,4 +22,27 @@ void main() {
     final table = {'O-soto-gari': 1};
     expect(findBestTechniqueMatch('Voellig-unbekannt', table), isNull);
   });
+
+  test(
+    '"Befreiung aus X" matcht nicht auf die Basistechnik X - eine '
+    'Befreiungstechnik ist inhaltlich etwas anderes als die Technik selbst',
+    () {
+      final table = {
+        'Ura-gatame':
+            'falsch (zeigt den Haltegriff, nicht die Befreiung davon)',
+      };
+      expect(findBestTechniqueMatch('Befreiung aus Ura-gatame', table), isNull);
+    },
+  );
+
+  test(
+    '"Kombination A/B" matcht nicht auf eine der beiden Einzeltechniken',
+    () {
+      final table = {'Harai-goshi': 'falsch', 'O-soto-gari': 'auch falsch'};
+      expect(
+        findBestTechniqueMatch('Kombination Harai-goshi/O-soto-gari', table),
+        isNull,
+      );
+    },
+  );
 }

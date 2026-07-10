@@ -44,4 +44,42 @@ void main() {
 
     expect(find.text('Auf YouTube ansehen'), findsOneWidget);
   });
+
+  testWidgets('Abhaken des letzten Punkts einer Guertelstufe zeigt die '
+      'Pokal-Belohnung, ein Zwischenschritt aber nicht', (
+    WidgetTester tester,
+  ) async {
+    // Grosses Testfenster, damit alle Checkboxen der Stufe ohne Scrollen
+    // erreichbar sind (die Stufe hat mehr Punkte, als in die
+    // Standard-Testviewport-Groesse passen).
+    tester.view.physicalSize = const Size(400, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final grade = judoKyuGrades.firstWhere((g) => g.kyu == 10);
+
+    await tester.pumpWidget(
+      await wrapWithProgress(
+        MaterialApp(home: KyuGradeDetailScreen(grade: grade)),
+      ),
+    );
+
+    final checkboxCount = tester.widgetList(find.byType(Checkbox)).length;
+    expect(checkboxCount, greaterThan(1));
+
+    for (var i = 0; i < checkboxCount - 1; i++) {
+      await tester.tap(find.byType(Checkbox).at(i));
+      await tester.pump();
+    }
+    expect(find.text('Gürtel komplett!'), findsNothing);
+
+    await tester.tap(find.byType(Checkbox).at(checkboxCount - 1));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Gürtel komplett!'), findsOneWidget);
+    // grade.title steht sowohl in der AppBar als auch in der
+    // Belohnungs-Anzeige - deshalb findsWidgets statt findsOneWidget.
+    expect(find.text(grade.title), findsWidgets);
+  });
 }

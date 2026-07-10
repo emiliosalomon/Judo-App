@@ -18,6 +18,7 @@ class AppStrings {
   static String streakDaysTooltip(int days) =>
       days == 1 ? '1 Tag in Folge aktiv' : '$days Tage in Folge aktiv';
   static const beltCompleteBadge = 'Gürtel komplett!';
+  static const rewardCloseLabel = 'Weiter geht\'s!';
 
   // Platzhalter
   static const contentComingSoon = 'Inhalte folgen.';

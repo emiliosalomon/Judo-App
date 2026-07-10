@@ -8,6 +8,7 @@ import '../theme/judo_theme.dart';
 import '../widgets/belt_knot_icon.dart';
 import '../widgets/belt_progress_bar.dart';
 import '../widgets/celebrating_checkbox.dart';
+import '../widgets/grade_complete_reward.dart';
 import 'technique_media_screen.dart';
 
 class KyuGradeDetailScreen extends StatelessWidget {
@@ -24,9 +25,22 @@ class KyuGradeDetailScreen extends StatelessWidget {
         grade.nageWaza.length +
         grade.katameWaza.length +
         grade.anwendungsaufgaben.length;
-    final completedCount = progress.countCompletedWithPrefix(
-      'kyu:${grade.kyu}:',
-    );
+    final idPrefix = 'kyu:${grade.kyu}:';
+    final completedCount = progress.countCompletedWithPrefix(idPrefix);
+
+    // War vor diesem Tap noch nicht komplett? Wenn der Tap die Stufe auf
+    // 100% bringt, wird direkt danach die grosse Belohnung gezeigt.
+    void handleToggle(BuildContext context, String id) {
+      final wasComplete =
+          trackableCount > 0 && completedCount == trackableCount;
+      progress.toggle(id);
+      if (!wasComplete && trackableCount > 0) {
+        final nowCompleted = progress.countCompletedWithPrefix(idPrefix);
+        if (nowCompleted == trackableCount) {
+          showGradeCompleteReward(context, gradeTitle: grade.title);
+        }
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text(grade.title)),
@@ -68,26 +82,30 @@ class KyuGradeDetailScreen extends StatelessWidget {
           _TrackableSection(
             title: AppStrings.sectionUkemiWaza,
             items: grade.ukemiWaza,
-            idPrefix: 'kyu:${grade.kyu}:',
+            idPrefix: idPrefix,
             beltColor: beltColors.first,
+            onToggle: handleToggle,
           ),
           _TrackableSection(
             title: AppStrings.sectionNageWaza,
             items: grade.nageWaza,
-            idPrefix: 'kyu:${grade.kyu}:',
+            idPrefix: idPrefix,
             beltColor: beltColors.first,
+            onToggle: handleToggle,
           ),
           _TrackableSection(
             title: AppStrings.sectionKatameWaza,
             items: grade.katameWaza,
-            idPrefix: 'kyu:${grade.kyu}:',
+            idPrefix: idPrefix,
             beltColor: beltColors.first,
+            onToggle: handleToggle,
           ),
           _TrackableSection(
             title: AppStrings.sectionAnwendungsaufgaben,
             items: grade.anwendungsaufgaben,
-            idPrefix: 'kyu:${grade.kyu}:',
+            idPrefix: idPrefix,
             beltColor: beltColors.first,
+            onToggle: handleToggle,
           ),
           _TheorySection(
             title: AppStrings.sectionTheorieThemen,
@@ -110,12 +128,14 @@ class _TrackableSection extends StatelessWidget {
   final List<String> items;
   final String idPrefix;
   final Color beltColor;
+  final void Function(BuildContext context, String id) onToggle;
 
   const _TrackableSection({
     required this.title,
     required this.items,
     required this.idPrefix,
     required this.beltColor,
+    required this.onToggle,
   });
 
   @override
@@ -141,7 +161,7 @@ class _TrackableSection extends StatelessWidget {
               leading: CelebratingCheckbox(
                 value: progress.isCompleted('$idPrefix$item'),
                 activeColor: beltColor,
-                onChanged: (_) => progress.toggle('$idPrefix$item'),
+                onChanged: (_) => onToggle(context, '$idPrefix$item'),
               ),
               title: Text(
                 item,
