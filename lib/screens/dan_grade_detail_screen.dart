@@ -5,7 +5,7 @@ import '../models/dan_grade.dart';
 import '../theme/belt_colors.dart';
 import '../theme/judo_theme.dart';
 import '../widgets/belt_knot_icon.dart';
-import 'technique_media_screen.dart';
+import '../widgets/expandable_technique_row.dart';
 
 class DanGradeDetailScreen extends StatelessWidget {
   final DanGrade grade;
@@ -57,23 +57,24 @@ class DanGradeDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             for (final technik in grade.zusatztechniken)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                leading: BeltKnotIcon(colors: beltColors, size: 30),
-                title: Text(
-                  technik,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    color: JudoColors.black,
+              ExpandableTechniqueRow(
+                technique: technik,
+                rowBuilder: (context, onTap, expanded) => ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  leading: BeltKnotIcon(colors: beltColors, size: 30),
+                  title: Text(
+                    technik,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: JudoColors.black,
+                    ),
                   ),
-                ),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => TechniqueMediaScreen(technique: technik),
+                  trailing: Icon(
+                    expanded ? Icons.play_circle_outline : Icons.chevron_right,
                   ),
+                  onTap: onTap,
                 ),
               ),
           ],

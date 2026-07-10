@@ -4,7 +4,7 @@ import '../l10n/strings.dart';
 import '../theme/belt_colors.dart';
 import '../theme/judo_theme.dart';
 import '../widgets/belt_knot_icon.dart';
-import 'technique_media_screen.dart';
+import '../widgets/expandable_technique_row.dart';
 
 /// Grad-uebergreifende Sicht auf die "Anwendungsaufgaben" aus dem
 /// Kyu-Pruefungsprogramm — dieselben Daten wie in der Guertelpruefung,
@@ -35,23 +35,30 @@ class StandardSituationsScreen extends StatelessWidget {
                   collapsedIconColor: JudoColors.black,
                   children: [
                     for (final aufgabe in grade.anwendungsaufgaben)
-                      ListTile(
-                        contentPadding: const EdgeInsets.fromLTRB(16, 0, 8, 0),
-                        leading: BeltKnotIcon(colors: beltColors, size: 26),
-                        title: Text(
-                          aufgabe,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: JudoColors.black,
+                      ExpandableTechniqueRow(
+                        technique: aufgabe,
+                        rowBuilder: (context, onTap, expanded) => ListTile(
+                          contentPadding: const EdgeInsets.fromLTRB(
+                            16,
+                            0,
+                            8,
+                            0,
                           ),
-                        ),
-                        trailing: const Icon(Icons.chevron_right),
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                TechniqueMediaScreen(technique: aufgabe),
+                          leading: BeltKnotIcon(colors: beltColors, size: 26),
+                          title: Text(
+                            aufgabe,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: JudoColors.black,
+                            ),
                           ),
+                          trailing: Icon(
+                            expanded
+                                ? Icons.play_circle_outline
+                                : Icons.chevron_right,
+                          ),
+                          onTap: onTap,
                         ),
                       ),
                   ],

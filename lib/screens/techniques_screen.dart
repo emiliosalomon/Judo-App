@@ -9,7 +9,7 @@ import '../theme/belt_colors.dart';
 import '../theme/judo_theme.dart';
 import '../widgets/belt_knot_icon.dart';
 import '../widgets/celebrating_checkbox.dart';
-import 'technique_media_screen.dart';
+import '../widgets/expandable_technique_row.dart';
 
 /// Kompletter Technik-Katalog (Kodokan-Gokyo + Katame-waza), mit Kennzeichnung
 /// welche Technik schon Teil des Kyu-Pruefungsprogramms ist ("bereits im
@@ -66,46 +66,48 @@ class TechniquesScreen extends StatelessWidget {
                       collapsedIconColor: JudoColors.black,
                       children: [
                         for (final technik in grade.zusatztechniken)
-                          ListTile(
-                            contentPadding: const EdgeInsets.only(left: 16),
-                            dense: true,
-                            leading: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CelebratingCheckbox(
-                                  value: progress.isCompleted(
-                                    'dan:${grade.dan}:$technik',
+                          ExpandableTechniqueRow(
+                            technique: technik,
+                            rowBuilder: (context, onTap, expanded) => ListTile(
+                              contentPadding: const EdgeInsets.only(left: 16),
+                              dense: true,
+                              leading: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CelebratingCheckbox(
+                                    value: progress.isCompleted(
+                                      'dan:${grade.dan}:$technik',
+                                    ),
+                                    activeColor: beltColorsFromName(
+                                      grade.beltDescription,
+                                    ).first,
+                                    onChanged: (_) => progress.toggle(
+                                      'dan:${grade.dan}:$technik',
+                                    ),
                                   ),
-                                  activeColor: beltColorsFromName(
-                                    grade.beltDescription,
-                                  ).first,
-                                  onChanged: (_) => progress.toggle(
-                                    'dan:${grade.dan}:$technik',
+                                  const SizedBox(width: 4),
+                                  BeltKnotIcon(
+                                    colors: beltColorsFromName(
+                                      grade.beltDescription,
+                                    ),
+                                    size: 28,
                                   ),
-                                ),
-                                const SizedBox(width: 4),
-                                BeltKnotIcon(
-                                  colors: beltColorsFromName(
-                                    grade.beltDescription,
-                                  ),
-                                  size: 28,
-                                ),
-                              ],
-                            ),
-                            title: Text(
-                              technik,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                                color: JudoColors.black,
+                                ],
                               ),
-                            ),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    TechniqueMediaScreen(technique: technik),
+                              title: Text(
+                                technik,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700,
+                                  color: JudoColors.black,
+                                ),
                               ),
+                              trailing: Icon(
+                                expanded
+                                    ? Icons.play_circle_outline
+                                    : Icons.chevron_right,
+                              ),
+                              onTap: onTap,
                             ),
                           ),
                       ],
@@ -181,57 +183,58 @@ class _TechniqueRow extends StatelessWidget {
     final beltColors = covered
         ? beltColorsFromName(coveringGrade!.beltName)
         : const [Color(0xFF9E9E9E)];
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      dense: true,
-      leading: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CelebratingCheckbox(
-            value: progress.isCompleted(id),
-            activeColor: beltColors.first,
-            onChanged: (_) => progress.toggle(id),
-          ),
-          const SizedBox(width: 4),
-          BeltKnotIcon(colors: beltColors, size: 28),
-        ],
-      ),
-      title: Row(
-        children: [
-          Expanded(
-            child: Text(
-              name,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: JudoColors.black,
-              ),
+    return ExpandableTechniqueRow(
+      technique: name,
+      rowBuilder: (context, onTap, expanded) => ListTile(
+        contentPadding: EdgeInsets.zero,
+        dense: true,
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CelebratingCheckbox(
+              value: progress.isCompleted(id),
+              activeColor: beltColors.first,
+              onChanged: (_) => progress.toggle(id),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: covered ? JudoColors.black : JudoColors.red,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Text(
-              covered
-                  ? AppStrings.coveredFromGrade(coveringGrade!.kyu)
-                  : AppStrings.notCoveredLabel,
-              style: const TextStyle(
-                color: JudoColors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => TechniqueMediaScreen(technique: name),
+            const SizedBox(width: 4),
+            BeltKnotIcon(colors: beltColors, size: 28),
+          ],
         ),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: JudoColors.black,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: covered ? JudoColors.black : JudoColors.red,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Text(
+                covered
+                    ? AppStrings.coveredFromGrade(coveringGrade!.kyu)
+                    : AppStrings.notCoveredLabel,
+                style: const TextStyle(
+                  color: JudoColors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
+        ),
+        trailing: Icon(
+          expanded ? Icons.play_circle_outline : Icons.chevron_right,
+        ),
+        onTap: onTap,
       ),
     );
   }

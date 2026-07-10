@@ -106,4 +106,5 @@ class AppStrings {
       'Noch keine Illustration hinterlegt — nutze den YouTube-Link.';
   static const imageAttributionPrefix = 'Bild: ';
   static const couldNotOpenLink = 'Link konnte nicht geöffnet werden.';
+  static const tapAgainForVideoHint = 'Nochmal antippen fürs Video';
 }

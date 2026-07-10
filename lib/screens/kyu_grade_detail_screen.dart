@@ -8,8 +8,8 @@ import '../theme/judo_theme.dart';
 import '../widgets/belt_knot_icon.dart';
 import '../widgets/belt_progress_bar.dart';
 import '../widgets/celebrating_checkbox.dart';
+import '../widgets/expandable_technique_row.dart';
 import '../widgets/grade_complete_reward.dart';
-import 'technique_media_screen.dart';
 
 class KyuGradeDetailScreen extends StatelessWidget {
   final KyuGrade grade;
@@ -155,27 +155,28 @@ class _TrackableSection extends StatelessWidget {
             ),
           ),
           for (final item in items)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              leading: CelebratingCheckbox(
-                value: progress.isCompleted('$idPrefix$item'),
-                activeColor: beltColor,
-                onChanged: (_) => onToggle(context, '$idPrefix$item'),
-              ),
-              title: Text(
-                item,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: JudoColors.black,
+            ExpandableTechniqueRow(
+              technique: item,
+              rowBuilder: (context, onTap, expanded) => ListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                leading: CelebratingCheckbox(
+                  value: progress.isCompleted('$idPrefix$item'),
+                  activeColor: beltColor,
+                  onChanged: (_) => onToggle(context, '$idPrefix$item'),
                 ),
-              ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => TechniqueMediaScreen(technique: item),
+                title: Text(
+                  item,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: JudoColors.black,
+                  ),
                 ),
+                trailing: Icon(
+                  expanded ? Icons.play_circle_outline : Icons.chevron_right,
+                ),
+                onTap: onTap,
               ),
             ),
         ],

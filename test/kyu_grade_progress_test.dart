@@ -28,22 +28,34 @@ void main() {
     expect(checkbox.value, isTrue);
   });
 
-  testWidgets('Antippen einer Technikzeile öffnet die Medien-Detailseite', (
-    WidgetTester tester,
-  ) async {
-    final grade = judoKyuGrades.firstWhere((g) => g.kyu == 5);
+  testWidgets(
+    'Antippen einer Technikzeile mit Bild klappt zuerst das Bild inline '
+    'auf (ohne Bildschirmwechsel), erst ein zweites Antippen oeffnet die '
+    'Medien-Detailseite',
+    (WidgetTester tester) async {
+      final grade = judoKyuGrades.firstWhere((g) => g.kyu == 5);
 
-    await tester.pumpWidget(
-      await wrapWithProgress(
-        MaterialApp(home: KyuGradeDetailScreen(grade: grade)),
-      ),
-    );
+      await tester.pumpWidget(
+        await wrapWithProgress(
+          MaterialApp(home: KyuGradeDetailScreen(grade: grade)),
+        ),
+      );
 
-    await tester.tap(find.text('O-soto-gari RL'));
-    await tester.pumpAndSettle();
+      // O-soto-gari hat ein kuratiertes Bild (technique_media_data.dart).
+      await tester.tap(find.text('O-soto-gari RL'));
+      await tester.pump();
 
-    expect(find.text('Auf YouTube ansehen'), findsOneWidget);
-  });
+      // Kein Bildschirmwechsel: die Zeile ist noch da, kein Video-Button.
+      expect(find.text('O-soto-gari RL'), findsOneWidget);
+      expect(find.text('Auf YouTube ansehen'), findsNothing);
+      expect(find.byIcon(Icons.play_circle_outline), findsOneWidget);
+
+      await tester.tap(find.text('O-soto-gari RL'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Auf YouTube ansehen'), findsOneWidget);
+    },
+  );
 
   testWidgets('Abhaken des letzten Punkts einer Guertelstufe zeigt die '
       'Pokal-Belohnung, ein Zwischenschritt aber nicht', (
