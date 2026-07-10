@@ -24,10 +24,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final searchableCategories = judoCategories
-        .where((c) => c.id != 'search')
-        .toList();
-
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.searchTitle)),
       body: Padding(
@@ -97,7 +93,7 @@ class _SearchScreenState extends State<SearchScreen> {
               spacing: 8,
               runSpacing: 8,
               children: [
-                for (final category in searchableCategories)
+                for (final category in judoCategories)
                   FilterChip(
                     label: Text(category.titleDe),
                     selected: _selectedCategoryIds.contains(category.id),

@@ -2,7 +2,23 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../models/category.dart';
 import '../theme/judo_theme.dart';
+import 'category_belt_icon.dart';
 import 'judo_logo.dart';
+
+/// Manuelle Trennstellen fuer lange Kategorienamen, damit sie im schmalen
+/// Rad-Button sauber an einer sinnvollen (Wort-)Stelle umbrechen statt
+/// mitten im Wort abgeschnitten zu werden.
+const _bubbleLabelBreaks = <String, String>{
+  'belt-exam': 'Gürtel-\nprüfung',
+  'standard-situations': 'Standard-\nsituationen',
+  'techniques': 'Weiterführende\nTechniken',
+};
+
+/// Text, wie er im Rad-Button tatsaechlich angezeigt wird (mit manuellem
+/// Umbruch bei langen Namen). Oeffentlich, damit Tests denselben Text zum
+/// Suchen/Antippen verwenden koennen wie das UI selbst.
+String bubbleLabelForCategory(JudoCategory category) =>
+    _bubbleLabelBreaks[category.id] ?? category.titleDe;
 
 /// Kreisfoermiges Auswahlrad: Logo in der Mitte, Kategorien drumherum.
 /// Ziehen dreht das Rad - die Kreis-Buttons (mit deutscher Beschriftung und
@@ -25,8 +41,6 @@ class CategoryWheel extends StatefulWidget {
 }
 
 class _CategoryWheelState extends State<CategoryWheel> {
-  static const double _logoSize = 116;
-  static const double _bubbleSize = 108;
   // Mindestabstand zwischen Logo-Mittelpunkt und Kreisbahn, damit die
   // Buttons das zentrale Logo (samt "JUDO LIFE"-Schriftzug darauf) nie
   // ueberdecken, unabhaengig von der tatsaechlichen Bildschirmgroesse.
@@ -42,7 +56,12 @@ class _CategoryWheelState extends State<CategoryWheel> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final diameter = math.min(constraints.maxWidth, constraints.maxHeight);
-        final minRadius = _logoSize / 2 + _bubbleSize / 2 + _minClearance;
+        // An diameter gekoppelt (statt fester Pixelwerte), damit Logo und
+        // Rad-Buttons auf kleinen/kurzen Bildschirmen mitschrumpfen statt
+        // weit ueber die eigene Kreisflaeche hinauszuragen.
+        final logoSize = (diameter * 0.33).clamp(70.0, 118.0);
+        final bubbleSize = (diameter * 0.34).clamp(74.0, 124.0);
+        final minRadius = logoSize / 2 + bubbleSize / 2 + _minClearance;
         final radius = math.max(diameter / 2 * 0.60, minRadius);
         final center = Offset(diameter / 2, diameter / 2);
         final count = widget.categories.length;
@@ -74,7 +93,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
               clipBehavior: Clip.none,
               children: [
                 JudoLogo(
-                  size: _logoSize,
+                  size: logoSize,
                   isDragging: _isDragging,
                   wheelRotation: _rotation,
                 ),
@@ -83,6 +102,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
                     category: widget.categories[i],
                     angle: _rotation + anglePer * i - math.pi / 2,
                     radius: radius,
+                    bubbleSize: bubbleSize,
                     center: center,
                   ),
               ],
@@ -97,17 +117,18 @@ class _CategoryWheelState extends State<CategoryWheel> {
     required JudoCategory category,
     required double angle,
     required double radius,
+    required double bubbleSize,
     required Offset center,
   }) {
-    const labelWidth = 60.0;
-    const labelGap = 8.0;
+    const labelWidth = 52.0;
+    const labelGap = 6.0;
     // Kreis-Button UND japanisches Schriftzeichen wandern gemeinsam auf
     // derselben Kreisbahn (angle, inkl. _rotation) mit, damit die Zuordnung
     // Zeichen <-> Kategorie beim Drehen immer stimmt.
-    final dx = center.dx + radius * math.cos(angle) - _bubbleSize / 2;
-    final dy = center.dy + radius * math.sin(angle) - _bubbleSize / 2;
+    final dx = center.dx + radius * math.cos(angle) - bubbleSize / 2;
+    final dy = center.dy + radius * math.sin(angle) - bubbleSize / 2;
 
-    final labelRadius = radius + _bubbleSize / 2 + labelGap;
+    final labelRadius = radius + bubbleSize / 2 + labelGap;
     final labelDx = center.dx + labelRadius * math.cos(angle) - labelWidth / 2;
     final labelDy = center.dy + labelRadius * math.sin(angle) - 20;
 
@@ -122,7 +143,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
         // Button selbst wandert auf der Kreisbahn mit.
         child: GestureDetector(
           onTap: () => widget.onSelect(category),
-          child: _CategoryBubble(category: category, size: _bubbleSize),
+          child: _CategoryBubble(category: category, size: bubbleSize),
         ),
       ),
       Positioned(
@@ -230,22 +251,29 @@ class _CategoryBubbleState extends State<_CategoryBubble>
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: size * 0.12),
+            padding: EdgeInsets.symmetric(horizontal: size * 0.1),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(category.icon, color: JudoColors.white, size: size * 0.28),
-                const SizedBox(height: 4),
+                if (category.id == 'belt-exam')
+                  CategoryBeltIcon(size: size * 0.22)
+                else
+                  Icon(
+                    category.icon,
+                    color: JudoColors.white,
+                    size: size * 0.2,
+                  ),
+                const SizedBox(height: 6),
                 Text(
-                  category.titleDe,
+                  bubbleLabelForCategory(category),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: JudoColors.white,
-                    fontSize: 13,
+                    fontSize: 17,
                     fontWeight: FontWeight.w800,
-                    height: 1.1,
+                    height: 1.08,
                   ),
                 ),
               ],

@@ -28,8 +28,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 600));
 
       final category = judoCategories.first;
+      final label = bubbleLabelForCategory(category);
       final kanjiLabelBefore = tester.getTopLeft(find.text(category.kanji));
-      final bubbleBefore = tester.getTopLeft(find.text(category.titleDe));
+      final bubbleBefore = tester.getTopLeft(find.text(label));
 
       // Rad um ein Viertel Umdrehung ziehen (Startpunkt bewusst abseits des
       // Mittelpunkts, sonst ist der Drehwinkel am Anfang undefiniert).
@@ -42,7 +43,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 600));
 
       final kanjiLabelAfter = tester.getTopLeft(find.text(category.kanji));
-      final bubbleAfter = tester.getTopLeft(find.text(category.titleDe));
+      final bubbleAfter = tester.getTopLeft(find.text(label));
 
       // Beide wandern gemeinsam auf der Kreisbahn mit - die Zuordnung
       // Zeichen <-> Kategorie darf sich beim Drehen nie loesen.

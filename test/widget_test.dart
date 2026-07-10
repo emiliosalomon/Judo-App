@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:judo_app/main.dart';
 import 'package:judo_app/models/category.dart';
+import 'package:judo_app/widgets/category_wheel.dart';
 
 void main() {
   setUp(() {
@@ -22,7 +23,7 @@ void main() {
     expect(find.text('Judo App'), findsOneWidget);
     for (final category in judoCategories) {
       expect(find.text(category.kanji), findsOneWidget);
-      expect(find.text(category.titleDe), findsOneWidget);
+      expect(find.text(bubbleLabelForCategory(category)), findsOneWidget);
     }
     // Lernanreiz-Leiste (Serie/Sterne/Pokale).
     expect(find.byIcon(Icons.local_fire_department_rounded), findsOneWidget);
@@ -42,7 +43,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
 
     final techniques = judoCategories.firstWhere((c) => c.id == 'techniques');
-    await tester.tap(find.text(techniques.titleDe));
+    await tester.tap(find.text(bubbleLabelForCategory(techniques)));
     // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
     // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
     await tester.pump();
@@ -68,7 +69,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
 
     final beltExam = judoCategories.firstWhere((c) => c.id == 'belt-exam');
-    await tester.tap(find.text(beltExam.titleDe));
+    await tester.tap(find.text(bubbleLabelForCategory(beltExam)));
     // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
     // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
     await tester.pump();
@@ -77,5 +78,27 @@ void main() {
     expect(find.text('Kyu (Schülergrade)'), findsOneWidget);
     expect(find.text('Dan (Meistergrade)'), findsOneWidget);
     expect(find.text('10. Kyu – Weiß-Gelb'), findsOneWidget);
+  });
+
+  testWidgets('Suche ist keine Rad-Kategorie mehr, sondern eine Leiste unten, '
+      'die die Suchseite oeffnet', (WidgetTester tester) async {
+    await tester.pumpWidget(const JudoApp());
+    // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
+    // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    expect(judoCategories.any((c) => c.id == 'search'), isFalse);
+    expect(find.text('Suche'), findsNothing);
+
+    await tester.tap(
+      find.text('Technik, Kata, Begriff ... (z.B. "osotogari")'),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text('Suche')),
+      findsOneWidget,
+    );
   });
 }
