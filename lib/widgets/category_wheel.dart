@@ -46,15 +46,15 @@ class _CategoryWheelState extends State<CategoryWheel> {
   // Mindestabstand zwischen Logo-Mittelpunkt und Kreisbahn, damit die
   // Buttons das zentrale Logo (samt "JUDO LIFE"-Schriftzug darauf) nie
   // ueberdecken, unabhaengig von der tatsaechlichen Bildschirmgroesse.
-  static const double _minClearance = 8;
+  static const double _minClearance = 5;
 
   // Anteil des verfuegbaren Platzes, der NICHT fuer Logo/Buttons verwendet
   // wird, sondern als Rand fuer die aussen liegenden Kanji-Beschriftungen
-  // reserviert bleibt. Ohne diesen Rand reichen Buttons schon fast bis zum
-  // Bildschirmrand (siehe _minClearance-Historie) und fuer ein Zeichen
-  // ausserhalb davon ist dann kein Platz mehr - es wuerde entweder ins
-  // Rad hineinragen oder ueber den Bildschirmrand hinaus.
-  static const double _labelMarginFraction = 0.11;
+  // reserviert bleibt. Auf 0 gesetzt: die Zeichen sind winzig genug, dass
+  // sie ohne dedizierten Rand auskommen (das Sicherheitsnetz in
+  // _wheelItem faengt den kleinen Rest-Ueberstand ab) - so werden Logo und
+  // Kreis-Buttons stattdessen spuerbar groesser.
+  static const double _labelMarginFraction = 0.0;
 
   double _rotation = 0;
   double _dragStartRotation = 0;
@@ -141,9 +141,9 @@ class _CategoryWheelState extends State<CategoryWheel> {
     required double bubbleSize,
     required Offset center,
   }) {
-    const labelWidth = 26.0;
-    const labelHeight = 22.0;
-    const labelGap = 3.0;
+    const labelWidth = 16.0;
+    const labelHeight = 14.0;
+    const labelGap = 2.0;
     const labelHalfWidth = labelWidth / 2;
     const labelHalfHeight = labelHeight / 2;
     // Kreis-Button UND japanisches Schriftzeichen wandern gemeinsam auf
@@ -209,7 +209,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 19,
+              fontSize: 12,
               fontWeight: FontWeight.w900,
               color: JudoColors.red,
               height: 1.15,
