@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/dan_grades_data.dart';
 import '../data/kyu_grades_data.dart';
+import '../data/technique_translations_data.dart';
 import '../data/techniques_data.dart';
 import '../l10n/strings.dart';
 import '../models/kyu_grade.dart';
@@ -102,6 +103,7 @@ class TechniquesScreen extends StatelessWidget {
                                   color: JudoColors.black,
                                 ),
                               ),
+                              subtitle: _translationSubtitle(technik),
                               trailing: Icon(
                                 expanded
                                     ? Icons.play_circle_outline
@@ -120,6 +122,13 @@ class TechniquesScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Deutsche Uebersetzung als ListTile-Subtitle, oder `null` wenn keine
+/// hinterlegt ist.
+Widget? _translationSubtitle(String technique) {
+  final translation = translateTechnique(technique);
+  return translation == null ? null : Text(translation);
 }
 
 /// Ab welchem Kyu-Grad [techniqueName] erstmals im Pruefungsprogramm
@@ -250,6 +259,7 @@ class _TechniqueRow extends StatelessWidget {
             ),
           ],
         ),
+        subtitle: _translationSubtitle(name),
         trailing: Icon(
           expanded ? Icons.play_circle_outline : Icons.chevron_right,
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../data/technique_translations_data.dart';
 import '../l10n/strings.dart';
 import '../models/kyu_grade.dart';
 import '../models/theory_question.dart';
@@ -173,6 +174,10 @@ class _TrackableSection extends StatelessWidget {
                     color: JudoColors.black,
                   ),
                 ),
+                subtitle: switch (translateTechnique(item)) {
+                  null => null,
+                  final translation => Text(translation),
+                },
                 trailing: Icon(
                   expanded ? Icons.play_circle_outline : Icons.chevron_right,
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/kata_video_data.dart';
+import '../data/technique_translations_data.dart';
 import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
 import '../models/kata_info.dart';
@@ -80,26 +81,49 @@ class KataDetailScreen extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   for (final technique in section.techniques)
-                    InkWell(
-                      onTap: () => _open(
-                        context,
-                        kodokanChannelSearchUrl('$technique ${info.name}'),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 4, 0, 4),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text('${AppStrings.bullet}$technique'),
+                    Builder(
+                      builder: (context) {
+                        final translation = translateTechnique(technique);
+                        return InkWell(
+                          onTap: () => _open(
+                            context,
+                            kodokanChannelSearchUrl('$technique ${info.name}'),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 4, 0, 4),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('${AppStrings.bullet}$technique'),
+                                      if (translation != null)
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 20,
+                                          ),
+                                          child: Text(
+                                            translation,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.play_circle_outline,
+                                  size: 20,
+                                  color: JudoColors.red,
+                                ),
+                              ],
                             ),
-                            const Icon(
-                              Icons.play_circle_outline,
-                              size: 20,
-                              color: JudoColors.red,
-                            ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     ),
                 ],
               ),

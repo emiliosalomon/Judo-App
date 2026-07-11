@@ -1,0 +1,154 @@
+import 'fuzzy_technique_match.dart';
+
+/// Deutsche Uebersetzungen der japanischen Technik-/Griffnamen, die in der
+/// App vorkommen (Nage-, Osae-komi-, Shime-, Kansetsu-waza sowie die
+/// Zusatztechniken des Dan-Programms). Technik-Namen sind Standardvokabular
+/// und die deutschen Bezeichnungen ebenso allgemein gebraeuchliche
+/// Uebersetzungen (nicht wortwoertlich aus OeJV-Originaltexten uebernommen)
+/// — siehe CLAUDE.md.
+///
+/// Als Map fuer eine einzelne Sprache angelegt und ueber [techniqueTranslations]
+/// nach Sprachcode gebuendelt, damit spaeter weitere Sprachen ergaenzt werden
+/// koennen, ohne die Aufrufstellen zu aendern.
+const Map<String, String> techniqueTranslationsDe = {
+  // Nage-waza (Kodokan-Gokyo, 40 Wurftechniken)
+  'De-ashi-barai': 'Vorwärtiges Fußfegen',
+  'Hiza-guruma': 'Kniewurf',
+  'Sasae-tsuri-komi-ashi': 'Sperrendes Fußheben',
+  'Uki-goshi': 'Schwebehüftwurf',
+  'O-soto-gari': 'Großes Außensicheln',
+  'O-goshi': 'Großer Hüftwurf',
+  'O-uchi-gari': 'Großes Innensicheln',
+  'Seoi-nage': 'Schulterwurf',
+  'Ko-soto-gari': 'Kleines Außensicheln',
+  'Ko-uchi-gari': 'Kleines Innensicheln',
+  'Koshi-guruma': 'Hüftrad',
+  'Tsuri-komi-goshi': 'Hebezughüftwurf',
+  'Okuri-ashi-barai': 'Begleitendes Fußfegen',
+  'Tai-otoshi': 'Körperwurf',
+  'Harai-goshi': 'Hüftfegen',
+  'Uchi-mata': 'Innenschenkelwurf',
+  'Ko-soto-gake': 'Kleines Außenhaken',
+  'Tsuri-goshi': 'Hebehüftwurf',
+  'Yoko-otoshi': 'Seitfallwurf',
+  'Ashi-guruma': 'Fußrad',
+  'Hane-goshi': 'Hüftschwung',
+  'Harai-tsuri-komi-ashi': 'Hebezugfußfegen',
+  'Tomoe-nage': 'Kreiswurf',
+  'O-soto-guruma': 'Großes Außenrad',
+  'Kata-guruma': 'Schulterrad',
+  'Uki-waza': 'Schwebewurf',
+  'Sumi-gaeshi': 'Eckenwurf',
+  'Tani-otoshi': 'Talwurf',
+  'Hane-maki-komi': 'Federeinrollwurf',
+  'Utsuri-goshi': 'Hüftwechselwurf',
+  'O-guruma': 'Großes Rad',
+  'Soto-maki-komi': 'Außeneinrollwurf',
+  'Uki-otoshi': 'Schwebefallwurf',
+  'Yoko-wakare': 'Seitliche Trennung',
+  'Yoko-guruma': 'Seitrad',
+  'Ushiro-goshi': 'Rückwärtiger Hüftwurf',
+  'Sukui-nage': 'Schaufelwurf',
+  'Ura-nage': 'Rückwurf',
+  'Sumi-otoshi': 'Eckenniederwurf',
+  'Yoko-gake': 'Seitliches Beinhaken',
+
+  // Osae-komi-waza (Haltegriffe)
+  'Kesa-gatame': 'Schärpenhalte',
+  'Kuzure-kesa-gatame': 'Abgewandelte Schärpenhalte',
+  'Ushiro-kesa-gatame': 'Rückwärtige Schärpenhalte',
+  'Gyaku-kesa-gatame': 'Umgekehrte Schärpenhalte',
+  'Kata-gatame': 'Schulterhalte',
+  'Kami-shiho-gatame': 'Obere Vierpunkthalte',
+  'Kuzure-kami-shiho-gatame': 'Abgewandelte obere Vierpunkthalte',
+  'Yoko-shiho-gatame': 'Seitliche Vierpunkthalte',
+  'Tate-shiho-gatame': 'Längs-Vierpunkthalte',
+  'Uki-gatame': 'Schwebehalte',
+  'Ura-gatame': 'Rückenhalte',
+  'Sankaku-gatame': 'Dreieckshalte',
+
+  // Shime-waza (Wuergetechniken)
+  'Nami-juji-jime': 'Normaler Kreuzwürger',
+  'Gyaku-juji-jime': 'Umgekehrter Kreuzwürger',
+  'Kata-juji-jime': 'Halbkreuzwürger',
+  'Hadaka-jime': 'Nackenwürger',
+  'Okuri-eri-jime': 'Verschobener Kragenwürger',
+  'Kata-ha-jime': 'Einarm-Schulterwürger',
+  'Kata-te-jime': 'Einhandwürger',
+  'Ryote-jime': 'Zweihandwürger',
+  'Sode-guruma-jime': 'Ärmelradwürger',
+  'Tsukkomi-jime': 'Stoßwürger',
+  'Sankaku-jime': 'Dreieckswürger',
+  'Eri-jime': 'Kragenwürger',
+  'Koshi-jime': 'Hüftwürger',
+  'Do-jime': 'Rumpfwürger',
+
+  // Kansetsu-waza (Hebeltechniken)
+  'Ude-garami': 'Armverschlingung',
+  'Ude-hishigi-juji-gatame': 'Kreuz-Armhebel',
+  'Ude-hishigi-ude-gatame': 'Arm-gegen-Arm-Hebel',
+  'Ude-hishigi-hiza-gatame': 'Knie-Armhebel',
+  'Ude-hishigi-waki-gatame': 'Achsel-Armhebel',
+  'Ude-hishigi-hara-gatame': 'Bauch-Armhebel',
+  'Ude-hishigi-ashi-gatame': 'Bein-Armhebel',
+  'Ude-hishigi-te-gatame': 'Hand-Armhebel',
+  'Ude-hishigi-sankaku-gatame': 'Dreieck-Armhebel',
+  'Ashi-garami': 'Beinverschlingung',
+
+  // Weitere in Kyu-Gürtelprogrammen vorkommende Techniknamen
+  'Sankaku-waza': 'Dreiecktechnik',
+  'Ippon-seoi-nage': 'Einarm-Schulterwurf',
+  'Ko-uchi-maki-komi': 'Kleines Innensicheln mit Einrollen',
+  'Ko-uchi (Barai/Gari)': 'Kleines Innensicheln/-fegen',
+  'O-uchi (Barai/Gari)': 'Großes Innensicheln/-fegen',
+
+  // Dan-Zusatztechniken (Shinmeisho-no-waza u.a.)
+  'Seoi-otoshi': 'Schulterfallwurf',
+  'Morote-seoi-nage': 'Beidhändiger Schulterwurf',
+  'Obi-otoshi': 'Gürtelfallwurf',
+  'Yama-arashi': 'Bergsturm',
+  'Ko-uchi-gaeshi': 'Konter gegen kleines Innensicheln',
+  'Sode-tsuri-komi-goshi': 'Ärmelhebezughüftwurf',
+  'Kubi-nage': 'Halswurf',
+  'Uchi-mata-sukashi': 'Ausweichkonter gegen Innenschenkelwurf',
+  'O-uchi-gaeshi': 'Konter gegen großes Innensicheln',
+  'Harai-goshi-gaeshi': 'Konter gegen Hüftfegen',
+  'Tsubame-gaeshi': 'Schwalbenkonter',
+  'O-soto-otoshi': 'Großer Außenfallwurf',
+  'O-soto-gaeshi': 'Konter gegen großes Außensicheln',
+  'Hane-goshi-gaeshi': 'Konter gegen Hüftschwung',
+  'Tama-guruma': 'Kugelrad',
+  'Kuchiki-daoshi': 'Totholzwurf',
+  'Kibisu-gaeshi': 'Fersenkonter',
+  'Morote-gari': 'Doppelbeingriff',
+  'Obi-tori-gaeshi': 'Gürtelgriff-Konter',
+  'Ni-dan-ko-soto-gari/gake': 'Zweifaches kleines Außensicheln/-haken',
+  'Uchi-mata-gaeshi': 'Konter gegen Innenschenkelwurf',
+  'Hikikomi-gaeshi': 'Zieh-Konter',
+  'Yoko-tomoe-nage': 'Seitlicher Kreiswurf',
+  'Daki-wakare': 'Trennwurf',
+  'Tawara-gaeshi': 'Reissack-Konter',
+  'Ude-gaeshi': 'Armkonter',
+  'Kani-basami': 'Krebsschere',
+  'Uchi-maki-komi': 'Inneres Einrollen',
+  'Harai-maki-komi': 'Einrollendes Hüftfegen',
+  'Uchi-mata-maki-komi': 'Innenschenkelwurf mit Einrollen',
+  'O-soto-maki-komi': 'Großes Außensicheln mit Einrollen',
+};
+
+/// Nach Sprachcode gebuendelte Uebersetzungen. Aktuell nur Deutsch - weitere
+/// Sprachen koennen hier als zusaetzliche Eintraege ergaenzt werden, ohne
+/// dass sich [translateTechnique] oder seine Aufrufstellen aendern muessen.
+const Map<String, Map<String, String>> techniqueTranslations = {
+  'de': techniqueTranslationsDe,
+};
+
+/// Findet die Uebersetzung fuer einen (ggf. mit Suffixen wie " RL" oder
+/// "(min. 3 Varianten)" versehenen) Technik-Namen, oder `null` wenn keine
+/// hinterlegt ist (z.B. bei Ukemi-waza, die schon auf Deutsch benannt sind,
+/// oder bei Anwendungsaufgaben-Beschreibungen statt reinen Technik-Namen).
+String? translateTechnique(String name, {String languageCode = 'de'}) {
+  final table = techniqueTranslations[languageCode];
+  if (table == null) return null;
+  return findBestTechniqueMatch(name, table);
+}
