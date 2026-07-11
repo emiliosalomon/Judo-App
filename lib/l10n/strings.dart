@@ -98,7 +98,7 @@ class AppStrings {
   static const searchHint = 'Technik, Kata, Begriff ... (z.B. "osotogari")';
   static const categoriesLabel = 'Kategorien';
   static const searchEmptyState =
-      'Tippe einen Begriff ein — Vorschläge erscheinen automatisch.';
+      'Antippen zeigt Vorschläge, Tippen grenzt sie weiter ein.';
 
   // Technik-Medien (Bild + YouTube-Link)
   static const watchOnYoutube = 'Auf YouTube ansehen';

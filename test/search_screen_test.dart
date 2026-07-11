@@ -26,7 +26,7 @@ void main() {
     },
   );
 
-  testWidgets('Leere Eingabe zeigt keine Vorschläge', (
+  testWidgets('Ohne Fokus auf das Suchfeld werden keine Vorschläge gezeigt', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
@@ -34,8 +34,23 @@ void main() {
     );
 
     expect(
-      find.text('Tippe einen Begriff ein — Vorschläge erscheinen automatisch.'),
+      find.text('Antippen zeigt Vorschläge, Tippen grenzt sie weiter ein.'),
       findsOneWidget,
     );
+    expect(find.byType(ListTile), findsNothing);
   });
+
+  testWidgets(
+    'Antippen des leeren Suchfelds zeigt bereits Vorschläge vor jeder Eingabe',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        await wrapWithProgress(const MaterialApp(home: SearchScreen())),
+      );
+
+      await tester.tap(find.byType(TextField));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ListTile), findsWidgets);
+    },
+  );
 }

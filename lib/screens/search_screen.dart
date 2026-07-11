@@ -22,6 +22,11 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final Set<String> _selectedCategoryIds = {};
 
+  // Anzahl Vorschlaege, die schon vor jeder Texteingabe angezeigt werden
+  // (sobald das Suchfeld fokussiert wird), damit Nutzer nicht erst tippen
+  // muessen, um zu sehen, was suchbar ist.
+  static const _suggestionLimit = 8;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,16 +39,20 @@ class _SearchScreenState extends State<SearchScreen> {
             Autocomplete<SearchEntry>(
               displayStringForOption: (entry) => entry.title,
               optionsBuilder: (textEditingValue) {
-                final query = normalizeForSearch(textEditingValue.text);
-                if (query.isEmpty) return const Iterable<SearchEntry>.empty();
-                return judoSearchIndex.where((entry) {
-                  final matchesCategory =
+                final matchesCategory = judoSearchIndex.where(
+                  (entry) =>
                       _selectedCategoryIds.isEmpty ||
-                      _selectedCategoryIds.contains(entry.categoryId);
-                  if (!matchesCategory) return false;
-                  return normalizeForSearch(entry.title).contains(query) ||
-                      normalizeForSearch(entry.contextLabel).contains(query);
-                });
+                      _selectedCategoryIds.contains(entry.categoryId),
+                );
+                final query = normalizeForSearch(textEditingValue.text);
+                if (query.isEmpty) {
+                  return matchesCategory.take(_suggestionLimit);
+                }
+                return matchesCategory.where(
+                  (entry) =>
+                      normalizeForSearch(entry.title).contains(query) ||
+                      normalizeForSearch(entry.contextLabel).contains(query),
+                );
               },
               onSelected: (entry) => _openEntry(context, entry),
               fieldViewBuilder: (context, controller, focusNode, onSubmitted) {
