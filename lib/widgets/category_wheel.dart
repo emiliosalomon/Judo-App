@@ -289,19 +289,6 @@ class _CategoryBubbleState extends State<_CategoryBubble>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Glanzlicht oben links fuer den "Arcade-Button"-Look.
-          Positioned(
-            top: size * 0.1,
-            left: size * 0.16,
-            child: Container(
-              width: size * 0.34,
-              height: size * 0.2,
-              decoration: BoxDecoration(
-                color: JudoColors.white.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(size),
-              ),
-            ),
-          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: size * 0.1),
             child: Column(
