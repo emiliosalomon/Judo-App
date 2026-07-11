@@ -49,17 +49,20 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
           child: Column(
             children: [
+              // Bewusst kompakt gehalten: die Serie/Sterne/Pokale-Anzeige
+              // ist ein Nebenschauplatz, das Auswahlrad soll den groessten
+              // Teil des Bildschirms einnehmen.
               const StatsBanner(),
-              const SizedBox(height: 12),
+              const SizedBox(height: 6),
               Text(
                 AppStrings.wheelHint,
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               Expanded(
                 child: Center(
                   child: AspectRatio(
@@ -71,11 +74,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              // Grosszuegiger Abstand: das Rad zeichnet Kanji-Beschriftungen
-              // per Clip.none bewusst etwas ueber seine eigene Kreisflaeche
-              // hinaus - der Puffer verhindert, dass diese mit der
-              // Suchleiste darunter kollidieren.
-              const SizedBox(height: 56),
+              // Puffer, damit das Rad (das per Clip.none in seltenen Faellen
+              // etwas ueber die eigene Kreisflaeche hinausragt) nicht mit
+              // der Suchleiste darunter kollidiert.
+              const SizedBox(height: 28),
               const _HomeSearchBar(),
             ],
           ),
