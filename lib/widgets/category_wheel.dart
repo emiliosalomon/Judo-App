@@ -46,7 +46,15 @@ class _CategoryWheelState extends State<CategoryWheel> {
   // Mindestabstand zwischen Logo-Mittelpunkt und Kreisbahn, damit die
   // Buttons das zentrale Logo (samt "JUDO LIFE"-Schriftzug darauf) nie
   // ueberdecken, unabhaengig von der tatsaechlichen Bildschirmgroesse.
-  static const double _minClearance = 12;
+  static const double _minClearance = 8;
+
+  // Anteil des verfuegbaren Platzes, der NICHT fuer Logo/Buttons verwendet
+  // wird, sondern als Rand fuer die aussen liegenden Kanji-Beschriftungen
+  // reserviert bleibt. Ohne diesen Rand reichen Buttons schon fast bis zum
+  // Bildschirmrand (siehe _minClearance-Historie) und fuer ein Zeichen
+  // ausserhalb davon ist dann kein Platz mehr - es wuerde entweder ins
+  // Rad hineinragen oder ueber den Bildschirmrand hinaus.
+  static const double _labelMarginFraction = 0.11;
 
   double _rotation = 0;
   double _dragStartRotation = 0;
@@ -57,21 +65,32 @@ class _CategoryWheelState extends State<CategoryWheel> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final diameter = math.min(constraints.maxWidth, constraints.maxHeight);
+        final boxSize = math.min(constraints.maxWidth, constraints.maxHeight);
+        // Logo und Rad-Buttons werden gegen einen kleineren "inneren"
+        // Durchmesser bemessen, damit rundherum immer ein Rand fuer die
+        // Kanji-Beschriftungen frei bleibt (siehe _labelMarginFraction).
+        final diameter = boxSize * (1 - 2 * _labelMarginFraction);
         // An diameter gekoppelt (statt fester Pixelwerte), damit Logo und
         // Rad-Buttons auf kleinen/kurzen Bildschirmen mitschrumpfen statt
         // weit ueber die eigene Kreisflaeche hinauszuragen.
         final logoSize = (diameter * 0.33).clamp(70.0, 118.0);
-        final bubbleSize = (diameter * 0.34).clamp(74.0, 124.0);
+        // Untergrenze bewusst etwas hoeher als man fuer die reine
+        // Kreisgroesse bräuchte: bei 3-zeiligen Labels ("Weiter-\n
+        // führende\nTechniken") reicht ein kleinerer Button sonst nicht
+        // mehr fuer Icon + Text (RenderFlex-Overflow bei 74px beobachtet).
+        final bubbleSize = (diameter * 0.34).clamp(80.0, 124.0);
         final minRadius = logoSize / 2 + bubbleSize / 2 + _minClearance;
         final radius = math.max(diameter / 2 * 0.60, minRadius);
-        final center = Offset(diameter / 2, diameter / 2);
+        // Mittelpunkt bezieht sich auf die volle Box (boxSize), nicht nur
+        // auf den inneren Durchmesser - der reservierte Rand liegt
+        // gleichmaessig rundherum.
+        final center = Offset(boxSize / 2, boxSize / 2);
         final count = widget.categories.length;
         final anglePer = (2 * math.pi) / count;
 
         return SizedBox(
-          width: diameter,
-          height: diameter,
+          width: boxSize,
+          height: boxSize,
           child: GestureDetector(
             onPanStart: (details) {
               _dragStartRotation = _rotation;
@@ -122,35 +141,47 @@ class _CategoryWheelState extends State<CategoryWheel> {
     required double bubbleSize,
     required Offset center,
   }) {
-    const labelWidth = 52.0;
-    const labelHeight = 40.0;
-    const labelGap = 6.0;
+    const labelWidth = 26.0;
+    const labelHeight = 22.0;
+    const labelGap = 3.0;
+    const labelHalfWidth = labelWidth / 2;
+    const labelHalfHeight = labelHeight / 2;
     // Kreis-Button UND japanisches Schriftzeichen wandern gemeinsam auf
     // derselben Kreisbahn (angle, inkl. _rotation) mit, damit die Zuordnung
     // Zeichen <-> Kategorie beim Drehen immer stimmt.
     final dx = center.dx + radius * math.cos(angle) - bubbleSize / 2;
     final dy = center.dy + radius * math.sin(angle) - bubbleSize / 2;
 
-    // Das Rad ist quadratisch (center.dx == center.dy == Durchmesser / 2).
-    final diameter = center.dx * 2;
+    // Das Rad ist quadratisch (center.dx == center.dy == Boxgroesse / 2).
+    final boxSize = center.dx * 2;
 
-    final labelRadius = radius + bubbleSize / 2 + labelGap;
-    var labelDx = center.dx + labelRadius * math.cos(angle) - labelWidth / 2;
-    var labelDy = center.dy + labelRadius * math.sin(angle) - labelHeight / 2;
+    // Wie weit das (immer aufrecht stehende, nicht mitgedrehte) Label in
+    // Richtung `angle` ueber seinen eigenen Mittelpunkt hinausragt - je
+    // nachdem, ob der Button gerade eher links/rechts oder eher oben/unten
+    // steht, zaehlt die halbe Breite bzw. halbe Hoehe (oder eine Mischung
+    // bei Zwischenwinkeln waehrend des Drehens).
+    final labelReach =
+        labelHalfWidth * math.cos(angle).abs() +
+        labelHalfHeight * math.sin(angle).abs();
+    final bubbleOuterEdge = radius + bubbleSize / 2;
+    final labelRadius = bubbleOuterEdge + labelGap + labelReach;
+    var labelDx = center.dx + labelRadius * math.cos(angle) - labelHalfWidth;
+    var labelDy = center.dy + labelRadius * math.sin(angle) - labelHalfHeight;
 
-    // Sicherheitsnetz: das Zeichen darf nur einen kleinen Toleranzsaum ueber
-    // die eigene Radflaeche hinausragen (Clip.none erlaubt das grundsaetzlich
-    // fuer den optischen "Aussen"-Look), sonst landet es je nach
-    // Bildschirmbreite ausserhalb des sichtbaren Bereichs - das war der Bug
-    // beim rechten Rad-Button ("Weiterführende Techniken").
-    final overflowTolerance = diameter * 0.06;
+    // Sicherheitsnetz fuer Extremfaelle (sehr kleine Bildschirme): das
+    // Zeichen darf nur einen grosszuegigen Toleranzsaum ueber die eigene
+    // Radflaeche hinausragen (Clip.none erlaubt das grundsaetzlich fuer den
+    // optischen "Aussen"-Look). Im Normalfall greift das nicht, weil
+    // labelRadius oben schon so berechnet ist, dass Label und Rad-Button
+    // sich nie ueberlappen und das Zeichen innerhalb dieses Saums bleibt.
+    final overflowTolerance = boxSize * 0.15;
     labelDx = labelDx.clamp(
       -overflowTolerance,
-      diameter - labelWidth + overflowTolerance,
+      boxSize - labelWidth + overflowTolerance,
     );
     labelDy = labelDy.clamp(
       -overflowTolerance,
-      diameter - labelHeight + overflowTolerance,
+      boxSize - labelHeight + overflowTolerance,
     );
 
     return [
@@ -178,7 +209,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 32,
+              fontSize: 19,
               fontWeight: FontWeight.w900,
               color: JudoColors.red,
               height: 1.15,

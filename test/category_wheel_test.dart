@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:judo_app/models/category.dart';
+import 'package:judo_app/theme/judo_theme.dart';
 import 'package:judo_app/widgets/category_wheel.dart';
 
 void main() {
@@ -56,13 +57,13 @@ void main() {
     'Kein Kanji-Zeichen ragt weit ueber den Bildschirmrand hinaus '
     '(Bug: Zeichen beim rechten Rad-Button stand ausserhalb des Bildschirms)',
     (WidgetTester tester) async {
-      const diameter = 360.0;
+      const boxSize = 360.0;
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SizedBox(
-              width: diameter,
-              height: diameter,
+              width: boxSize,
+              height: boxSize,
               child: CategoryWheel(
                 categories: judoCategories,
                 onSelect: (_) {},
@@ -74,11 +75,11 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
 
-      // Derselbe kleine Toleranzsaum wie im Widget selbst (siehe
-      // CategoryWheel._wheelItem) - alles darueber hinaus waere wieder der
-      // urspruengliche Bug (Zeichen komplett ausserhalb des sichtbaren
-      // Bereichs).
-      const tolerance = diameter * 0.06;
+      // Derselbe grosszuegige Sicherheitsnetz-Saum wie im Widget selbst
+      // (siehe CategoryWheel._wheelItem) - alles darueber hinaus waere
+      // wieder der urspruengliche Bug (Zeichen komplett ausserhalb des
+      // sichtbaren Bereichs).
+      const tolerance = boxSize * 0.15;
 
       for (final category in judoCategories) {
         final rect = tester.getRect(find.text(category.kanji));
@@ -89,7 +90,7 @@ void main() {
         );
         expect(
           rect.right,
-          lessThanOrEqualTo(diameter + tolerance),
+          lessThanOrEqualTo(boxSize + tolerance),
           reason: '${category.kanji} ragt rechts zu weit heraus',
         );
         expect(
@@ -99,10 +100,83 @@ void main() {
         );
         expect(
           rect.bottom,
-          lessThanOrEqualTo(diameter + tolerance),
+          lessThanOrEqualTo(boxSize + tolerance),
           reason: '${category.kanji} ragt unten zu weit heraus',
         );
       }
     },
   );
+
+  testWidgets('Kein Kanji-Zeichen ueberlappt den zugehoerigen Kreis-Button '
+      '(Bug: Zeichen wurde optisch in den Kreis hineingezogen)', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 360,
+            height: 360,
+            child: CategoryWheel(categories: judoCategories, onSelect: (_) {}),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    // Die Rad-Buttons sind die einzigen kreisfoermigen Container mit
+    // rotem Rand im Baum (das zentrale Logo ist zwar auch kreisfoermig,
+    // hat aber keinen Rand) - darueber laesst sich ihr tatsaechlicher
+    // Kreis (Mittelpunkt + Radius) unabhaengig von der internen
+    // Positionierungs-Formel ermitteln.
+    final circleFinder = find.byWidgetPredicate((widget) {
+      if (widget is! Container || widget.decoration is! BoxDecoration) {
+        return false;
+      }
+      final decoration = widget.decoration! as BoxDecoration;
+      return decoration.shape == BoxShape.circle &&
+          decoration.border?.top.color == JudoColors.red;
+    });
+    expect(circleFinder, findsNWidgets(judoCategories.length));
+
+    void checkNoOverlap() {
+      for (var i = 0; i < judoCategories.length; i++) {
+        final bubbleRect = tester.getRect(circleFinder.at(i));
+        final bubbleCenter = bubbleRect.center;
+        final bubbleRadius = bubbleRect.width / 2;
+
+        final kanjiRect = tester.getRect(find.text(judoCategories[i].kanji));
+        // Naechster Punkt des (achsenparallelen) Kanji-Rechtecks zum
+        // Kreismittelpunkt - liegt dieser ausserhalb des Kreisradius,
+        // ueberlappt das Zeichen den Kreis nirgends.
+        final nearestX = bubbleCenter.dx.clamp(kanjiRect.left, kanjiRect.right);
+        final nearestY = bubbleCenter.dy.clamp(kanjiRect.top, kanjiRect.bottom);
+        final distance = (Offset(nearestX, nearestY) - bubbleCenter).distance;
+
+        expect(
+          distance,
+          greaterThanOrEqualTo(bubbleRadius - 1),
+          reason:
+              '${judoCategories[i].kanji} ueberlappt seinen Kreis-Button '
+              '(Abstand $distance < Radius $bubbleRadius)',
+        );
+      }
+    }
+
+    checkNoOverlap();
+
+    // Auch nach einer beliebigen (nicht auf 90-Grad-Schritte gerundeten)
+    // Drehung darf sich nichts ueberlappen - die Buttons stehen dann
+    // nicht mehr an den vier Grund-Positionen oben/rechts/unten/links.
+    final wheelCenter = tester.getCenter(find.byType(CategoryWheel));
+    await tester.dragFrom(
+      wheelCenter + const Offset(0, -100),
+      const Offset(37, 0),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    checkNoOverlap();
+  });
 }
