@@ -51,4 +51,58 @@ void main() {
       expect(bubbleAfter, isNot(bubbleBefore));
     },
   );
+
+  testWidgets(
+    'Kein Kanji-Zeichen ragt weit ueber den Bildschirmrand hinaus '
+    '(Bug: Zeichen beim rechten Rad-Button stand ausserhalb des Bildschirms)',
+    (WidgetTester tester) async {
+      const diameter = 360.0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: diameter,
+              height: diameter,
+              child: CategoryWheel(
+                categories: judoCategories,
+                onSelect: (_) {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+
+      // Derselbe kleine Toleranzsaum wie im Widget selbst (siehe
+      // CategoryWheel._wheelItem) - alles darueber hinaus waere wieder der
+      // urspruengliche Bug (Zeichen komplett ausserhalb des sichtbaren
+      // Bereichs).
+      const tolerance = diameter * 0.06;
+
+      for (final category in judoCategories) {
+        final rect = tester.getRect(find.text(category.kanji));
+        expect(
+          rect.left,
+          greaterThanOrEqualTo(-tolerance),
+          reason: '${category.kanji} ragt links zu weit heraus',
+        );
+        expect(
+          rect.right,
+          lessThanOrEqualTo(diameter + tolerance),
+          reason: '${category.kanji} ragt rechts zu weit heraus',
+        );
+        expect(
+          rect.top,
+          greaterThanOrEqualTo(-tolerance),
+          reason: '${category.kanji} ragt oben zu weit heraus',
+        );
+        expect(
+          rect.bottom,
+          lessThanOrEqualTo(diameter + tolerance),
+          reason: '${category.kanji} ragt unten zu weit heraus',
+        );
+      }
+    },
+  );
 }

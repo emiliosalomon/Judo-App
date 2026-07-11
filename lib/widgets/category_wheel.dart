@@ -123,6 +123,7 @@ class _CategoryWheelState extends State<CategoryWheel> {
     required Offset center,
   }) {
     const labelWidth = 52.0;
+    const labelHeight = 40.0;
     const labelGap = 6.0;
     // Kreis-Button UND japanisches Schriftzeichen wandern gemeinsam auf
     // derselben Kreisbahn (angle, inkl. _rotation) mit, damit die Zuordnung
@@ -130,9 +131,27 @@ class _CategoryWheelState extends State<CategoryWheel> {
     final dx = center.dx + radius * math.cos(angle) - bubbleSize / 2;
     final dy = center.dy + radius * math.sin(angle) - bubbleSize / 2;
 
+    // Das Rad ist quadratisch (center.dx == center.dy == Durchmesser / 2).
+    final diameter = center.dx * 2;
+
     final labelRadius = radius + bubbleSize / 2 + labelGap;
-    final labelDx = center.dx + labelRadius * math.cos(angle) - labelWidth / 2;
-    final labelDy = center.dy + labelRadius * math.sin(angle) - 20;
+    var labelDx = center.dx + labelRadius * math.cos(angle) - labelWidth / 2;
+    var labelDy = center.dy + labelRadius * math.sin(angle) - labelHeight / 2;
+
+    // Sicherheitsnetz: das Zeichen darf nur einen kleinen Toleranzsaum ueber
+    // die eigene Radflaeche hinausragen (Clip.none erlaubt das grundsaetzlich
+    // fuer den optischen "Aussen"-Look), sonst landet es je nach
+    // Bildschirmbreite ausserhalb des sichtbaren Bereichs - das war der Bug
+    // beim rechten Rad-Button ("Weiterführende Techniken").
+    final overflowTolerance = diameter * 0.06;
+    labelDx = labelDx.clamp(
+      -overflowTolerance,
+      diameter - labelWidth + overflowTolerance,
+    );
+    labelDy = labelDy.clamp(
+      -overflowTolerance,
+      diameter - labelHeight + overflowTolerance,
+    );
 
     return [
       Positioned(
