@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../data/judo_austria_link.dart';
 import '../l10n/strings.dart';
 import '../models/fight_entry.dart';
 import '../services/fight_log_controller.dart';
@@ -25,30 +27,69 @@ class MyFightsScreen extends StatelessWidget {
         ).push(MaterialPageRoute(builder: (_) => const AddFightScreen())),
         child: const Icon(Icons.add, color: JudoColors.white),
       ),
-      body: AnimatedBuilder(
-        animation: controller,
-        builder: (context, _) {
-          final fights = controller.fights;
-          if (fights.isEmpty) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  AppStrings.myFightsEmptyState,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-          }
-          return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 88),
-            itemCount: fights.length,
-            itemBuilder: (context, index) =>
-                _FightCard(fight: fights[index], controller: controller),
-          );
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: _JudoAustriaTermineButton(),
+          ),
+          Expanded(
+            child: AnimatedBuilder(
+              animation: controller,
+              builder: (context, _) {
+                final fights = controller.fights;
+                if (fights.isEmpty) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Text(
+                        AppStrings.myFightsEmptyState,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 88),
+                  itemCount: fights.length,
+                  itemBuilder: (context, index) =>
+                      _FightCard(fight: fights[index], controller: controller),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
+  }
+}
+
+/// Oeffnet die offizielle Turnier-Termin-Uebersicht von Judo Austria.
+class _JudoAustriaTermineButton extends StatelessWidget {
+  const _JudoAustriaTermineButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () => _open(context),
+        icon: const Icon(Icons.open_in_new, color: JudoColors.red),
+        label: const Text(AppStrings.judoAustriaTermineButton),
+      ),
+    );
+  }
+
+  Future<void> _open(BuildContext context) async {
+    final opened = await launchUrl(
+      judoAustriaTermineUrl,
+      mode: LaunchMode.externalApplication,
+    );
+    if (!opened && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text(AppStrings.couldNotOpenLink)),
+      );
+    }
   }
 }
 

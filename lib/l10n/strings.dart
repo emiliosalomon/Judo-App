@@ -154,4 +154,5 @@ class AppStrings {
   static const deleteCancel = 'Abbrechen';
   static const fightRequiredFieldsMissing =
       'Bitte Turnier, Ort und Datum ausfüllen.';
+  static const judoAustriaTermineButton = 'Judo Austria – Turniertermine';
 }

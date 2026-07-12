@@ -14,6 +14,16 @@ void main() {
     expect(find.text(AppStrings.myFightsEmptyState), findsOneWidget);
   });
 
+  testWidgets('Zeigt einen Link-Button zu den Judo-Austria-Turnierterminen', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      await wrapWithFightLog(const MaterialApp(home: MyFightsScreen())),
+    );
+
+    expect(find.text(AppStrings.judoAustriaTermineButton), findsOneWidget);
+  });
+
   testWidgets(
     'Kampf ueber das Formular eintragen zeigt ihn danach in der Liste',
     (tester) async {
