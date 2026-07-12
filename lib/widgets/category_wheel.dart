@@ -42,7 +42,8 @@ class CategoryWheel extends StatefulWidget {
   State<CategoryWheel> createState() => _CategoryWheelState();
 }
 
-class _CategoryWheelState extends State<CategoryWheel> {
+class _CategoryWheelState extends State<CategoryWheel>
+    with SingleTickerProviderStateMixin {
   // Mindestabstand zwischen Logo-Mittelpunkt und Kreisbahn, damit die
   // Buttons das zentrale Logo (samt "JUDO LIFE"-Schriftzug darauf) nie
   // ueberdecken, unabhaengig von der tatsaechlichen Bildschirmgroesse.
@@ -60,6 +61,52 @@ class _CategoryWheelState extends State<CategoryWheel> {
   double _dragStartRotation = 0;
   Offset? _dragStartFocal;
   bool _isDragging = false;
+
+  // Das Drehen selbst ist nur ein Gimmick - nach dem Loslassen soll das
+  // Rad aber immer in einer der festen Grundpositionen einrasten (wie ein
+  // Kreuz/Viereck aus vier Kategorien um die Mitte), nie in einer
+  // beliebigen Zwischenstellung stehen bleiben.
+  //
+  // In initState() (statt als lazy `late final` Feldinitialisierer)
+  // konstruiert: ein `late final`-Initialisierer liefe erst beim ersten
+  // Zugriff - wird das Widget disposed(), OHNE dass je gedreht wurde, waere
+  // dieser erste Zugriff ausgerechnet dispose() selbst, wo das Element
+  // schon deaktiviert wird (AnimationController.createTicker() braucht
+  // dann eine TickerMode-Ancestor-Lookup, die zu diesem Zeitpunkt fehlschlaegt).
+  late final AnimationController _snapController;
+  Animation<double>? _snapAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _snapController =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 320),
+        )..addListener(() {
+          final animation = _snapAnimation;
+          if (animation != null) setState(() => _rotation = animation.value);
+        });
+  }
+
+  double get _anglePer => (2 * math.pi) / widget.categories.length;
+
+  void _snapToNearestPosition() {
+    final anglePer = _anglePer;
+    final snapped = (_rotation / anglePer).roundToDouble() * anglePer;
+    _snapAnimation = Tween<double>(begin: _rotation, end: snapped).animate(
+      CurvedAnimation(parent: _snapController, curve: Curves.easeOutBack),
+    );
+    _snapController
+      ..reset()
+      ..forward();
+  }
+
+  @override
+  void dispose() {
+    _snapController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +140,9 @@ class _CategoryWheelState extends State<CategoryWheel> {
           height: boxSize,
           child: GestureDetector(
             onPanStart: (details) {
+              // Eine noch laufende Einrast-Animation vom letzten Loslassen
+              // sofort stoppen, sonst "kaempft" sie mit der neuen Drehung.
+              _snapController.stop();
               _dragStartRotation = _rotation;
               _dragStartFocal = details.localPosition - center;
               setState(() => _isDragging = true);
@@ -107,8 +157,14 @@ class _CategoryWheelState extends State<CategoryWheel> {
                 _rotation = _dragStartRotation + (currentAngle - startAngle);
               });
             },
-            onPanEnd: (_) => setState(() => _isDragging = false),
-            onPanCancel: () => setState(() => _isDragging = false),
+            onPanEnd: (_) {
+              setState(() => _isDragging = false);
+              _snapToNearestPosition();
+            },
+            onPanCancel: () {
+              setState(() => _isDragging = false);
+              _snapToNearestPosition();
+            },
             child: Stack(
               alignment: Alignment.center,
               clipBehavior: Clip.none,

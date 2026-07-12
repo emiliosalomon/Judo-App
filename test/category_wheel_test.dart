@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:judo_app/models/category.dart';
@@ -166,9 +167,9 @@ void main() {
 
     checkNoOverlap();
 
-    // Auch nach einer beliebigen (nicht auf 90-Grad-Schritte gerundeten)
-    // Drehung darf sich nichts ueberlappen - die Buttons stehen dann
-    // nicht mehr an den vier Grund-Positionen oben/rechts/unten/links.
+    // Auch waehrend des Ziehens selbst (bevor die Einrast-Animation nach
+    // dem Loslassen greift) darf sich nichts ueberlappen - das Rad kann in
+    // diesem Moment an jeder beliebigen Zwischenstellung stehen.
     final wheelCenter = tester.getCenter(find.byType(CategoryWheel));
     await tester.dragFrom(
       wheelCenter + const Offset(0, -100),
@@ -178,5 +179,62 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
 
     checkNoOverlap();
+  });
+
+  testWidgets('Rad rastet nach dem Loslassen immer in einer der vier festen '
+      'Grundpositionen ein, egal wie weit gezogen wurde', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 360,
+            height: 360,
+            child: CategoryWheel(categories: judoCategories, onSelect: (_) {}),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    final wheelCenter = tester.getCenter(find.byType(CategoryWheel));
+    final circleFinder = find.byWidgetPredicate((widget) {
+      if (widget is! Container || widget.decoration is! BoxDecoration) {
+        return false;
+      }
+      final decoration = widget.decoration! as BoxDecoration;
+      return decoration.shape == BoxShape.circle &&
+          decoration.border?.top.color == JudoColors.red;
+    });
+
+    // Ein willkuerlicher, nicht auf 90 Grad ausgerichteter Ziehweg -
+    // genau der Fall, der vorher an einer Zwischenstellung stehen blieb.
+    await tester.dragFrom(
+      wheelCenter + const Offset(0, -100),
+      const Offset(37, 0),
+    );
+    await tester.pump();
+    // Laenger als die 320ms-Einrast-Animation warten, bis sie fertig ist.
+    await tester.pump(const Duration(milliseconds: 500));
+
+    final anglePer = 2 * math.pi / judoCategories.length; // 4 -> 90 Grad
+    for (var i = 0; i < judoCategories.length; i++) {
+      final bubbleCenter = tester.getCenter(circleFinder.at(i));
+      final offset = bubbleCenter - wheelCenter;
+      final angle = math.atan2(offset.dy, offset.dx);
+      final stepsFromZero = angle / anglePer;
+      final distanceFromNearestStep =
+          (stepsFromZero - stepsFromZero.roundToDouble()).abs();
+      expect(
+        distanceFromNearestStep,
+        lessThan(0.02),
+        reason:
+            '${judoCategories[i].titleDe} steht nicht auf einer der vier '
+            'Grundpositionen (Winkel-Schritt-Abweichung '
+            '$distanceFromNearestStep)',
+      );
+    }
   });
 }
