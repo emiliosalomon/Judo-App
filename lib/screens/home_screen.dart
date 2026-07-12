@@ -9,6 +9,7 @@ import 'belt_exam_screen.dart';
 import 'category_placeholder_screen.dart';
 import 'kata_screen.dart';
 import 'leaderboard_screen.dart';
+import 'my_fights_screen.dart';
 import 'search_screen.dart';
 import 'standard_situations_screen.dart';
 import 'techniques_screen.dart';
@@ -76,8 +77,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               // Puffer, damit das Rad (das per Clip.none in seltenen Faellen
               // etwas ueber die eigene Kreisflaeche hinausragt) nicht mit
-              // der Suchleiste darunter kollidiert.
+              // den Buttons darunter kollidiert.
               const SizedBox(height: 28),
+              const _MyFightsButton(),
+              const SizedBox(height: 10),
               const _HomeSearchBar(),
             ],
           ),
@@ -95,6 +98,26 @@ class _HomeScreenState extends State<HomeScreen> {
       _ => CategoryPlaceholderScreen(category: category),
     };
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+  }
+}
+
+/// Einstieg ins persoenliche Wettkampf-Tagebuch, oberhalb der Suchleiste.
+class _MyFightsButton extends StatelessWidget {
+  const _MyFightsButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton.icon(
+        onPressed: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const MyFightsScreen())),
+        style: FilledButton.styleFrom(backgroundColor: JudoColors.red),
+        icon: const Icon(Icons.military_tech_outlined),
+        label: const Text(AppStrings.myFightsButtonLabel),
+      ),
+    );
   }
 }
 

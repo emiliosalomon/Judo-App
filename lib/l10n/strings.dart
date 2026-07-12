@@ -119,4 +119,39 @@ class AppStrings {
   static const nicknamePromptHint = 'Spitzname';
   static const nicknamePromptConfirm = 'Speichern';
   static const nicknamePromptCancel = 'Abbrechen';
+
+  // Meine Kaempfe
+  static const myFightsButtonLabel = 'Meine Kämpfe';
+  static const myFightsTitle = 'Meine Kämpfe';
+  static const myFightsEmptyState =
+      'Noch keine Kämpfe eingetragen — leg los und werde deine eigene '
+      'Fighting-Legende!';
+  static const addFightTitle = 'Kampf eintragen';
+  static const addFightFabTooltip = 'Kampf hinzufügen';
+  static const fightDateLabel = 'Datum';
+  static const fightTournamentLabel = 'Turnier';
+  static const fightTournamentHint = 'Name des Turniers';
+  static const fightLocationLabel = 'Ort';
+  static const fightLocationHint = 'Wo hat der Kampf stattgefunden?';
+  static const fightPlacementLabel = 'Erreichter Platz';
+  static const fightPlacementHint = 'z.B. 1. Platz, Vorrunde ausgeschieden';
+  static const fightOpponentsCountLabel = 'Anzahl Kämpfe/Gegner';
+  static const fightNotesLabel = 'Notizen';
+  static const fightNotesHint = 'Wie ist es gelaufen? Was hast du gelernt?';
+  static const fightPhotoLabel = 'Erinnerungsfoto';
+  static const fightBracketPhotoLabel = 'Kämpferliste / Auslosung';
+  static const addPhotoButton = 'Foto hinzufügen';
+  static const changePhotoButton = 'Foto ändern';
+  static const removePhotoButton = 'Foto entfernen';
+  static const saveFightButton = 'Speichern';
+  static String fightOpponentsCountSummary(int count) =>
+      count == 1 ? '1 Gegner' : '$count Gegner';
+  static const deleteFightTooltip = 'Kampf löschen';
+  static const deleteFightConfirmTitle = 'Kampf löschen?';
+  static const deleteFightConfirmMessage =
+      'Dieser Eintrag wird unwiderruflich gelöscht.';
+  static const deleteConfirm = 'Löschen';
+  static const deleteCancel = 'Abbrechen';
+  static const fightRequiredFieldsMissing =
+      'Bitte Turnier, Ort und Datum ausfüllen.';
 }

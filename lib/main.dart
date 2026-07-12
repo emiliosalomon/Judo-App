@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'l10n/strings.dart';
 import 'screens/home_screen.dart';
+import 'services/fight_log_controller.dart';
+import 'services/fight_log_scope.dart';
+import 'services/fight_log_store.dart';
 import 'services/firestore_leaderboard_repository.dart';
 import 'services/leaderboard_scope.dart';
 import 'services/progress_controller.dart';
@@ -23,10 +26,11 @@ void main() {
   runApp(const JudoApp());
 }
 
-Future<(ProgressStore, StreakStore)> _loadStores() async {
+Future<(ProgressStore, StreakStore, FightLogStore)> _loadStores() async {
   final progress = await ProgressStore.load();
   final streak = await StreakStore.load();
-  return (progress, streak);
+  final fightLog = await FightLogStore.load();
+  return (progress, streak, fightLog);
 }
 
 class JudoApp extends StatelessWidget {
@@ -34,7 +38,7 @@ class JudoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<(ProgressStore, StreakStore)>(
+    return FutureBuilder<(ProgressStore, StreakStore, FightLogStore)>(
       future: _loadStores(),
       builder: (context, snapshot) {
         final stores = snapshot.data;
@@ -44,18 +48,21 @@ class JudoApp extends StatelessWidget {
             home: Scaffold(body: Center(child: CircularProgressIndicator())),
           );
         }
-        final (progressStore, streakStore) = stores;
+        final (progressStore, streakStore, fightLogStore) = stores;
         return ProgressScope(
           controller: ProgressController(progressStore),
           child: StreakScope(
             controller: StreakController(streakStore),
-            child: LeaderboardScope(
-              repository: FirestoreLeaderboardRepository(),
-              child: MaterialApp(
-                title: AppStrings.appTitle,
-                debugShowCheckedModeBanner: false,
-                theme: judoTheme,
-                home: const HomeScreen(),
+            child: FightLogScope(
+              controller: FightLogController(fightLogStore),
+              child: LeaderboardScope(
+                repository: FirestoreLeaderboardRepository(),
+                child: MaterialApp(
+                  title: AppStrings.appTitle,
+                  debugShowCheckedModeBanner: false,
+                  theme: judoTheme,
+                  home: const HomeScreen(),
+                ),
               ),
             ),
           ),
