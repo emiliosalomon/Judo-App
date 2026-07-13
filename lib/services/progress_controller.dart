@@ -31,6 +31,21 @@ class ProgressController extends ChangeNotifier {
     }
   }
 
+  /// Entfernt [id], falls markiert - Gegenstueck zu [markLearned] fuer
+  /// Faelle wie die Quiz-"nochmal ueben"-Liste, aus der eine Technik
+  /// verschwinden soll, sobald sie richtig beantwortet wurde.
+  void unmark(String id) {
+    if (_completed.remove(id)) {
+      notifyListeners();
+      _store.write(_completed);
+    }
+  }
+
   int countCompletedWithPrefix(String prefix) =>
       _completed.where((id) => id.startsWith(prefix)).length;
+
+  /// Alle IDs mit [prefix], z.B. um die konkreten Technik-Namen einer
+  /// Kategorie (nicht nur ihre Anzahl) aufzulisten.
+  Iterable<String> idsWithPrefix(String prefix) =>
+      _completed.where((id) => id.startsWith(prefix));
 }

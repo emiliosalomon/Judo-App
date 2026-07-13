@@ -7,17 +7,32 @@ import '../l10n/strings.dart';
 import '../services/progress_scope.dart';
 import '../theme/judo_theme.dart';
 import '../widgets/confetti_burst.dart';
+import '../widgets/milestone_reward.dart';
 
 enum _QuizStage { intro, playing, finished }
+
+enum _Milestone { medal, trophy }
 
 /// Farbe fuer "richtige Antwort" im Quiz - bewusst nicht Teil der
 /// Marken-Farbpalette (Rot/Weiss/Schwarz), sondern dieselbe Gruen-Note wie
 /// im Konfetti (confetti_burst.dart), rein als universelles Feedback-Signal.
 const _correctColor = Color(0xFF2E9E4C);
 
+/// Fortschritts-ID-Praefixe im gemeinsamen ProgressController-Speicher
+/// (siehe progress_controller.dart) - eigener Namensraum, damit sich das
+/// Quiz nicht mit den Kyu-/Dan-/Gokyo-IDs anderer Screens ueberschneidet.
+const _masteredPrefix = 'quiz:';
+const _wrongPrefix = 'quiz-wrong:';
+
+const _medalInterval = 5;
+const _trophyInterval = 20;
+
 /// Multiple-Choice-Karteikarten-Quiz: zeigt eine Technik (japanischer
 /// Name), drei deutsche Uebersetzungen zur Auswahl, eine davon richtig.
-/// Eine richtig beantwortete Technik zaehlt als "gelernt" (Sterne-Zaehler).
+/// Eine richtig beantwortete Technik zaehlt als "gelernt" (Sterne-Zaehler);
+/// je 5 gelernte Techniken gibt es eine Medaille, ab 20 einen Pokal. Falsch
+/// beantwortete Techniken bleiben in einer "nochmal ueben"-Liste, bis sie
+/// einmal richtig beantwortet wurden.
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
 
@@ -35,12 +50,9 @@ class _QuizScreenState extends State<QuizScreen> {
   int _index = 0;
   int _score = 0;
   String? _selectedAnswer;
+  _Milestone? _pendingMilestone;
 
-  void _startRound() {
-    final techniques = pickQuizTechniques(
-      min(_roundSize, quizTechniquePool.length),
-      _random,
-    );
+  void _beginRound(List<String> techniques) {
     setState(() {
       _techniques = techniques;
       _index = 0;
@@ -51,19 +63,71 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
+  void _startRound() {
+    _beginRound(
+      pickQuizTechniques(min(_roundSize, quizTechniquePool.length), _random),
+    );
+  }
+
+  void _startReviewRound(List<String> wrongTechniques) {
+    if (wrongTechniques.isEmpty) return;
+    _beginRound(wrongTechniques.toList()..shuffle(_random));
+  }
+
   void _selectAnswer(String answer, Offset tapPosition) {
     final question = _question;
     if (question == null || _selectedAnswer != null) return;
+    final progress = ProgressScope.of(context);
+    final masteredId = '$_masteredPrefix${question.technique}';
+    final wrongId = '$_wrongPrefix${question.technique}';
     final correct = answer == question.correctAnswer;
     if (correct) {
       _score++;
-      ProgressScope.of(context).markLearned('quiz:${question.technique}');
+      final before = progress.countCompletedWithPrefix(_masteredPrefix);
+      progress.markLearned(masteredId);
+      progress.unmark(wrongId);
       showConfettiBurst(context, tapPosition);
+      final after = progress.countCompletedWithPrefix(_masteredPrefix);
+      if (after > before) {
+        _pendingMilestone = after % _trophyInterval == 0
+            ? _Milestone.trophy
+            : after % _medalInterval == 0
+            ? _Milestone.medal
+            : null;
+      }
+    } else {
+      progress.markLearned(wrongId);
     }
     setState(() => _selectedAnswer = answer);
   }
 
+  void _resolvePendingMilestone() {
+    final milestone = _pendingMilestone;
+    _pendingMilestone = null;
+    if (milestone == null) return;
+    final total = ProgressScope.of(
+      context,
+    ).countCompletedWithPrefix(_masteredPrefix);
+    switch (milestone) {
+      case _Milestone.medal:
+        showMilestoneReward(
+          context,
+          icon: Icons.workspace_premium,
+          title: AppStrings.quizMedalTitle,
+          subtitle: AppStrings.quizMedalSubtitle(total),
+        );
+      case _Milestone.trophy:
+        showMilestoneReward(
+          context,
+          icon: Icons.emoji_events_rounded,
+          title: AppStrings.quizTrophyTitle,
+          subtitle: AppStrings.quizTrophySubtitle(total),
+        );
+    }
+  }
+
   void _nextQuestion() {
+    _resolvePendingMilestone();
     if (_index + 1 >= _techniques.length) {
       setState(() => _stage = _QuizStage.finished);
       return;
@@ -77,13 +141,24 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final progress = ProgressScope.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.quizTitle)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: switch (_stage) {
-            _QuizStage.intro => _IntroView(onStart: _startRound),
+            _QuizStage.intro => _IntroView(
+              onStart: _startRound,
+              onReview: () => _startReviewRound(
+                progress
+                    .idsWithPrefix(_wrongPrefix)
+                    .map((id) => id.substring(_wrongPrefix.length))
+                    .toList(),
+              ),
+              reviewCount: progress.countCompletedWithPrefix(_wrongPrefix),
+              masteredCount: progress.countCompletedWithPrefix(_masteredPrefix),
+            ),
             _QuizStage.playing => _QuestionView(
               question: _question!,
               index: _index,
@@ -106,11 +181,21 @@ class _QuizScreenState extends State<QuizScreen> {
 
 class _IntroView extends StatelessWidget {
   final VoidCallback onStart;
+  final VoidCallback onReview;
+  final int reviewCount;
+  final int masteredCount;
 
-  const _IntroView({required this.onStart});
+  const _IntroView({
+    required this.onStart,
+    required this.onReview,
+    required this.reviewCount,
+    required this.masteredCount,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final medals = masteredCount ~/ _medalInterval;
+    final trophies = masteredCount ~/ _trophyInterval;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -122,11 +207,40 @@ class _IntroView extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
+          if (masteredCount > 0) ...[
+            const SizedBox(height: 16),
+            Text(
+              AppStrings.quizProgressSummary(masteredCount, medals, trophies),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: JudoColors.black,
+              ),
+            ),
+          ],
           const SizedBox(height: 28),
           FilledButton(
             onPressed: onStart,
             style: FilledButton.styleFrom(backgroundColor: JudoColors.red),
             child: const Text(AppStrings.quizStartButton),
+          ),
+          if (reviewCount > 0) ...[
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: onReview,
+              child: Text(AppStrings.quizReviewButton(reviewCount)),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              AppStrings.quizReviewIntro,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+          const SizedBox(height: 12),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(AppStrings.quizExitButton),
           ),
         ],
       ),
@@ -157,6 +271,14 @@ class _QuestionView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_back, size: 18),
+            label: const Text(AppStrings.quizExitButton),
+          ),
+        ),
         Text(
           AppStrings.quizQuestionProgress(index + 1, total),
           style: Theme.of(context).textTheme.bodySmall,
@@ -170,21 +292,29 @@ class _QuestionView extends StatelessWidget {
           ).textTheme.titleLarge?.copyWith(color: JudoColors.red),
         ),
         const SizedBox(height: 28),
-        for (final option in question.options)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _AnswerOption(
-              label: option,
-              status: !answered
-                  ? _AnswerStatus.neutral
-                  : option == question.correctAnswer
-                  ? _AnswerStatus.correct
-                  : option == selectedAnswer
-                  ? _AnswerStatus.wrong
-                  : _AnswerStatus.neutral,
-              onTap: answered ? null : (position) => onSelect(option, position),
-            ),
-          ),
+        Column(
+          key: const Key('quiz-options'),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final option in question.options)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _AnswerOption(
+                  label: option,
+                  status: !answered
+                      ? _AnswerStatus.neutral
+                      : option == question.correctAnswer
+                      ? _AnswerStatus.correct
+                      : option == selectedAnswer
+                      ? _AnswerStatus.wrong
+                      : _AnswerStatus.neutral,
+                  onTap: answered
+                      ? null
+                      : (position) => onSelect(option, position),
+                ),
+              ),
+          ],
+        ),
         if (answered) ...[
           const SizedBox(height: 8),
           Text(

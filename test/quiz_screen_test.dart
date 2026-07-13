@@ -1,9 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:judo_app/data/quiz_data.dart';
 import 'package:judo_app/l10n/strings.dart';
 import 'package:judo_app/screens/quiz_screen.dart';
+import 'package:judo_app/services/progress_controller.dart';
+import 'package:judo_app/services/progress_scope.dart';
+import 'package:judo_app/services/progress_store.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'test_helpers.dart';
+
+/// Findet nur die GestureDetectors der 3 Antwortoptionen (nicht z.B. die
+/// des "Zurück"-Buttons) - die Optionen sind in eine eigene, mit
+/// `Key('quiz-options')` markierte Column gepackt.
+Finder _answerOptions() => find.descendant(
+  of: find.byKey(const Key('quiz-options')),
+  matching: find.byType(GestureDetector),
+);
+
+/// Tippt den "Weiter"/"Ergebnis ansehen"-Button an und schliesst danach
+/// eine ggf. aufpoppende Medaillen-/Pokal-Belohnung wieder, damit der
+/// naechste Test-Schritt nicht durch den Dialog blockiert wird.
+Future<void> _tapNextAndDismissAnyReward(WidgetTester tester) async {
+  final nextOrFinish =
+      find.text(AppStrings.quizNextButton).evaluate().isNotEmpty
+      ? find.text(AppStrings.quizNextButton)
+      : find.text(AppStrings.quizFinishButton);
+  await tester.tap(nextOrFinish);
+  await tester.pump();
+  // Der Belohnungs-Dialog hat eine 380ms-Einblend-Animation (elasticOut) -
+  // ohne zu warten sitzt sein Schliessen-Button noch nicht an der
+  // finalen Position/Groesse und ist nicht trefferbar.
+  await tester.pump(const Duration(milliseconds: 400));
+  final rewardClose = find.text(AppStrings.rewardCloseLabel);
+  if (rewardClose.evaluate().isNotEmpty) {
+    await tester.tap(rewardClose);
+    await tester.pump();
+  }
+}
 
 void main() {
   testWidgets(
@@ -19,7 +53,7 @@ void main() {
       await tester.pump();
 
       expect(find.text(AppStrings.quizQuestionProgress(1, 10)), findsOneWidget);
-      final options = find.byType(GestureDetector);
+      final options = _answerOptions();
       expect(options, findsNWidgets(3));
 
       await tester.tap(options.first);
@@ -56,19 +90,131 @@ void main() {
       await tester.pump();
 
       for (var i = 0; i < 10; i++) {
-        await tester.tap(find.byType(GestureDetector).first);
+        await tester.tap(_answerOptions().first);
         await tester.pump();
-        final nextOrFinish =
-            find.text(AppStrings.quizNextButton).evaluate().isNotEmpty
-            ? find.text(AppStrings.quizNextButton)
-            : find.text(AppStrings.quizFinishButton);
-        await tester.tap(nextOrFinish);
-        await tester.pump();
+        await _tapNextAndDismissAnyReward(tester);
       }
 
       expect(find.text(AppStrings.quizFinishedTitle), findsOneWidget);
       expect(find.textContaining('von 10 richtig'), findsOneWidget);
       expect(find.text(AppStrings.quizPlayAgainButton), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Zurueck-Button auf dem Intro- und dem Frage-Bildschirm verlaesst das '
+    'Quiz (Navigator.pop)',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        await wrapWithProgress(
+          MaterialApp(
+            home: Builder(
+              builder: (context) => Scaffold(
+                body: Center(
+                  child: FilledButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const QuizScreen()),
+                    ),
+                    child: const Text('Quiz oeffnen'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Quiz oeffnen'));
+      await tester.pumpAndSettle();
+      expect(find.text(AppStrings.quizTitle), findsOneWidget);
+
+      // Zurueck auf dem Intro-Bildschirm.
+      await tester.tap(find.text(AppStrings.quizExitButton));
+      await tester.pumpAndSettle();
+      expect(find.text('Quiz oeffnen'), findsOneWidget);
+
+      // Nochmal oeffnen, diesmal eine Runde starten und waehrend des
+      // Beantwortens ueber den Zurueck-Button aussteigen.
+      await tester.tap(find.text('Quiz oeffnen'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(AppStrings.quizStartButton));
+      await tester.pump();
+      await tester.tap(find.text(AppStrings.quizExitButton));
+      await tester.pumpAndSettle();
+      expect(find.text('Quiz oeffnen'), findsOneWidget);
+    },
+  );
+
+  testWidgets('Nach 5 richtig gelernten Techniken insgesamt erscheint eine '
+      'Medaillen-Belohnung', (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final store = await ProgressStore.load();
+    final controller = ProgressController(store);
+
+    await tester.pumpWidget(
+      ProgressScope(
+        controller: controller,
+        child: const MaterialApp(home: QuizScreen()),
+      ),
+    );
+
+    await tester.tap(find.text(AppStrings.quizStartButton));
+    await tester.pump();
+
+    var safetyLimit = 60;
+    while (controller.countCompletedWithPrefix('quiz:') < 5 &&
+        safetyLimit > 0) {
+      safetyLimit--;
+      await tester.tap(_answerOptions().first);
+      await tester.pump();
+      await _tapNextAndDismissAnyReward(tester);
+      if (find.text(AppStrings.quizPlayAgainButton).evaluate().isNotEmpty) {
+        await tester.tap(find.text(AppStrings.quizPlayAgainButton));
+        await tester.pump();
+      }
+    }
+
+    expect(
+      controller.countCompletedWithPrefix('quiz:'),
+      greaterThanOrEqualTo(5),
+    );
+    expect(find.text(AppStrings.quizMedalTitle), findsOneWidget);
+  });
+
+  testWidgets(
+    'Falsch beantwortete Technik landet in der Wiederholungsliste und kann '
+    'gezielt nochmal geuebt werden; richtige Antwort entfernt sie wieder',
+    (WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final store = await ProgressStore.load();
+      final controller = ProgressController(store);
+      final technique = quizTechniquePool.first;
+      controller.markLearned('quiz-wrong:$technique');
+
+      await tester.pumpWidget(
+        ProgressScope(
+          controller: controller,
+          child: const MaterialApp(home: QuizScreen()),
+        ),
+      );
+
+      expect(find.text(AppStrings.quizReviewButton(1)), findsOneWidget);
+      await tester.tap(find.text(AppStrings.quizReviewButton(1)));
+      await tester.pump();
+
+      // Die Wiederholungsrunde hat genau 1 Frage - und zwar zur zuvor als
+      // falsch markierten Technik.
+      expect(find.text(AppStrings.quizQuestionProgress(1, 1)), findsOneWidget);
+      expect(find.text(technique), findsOneWidget);
+
+      await tester.tap(_answerOptions().first);
+      await tester.pump();
+
+      if (find.text(AppStrings.quizCorrectFeedback).evaluate().isNotEmpty) {
+        expect(controller.isCompleted('quiz-wrong:$technique'), isFalse);
+      } else {
+        expect(controller.isCompleted('quiz-wrong:$technique'), isTrue);
+      }
     },
   );
 }

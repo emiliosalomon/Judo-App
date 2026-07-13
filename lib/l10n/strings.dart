@@ -123,6 +123,19 @@ class AppStrings {
       '$correct von $total richtig';
   static const quizPlayAgainButton = 'Nochmal spielen';
   static const quizBackButton = 'Zurück zur Übersicht';
+  static const quizExitButton = 'Zurück';
+  static const quizMedalTitle = 'Medaille verdient!';
+  static String quizMedalSubtitle(int total) =>
+      '$total richtig beantwortete Techniken';
+  static const quizTrophyTitle = 'Pokal verdient!';
+  static String quizTrophySubtitle(int total) =>
+      '$total richtig beantwortete Techniken insgesamt';
+  static String quizProgressSummary(int total, int medals, int trophies) =>
+      '$total gelernt · $medals Medaillen · $trophies Pokale';
+  static String quizReviewButton(int count) => 'Falsche wiederholen ($count)';
+  static const quizReviewIntro =
+      'Wiederhole gezielt die Techniken, bei denen du zuletzt daneben '
+      'lagst.';
 
   // Rangliste
   static const leaderboardTitle = 'Rangliste';
