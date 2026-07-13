@@ -21,6 +21,16 @@ class ProgressController extends ChangeNotifier {
     _store.write(_completed);
   }
 
+  /// Markiert [id] als gelernt, ohne (anders als [toggle]) eine bereits
+  /// gelernte ID wieder zu entfernen - fuer Faelle wie das Quiz, wo eine
+  /// richtige Antwort den Lernstatus nur setzen, nie zuruecknehmen soll.
+  void markLearned(String id) {
+    if (_completed.add(id)) {
+      notifyListeners();
+      _store.write(_completed);
+    }
+  }
+
   int countCompletedWithPrefix(String prefix) =>
       _completed.where((id) => id.startsWith(prefix)).length;
 }

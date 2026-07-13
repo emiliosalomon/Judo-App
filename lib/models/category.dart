@@ -41,4 +41,12 @@ const judoCategories = <JudoCategory>[
     kanji: '応用',
     icon: Icons.compare_arrows,
   ),
+  JudoCategory(
+    id: 'quiz',
+    titleDe: 'Technik-Quiz',
+    // 問 (mon, "Frage") — passend zum Multiple-Choice-Format, kein
+    // offizieller Kodokan-Fachbegriff.
+    kanji: '問',
+    icon: Icons.quiz,
+  ),
 ];

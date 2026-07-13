@@ -101,4 +101,27 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('Antippen von Technik-Quiz oeffnet das Quiz', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const JudoApp());
+    // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
+    // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    final quiz = judoCategories.firstWhere((c) => c.id == 'quiz');
+    await tester.tap(find.text(bubbleLabelForCategory(quiz)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    expect(
+      find.descendant(
+        of: find.byType(AppBar),
+        matching: find.text('Technik-Quiz'),
+      ),
+      findsOneWidget,
+    );
+  });
 }

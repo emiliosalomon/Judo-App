@@ -105,6 +105,25 @@ class AppStrings {
   static const couldNotOpenLink = 'Link konnte nicht geöffnet werden.';
   static const tapAgainForVideoHint = 'Nochmal antippen fürs Video';
 
+  // Technik-Quiz
+  static const quizTitle = 'Technik-Quiz';
+  static const quizIntro =
+      'Welche deutsche Übersetzung passt zur Technik? Bei jeder Runde '
+      'werden zufällige Techniken aus dem gesamten Programm abgefragt.';
+  static const quizStartButton = 'Runde starten';
+  static String quizQuestionProgress(int current, int total) =>
+      'Frage $current/$total';
+  static const quizCorrectFeedback = 'Richtig!';
+  static String quizWrongFeedback(String correctAnswer) =>
+      'Leider falsch — richtig wäre: $correctAnswer';
+  static const quizNextButton = 'Weiter';
+  static const quizFinishButton = 'Ergebnis ansehen';
+  static const quizFinishedTitle = 'Runde geschafft!';
+  static String quizScoreSummary(int correct, int total) =>
+      '$correct von $total richtig';
+  static const quizPlayAgainButton = 'Nochmal spielen';
+  static const quizBackButton = 'Zurück zur Übersicht';
+
   // Rangliste
   static const leaderboardTitle = 'Rangliste';
   static const leaderboardUnavailable =

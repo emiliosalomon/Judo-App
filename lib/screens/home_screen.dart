@@ -10,6 +10,7 @@ import 'category_placeholder_screen.dart';
 import 'kata_screen.dart';
 import 'leaderboard_screen.dart';
 import 'my_fights_screen.dart';
+import 'quiz_screen.dart';
 import 'search_screen.dart';
 import 'standard_situations_screen.dart';
 import 'techniques_screen.dart';
@@ -95,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'techniques' => const TechniquesScreen(),
       'kata' => const KataScreen(),
       'standard-situations' => const StandardSituationsScreen(),
+      'quiz' => const QuizScreen(),
       _ => CategoryPlaceholderScreen(category: category),
     };
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));

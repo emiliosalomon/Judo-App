@@ -181,7 +181,7 @@ void main() {
     checkNoOverlap();
   });
 
-  testWidgets('Rad rastet nach dem Loslassen immer in einer der vier festen '
+  testWidgets('Rad rastet nach dem Loslassen immer in einer der festen '
       'Grundpositionen ein, egal wie weit gezogen wurde', (
     WidgetTester tester,
   ) async {
@@ -219,19 +219,25 @@ void main() {
     // Laenger als die 320ms-Einrast-Animation warten, bis sie fertig ist.
     await tester.pump(const Duration(milliseconds: 500));
 
-    final anglePer = 2 * math.pi / judoCategories.length; // 4 -> 90 Grad
+    final anglePer = 2 * math.pi / judoCategories.length;
     for (var i = 0; i < judoCategories.length; i++) {
       final bubbleCenter = tester.getCenter(circleFinder.at(i));
       final offset = bubbleCenter - wheelCenter;
       final angle = math.atan2(offset.dy, offset.dx);
-      final stepsFromZero = angle / anglePer;
+      // Kategorie 0 sitzt bei Rotation 0 nicht auf der 3-Uhr-Linie
+      // (angle == 0), sondern eine viertel Umdrehung "davor" oben (siehe
+      // `- math.pi / 2` in category_wheel.dart) - dieselbe konstante
+      // Verschiebung muss hier vor dem Schritt-Vergleich abgezogen werden,
+      // sonst passt das Raster nur zufaellig bei Kategorienanzahlen, bei
+      // denen 90 Grad ein Vielfaches von anglePer ist (z.B. 4, nicht 5).
+      final stepsFromZero = (angle + math.pi / 2) / anglePer;
       final distanceFromNearestStep =
           (stepsFromZero - stepsFromZero.roundToDouble()).abs();
       expect(
         distanceFromNearestStep,
         lessThan(0.02),
         reason:
-            '${judoCategories[i].titleDe} steht nicht auf einer der vier '
+            '${judoCategories[i].titleDe} steht nicht auf einer der festen '
             'Grundpositionen (Winkel-Schritt-Abweichung '
             '$distanceFromNearestStep)',
       );

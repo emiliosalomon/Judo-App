@@ -14,6 +14,7 @@ const _bubbleLabelBreaks = <String, String>{
   // "Weiterführende" allein ist selbst nach einem Umbruch noch zu breit fuer
   // den Button, deshalb hier zusaetzlich am Wort selbst getrennt (3 Zeilen).
   'techniques': 'Weiter-\nführende\nTechniken',
+  'quiz': 'Technik-\nQuiz',
 };
 
 /// Text, wie er im Rad-Button tatsaechlich angezeigt wird (mit manuellem
