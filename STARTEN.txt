@@ -1,0 +1,19 @@
+Judo-App lokal ausprobieren
+============================
+
+Voraussetzung: Python 3 (fast überall vorinstalliert) ODER Node.js.
+
+1. Diesen Ordner entpacken.
+2. Terminal in diesem Ordner öffnen.
+3. Lokalen Server starten:
+
+   Mit Python:
+     python3 -m http.server 8080
+
+   Oder mit Node (falls installiert):
+     npx serve -l 8080
+
+4. Im Browser öffnen: http://localhost:8080
+
+Fertig — das Auswahlrad, alle Gürtelprüfungs-Inhalte und die Suche
+funktionieren direkt im Browser.
