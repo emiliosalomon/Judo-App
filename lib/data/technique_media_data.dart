@@ -132,8 +132,20 @@ const techniqueImages = <String, TechniqueImage>{
   ),
 };
 
+/// Diese Technik-Namen enthalten zwar einen kuerzeren, kuratierten
+/// Schluessel als wortgrenzen-gueltigen Teilstring (z.B. "Ushiro-kesa-
+/// gatame" enthaelt "Kesa-gatame"), bezeichnen aber eine eigenstaendige,
+/// andere Technik - die Illustration des kuerzeren Schluessels waere hier
+/// irrefuehrend (analog zum Seoi-nage/Ippon-seoi-nage-Bug bei den Videos).
+final _noFallbackImage = RegExp(
+  r'\b(ushiro-kesa-gatame|harai-goshi-gaeshi|yoko-tomoe-nage)\b',
+  caseSensitive: false,
+);
+
 /// Sucht per wortgrenzen-bewusstem Teilstring-Abgleich (siehe
 /// fuzzy_technique_match.dart; Kyu-Programm-Namen haben oft Suffixe wie
 /// " RL" oder "oder ..."), nicht per exaktem Schluessel.
-TechniqueImage? findTechniqueImage(String technique) =>
-    findBestTechniqueMatch(technique, techniqueImages);
+TechniqueImage? findTechniqueImage(String technique) {
+  if (_noFallbackImage.hasMatch(technique.toLowerCase())) return null;
+  return findBestTechniqueMatch(technique, techniqueImages);
+}

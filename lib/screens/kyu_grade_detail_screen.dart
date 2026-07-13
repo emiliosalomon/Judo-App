@@ -178,9 +178,7 @@ class _TrackableSection extends StatelessWidget {
                   null => null,
                   final translation => Text(translation),
                 },
-                trailing: Icon(
-                  expanded ? Icons.play_circle_outline : Icons.chevron_right,
-                ),
+                trailing: const Icon(Icons.play_circle_outline),
                 onTap: onTap,
               ),
             ),

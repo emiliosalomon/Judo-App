@@ -71,9 +71,7 @@ class DanGradeDetailScreen extends StatelessWidget {
                       color: JudoColors.black,
                     ),
                   ),
-                  trailing: Icon(
-                    expanded ? Icons.play_circle_outline : Icons.chevron_right,
-                  ),
+                  trailing: const Icon(Icons.play_circle_outline),
                   onTap: onTap,
                 ),
               ),

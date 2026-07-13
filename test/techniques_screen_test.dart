@@ -55,6 +55,12 @@ void main() {
     await tester.pump();
 
     expect(find.text('O-uchi-gari'), findsOneWidget);
-    expect(find.byIcon(Icons.play_circle_outline), findsOneWidget);
+    final tile = tester.widget<ListTile>(
+      find.ancestor(
+        of: find.text('O-uchi-gari'),
+        matching: find.byType(ListTile),
+      ),
+    );
+    expect((tile.trailing as Icon).icon, Icons.play_circle_outline);
   });
 }

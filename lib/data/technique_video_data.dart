@@ -20,7 +20,14 @@ const techniqueVideos = <String, String>{
   'O-soto-gari': 'https://www.youtube.com/watch?v=c-A_nP7mKAc',
   'O-goshi': 'https://www.youtube.com/watch?v=yhu1mfy2vJ4',
   'O-uchi-gari': 'https://www.youtube.com/watch?v=0itJFhV9pDQ',
-  'Seoi-nage': 'https://www.youtube.com/watch?v=FQnOlCxo4oI',
+  // 'Seoi-nage' ist im Kodokan-Gokyo die generische/beidhaendige Ausfuehrung
+  // (= OeJV "Morote-seoi-nage"). Die einhaendige Variante "Ippon-seoi-nage"
+  // ist ein eigener, offizieller Kodokan-Eintrag mit eigenem Video - beide
+  // brauchen daher einen eigenen Schluessel, sonst wuerde der Teilstring-
+  // Abgleich "Morote-seoi-nage" faelschlich das Ippon-Video zeigen.
+  'Seoi-nage': 'https://www.youtube.com/watch?v=zIq0xI0ogxk',
+  'Morote-seoi-nage': 'https://www.youtube.com/watch?v=zIq0xI0ogxk',
+  'Ippon-seoi-nage': 'https://www.youtube.com/watch?v=FQnOlCxo4oI',
   'Ko-soto-gari': 'https://www.youtube.com/watch?v=jeQ541ScLB4',
   'Ko-uchi-gari': 'https://www.youtube.com/watch?v=3Jb3tZvr9Ng',
   'Koshi-guruma': 'https://www.youtube.com/watch?v=SU7Id6uVJ44',
@@ -38,6 +45,9 @@ const techniqueVideos = <String, String>{
   'Utsuri-goshi': 'https://www.youtube.com/watch?v=4pQd_bEnlf0',
   'O-guruma': 'https://www.youtube.com/watch?v=SnZciTAY9vc',
   'Soto-maki-komi': 'https://www.youtube.com/watch?v=bWG9O1BVKtQ',
+  // Eigener Kodokan-Eintrag, keine Variante von 'Soto-maki-komi' - eigener
+  // Schluessel noetig, sonst greift derselbe Teilstring-Kollisionsfehler.
+  'O-soto-maki-komi': 'https://www.youtube.com/watch?v=DGDv2oMwmas',
   'Uki-otoshi': 'https://www.youtube.com/watch?v=6H5tmncOY4Q',
   'O-soto-guruma': 'https://www.youtube.com/watch?v=92KbCm6pQeI',
   'Uki-waza': 'https://www.youtube.com/watch?v=weVOpJ63gII',
@@ -51,6 +61,10 @@ const techniqueVideos = <String, String>{
   // Katame-waza: Osae-komi-waza (Festhaltegriffe)
   'Kesa-gatame': 'https://www.youtube.com/watch?v=NDaQuJOFBYk',
   'Kuzure-kesa-gatame': 'https://www.youtube.com/watch?v=Q2fb9jaoUFQ',
+  // Kein eigenes kuratiertes Video - dieselbe Zuordnung wie das Bild in
+  // technique_media_data.dart (Gyaku-kesa-gatame ist der Kuzure-Familie
+  // aehnlicher als der einfachen Kesa-gatame).
+  'Gyaku-kesa-gatame': 'https://www.youtube.com/watch?v=Q2fb9jaoUFQ',
   'Ushiro-kesa-gatame': 'https://www.youtube.com/watch?v=SBapox2M2dE',
   'Kata-gatame': 'https://www.youtube.com/watch?v=zQR3IOXxO_Q',
   'Kami-shiho-gatame': 'https://www.youtube.com/watch?v=HFuMjOv0WN8',

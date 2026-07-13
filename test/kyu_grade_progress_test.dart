@@ -46,7 +46,13 @@ void main() {
 
       // Kein Bildschirmwechsel: die Zeile ist noch da, Video-Icon bleibt.
       expect(find.text('O-soto-gari RL'), findsOneWidget);
-      expect(find.byIcon(Icons.play_circle_outline), findsOneWidget);
+      final tile = tester.widget<ListTile>(
+        find.ancestor(
+          of: find.text('O-soto-gari RL'),
+          matching: find.byType(ListTile),
+        ),
+      );
+      expect((tile.trailing as Icon).icon, Icons.play_circle_outline);
     },
   );
 

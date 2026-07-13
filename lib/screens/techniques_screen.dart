@@ -104,11 +104,7 @@ class TechniquesScreen extends StatelessWidget {
                                 ),
                               ),
                               subtitle: _translationSubtitle(technik),
-                              trailing: Icon(
-                                expanded
-                                    ? Icons.play_circle_outline
-                                    : Icons.chevron_right,
-                              ),
+                              trailing: const Icon(Icons.play_circle_outline),
                               onTap: onTap,
                             ),
                           ),
@@ -260,9 +256,7 @@ class _TechniqueRow extends StatelessWidget {
           ],
         ),
         subtitle: _translationSubtitle(name),
-        trailing: Icon(
-          expanded ? Icons.play_circle_outline : Icons.chevron_right,
-        ),
+        trailing: const Icon(Icons.play_circle_outline),
         onTap: onTap,
       ),
     );

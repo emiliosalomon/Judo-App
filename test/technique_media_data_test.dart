@@ -31,4 +31,11 @@ void main() {
       );
     }
   });
+
+  test('Techniken ohne eigene Illustration erben nicht faelschlich das Bild '
+      'einer aehnlich benannten, aber eigenstaendigen anderen Technik', () {
+    expect(findTechniqueImage('Ushiro-kesa-gatame'), isNull);
+    expect(findTechniqueImage('Harai-goshi-gaeshi'), isNull);
+    expect(findTechniqueImage('Yoko-tomoe-nage'), isNull);
+  });
 }

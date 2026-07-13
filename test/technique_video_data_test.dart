@@ -51,6 +51,26 @@ void main() {
     );
   });
 
+  test('Ippon-seoi-nage und Morote-seoi-nage sind unterschiedliche Techniken '
+      'und duerfen nicht dasselbe Video wie die jeweils andere zeigen '
+      '(Bug: Morote-seoi-nage RL zeigte faelschlich das Ippon-Video)', () {
+    final ippon = findTechniqueVideo('Ippon-seoi-nage RL');
+    final morote = findTechniqueVideo('Morote-seoi-nage RL');
+    expect(ippon, isNotNull);
+    expect(morote, isNotNull);
+    expect(ippon, isNot(equals(morote)));
+    expect(ippon, techniqueVideos['Ippon-seoi-nage']);
+    expect(morote, techniqueVideos['Morote-seoi-nage']);
+  });
+
+  test('O-soto-maki-komi ist eine eigenstaendige Technik und darf nicht das '
+      'Video von Soto-maki-komi erben', () {
+    expect(
+      findTechniqueVideo('O-soto-maki-komi'),
+      isNot(equals(techniqueVideos['Soto-maki-komi'])),
+    );
+  });
+
   test('findTechniqueVideo findet die "Prinzip"-Uebungen aus dem '
       'Kyu-Programm trotz Anfuehrungszeichen und RL-Suffix', () {
     expect(findTechniqueVideo('Prinzip „Kesa" RL'), isNotNull);
