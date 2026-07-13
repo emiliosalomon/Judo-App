@@ -50,9 +50,11 @@ class _JudoLogoState extends State<JudoLogo> with TickerProviderStateMixin {
     try {
       await _hajimePlayer.stop();
       await _hajimePlayer.play(AssetSource('audio/hajime.m4a'));
-    } catch (_) {
+    } catch (error) {
       // Ton ist reine Zugabe – Wiedergabefehler (z.B. kein Audio-Output)
-      // duerfen die Bedienung nicht stoeren.
+      // duerfen die Bedienung nicht stoeren, aber im Debug-Log sichtbar
+      // sein, damit sich Abspielfehler ueberhaupt diagnostizieren lassen.
+      debugPrint('Hajime-Sound konnte nicht abgespielt werden: $error');
     }
   }
 
