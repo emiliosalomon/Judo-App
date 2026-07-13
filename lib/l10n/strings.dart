@@ -10,6 +10,7 @@ class AppStrings {
   // Home
   static const appTitle = 'Judo App';
   static const wheelHint = 'Ziehen zum Drehen, antippen zum Auswählen';
+  static const logoTapHint = 'Judo-Logo, zum Anhören von "Hajime!" antippen';
 
   // Lernanreiz (Streak/Sterne/Pokale)
   static const streakLabel = 'Serie';

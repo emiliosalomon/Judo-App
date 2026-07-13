@@ -45,4 +45,24 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets(
+    'Antippen des Logos loest den Verbeugungs-Bounce aus, ohne Fehler '
+    '(auch wenn die Tonwiedergabe in Tests nicht verfuegbar ist)',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: JudoLogo(isDragging: false, wheelRotation: 0)),
+        ),
+      );
+
+      await tester.tap(find.byType(JudoLogo));
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.byType(Image), findsOneWidget);
+
+      await tester.pumpAndSettle();
+      expect(find.byType(Image), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }
