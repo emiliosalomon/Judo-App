@@ -113,6 +113,7 @@ class AppStrings {
   static const quizStartButton = 'Runde starten';
   static String quizQuestionProgress(int current, int total) =>
       'Frage $current/$total';
+  static const quizTechniqueVideoHint = 'Technik antippen fürs Video';
   static const quizCorrectFeedback = 'Richtig!';
   static String quizWrongFeedback(String correctAnswer) =>
       'Leider falsch — richtig wäre: $correctAnswer';

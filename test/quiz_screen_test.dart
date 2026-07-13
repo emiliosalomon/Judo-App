@@ -80,6 +80,23 @@ void main() {
   );
 
   testWidgets(
+    'Die Technik-Frage ist antippbar (Video-Hinweis wird angezeigt) - '
+    'wird nicht tatsaechlich angetippt, da das einen echten launchUrl()-'
+    'Aufruf ohne Platform-Mock ausloesen wuerde',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        await wrapWithProgress(const MaterialApp(home: QuizScreen())),
+      );
+
+      await tester.tap(find.text(AppStrings.quizStartButton));
+      await tester.pump();
+
+      expect(find.text(AppStrings.quizTechniqueVideoHint), findsOneWidget);
+      expect(find.byIcon(Icons.play_circle_outline), findsOneWidget);
+    },
+  );
+
+  testWidgets(
     'Eine komplette Runde fuehrt zur Ergebnis-Ansicht mit Punktestand',
     (WidgetTester tester) async {
       await tester.pumpWidget(
