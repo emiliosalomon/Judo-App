@@ -36,33 +36,25 @@ void main() {
     },
   );
 
-  testWidgets(
-    'Antippen von O-uchi-gari klappt zuerst das Bild inline auf, erst ein '
-    'zweites Antippen oeffnet die Medien-Detailseite',
-    (WidgetTester tester) async {
-      // Grosses Testfenster, damit O-uchi-gari in der langen Gokyo-Liste
-      // ohne Scrollen erreichbar ist. O-uchi-gari ist "weiterfuehrend"
-      // (keiner Kyu-Stufe zugeordnet) und landet durch die Sortierung nach
-      // Guertelfarbe entsprechend weit unten in der Liste.
-      tester.view.physicalSize = const Size(400, 8000);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets('Antippen von O-uchi-gari klappt das Bild inline auf, ohne den '
+      'Bildschirm zu wechseln', (WidgetTester tester) async {
+    // Grosses Testfenster, damit O-uchi-gari in der langen Gokyo-Liste
+    // ohne Scrollen erreichbar ist. O-uchi-gari ist "weiterfuehrend"
+    // (keiner Kyu-Stufe zugeordnet) und landet durch die Sortierung nach
+    // Guertelfarbe entsprechend weit unten in der Liste.
+    tester.view.physicalSize = const Size(400, 8000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
 
-      await tester.pumpWidget(
-        await wrapWithProgress(const MaterialApp(home: TechniquesScreen())),
-      );
+    await tester.pumpWidget(
+      await wrapWithProgress(const MaterialApp(home: TechniquesScreen())),
+    );
 
-      await tester.tap(find.text('O-uchi-gari'));
-      await tester.pump();
+    await tester.tap(find.text('O-uchi-gari'));
+    await tester.pump();
 
-      expect(find.text('Auf YouTube ansehen'), findsNothing);
-      expect(find.byIcon(Icons.play_circle_outline), findsOneWidget);
-
-      await tester.tap(find.text('O-uchi-gari'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Auf YouTube ansehen'), findsOneWidget);
-    },
-  );
+    expect(find.text('O-uchi-gari'), findsOneWidget);
+    expect(find.byIcon(Icons.play_circle_outline), findsOneWidget);
+  });
 }

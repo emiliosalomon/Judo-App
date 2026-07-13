@@ -101,9 +101,6 @@ class AppStrings {
       'Antippen zeigt Vorschläge, Tippen grenzt sie weiter ein.';
 
   // Technik-Medien (Bild + YouTube-Link)
-  static const watchOnYoutube = 'Auf YouTube ansehen';
-  static const noIllustrationYet =
-      'Noch keine Illustration hinterlegt — nutze den YouTube-Link.';
   static const imageAttributionPrefix = 'Bild: ';
   static const couldNotOpenLink = 'Link konnte nicht geöffnet werden.';
   static const tapAgainForVideoHint = 'Nochmal antippen fürs Video';

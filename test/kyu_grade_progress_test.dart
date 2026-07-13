@@ -29,9 +29,8 @@ void main() {
   });
 
   testWidgets(
-    'Antippen einer Technikzeile mit Bild klappt zuerst das Bild inline '
-    'auf (ohne Bildschirmwechsel), erst ein zweites Antippen oeffnet die '
-    'Medien-Detailseite',
+    'Antippen einer Technikzeile mit Bild klappt das Bild inline auf, '
+    'ohne den Bildschirm zu wechseln',
     (WidgetTester tester) async {
       final grade = judoKyuGrades.firstWhere((g) => g.kyu == 5);
 
@@ -45,15 +44,9 @@ void main() {
       await tester.tap(find.text('O-soto-gari RL'));
       await tester.pump();
 
-      // Kein Bildschirmwechsel: die Zeile ist noch da, kein Video-Button.
+      // Kein Bildschirmwechsel: die Zeile ist noch da, Video-Icon bleibt.
       expect(find.text('O-soto-gari RL'), findsOneWidget);
-      expect(find.text('Auf YouTube ansehen'), findsNothing);
       expect(find.byIcon(Icons.play_circle_outline), findsOneWidget);
-
-      await tester.tap(find.text('O-soto-gari RL'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Auf YouTube ansehen'), findsOneWidget);
     },
   );
 

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../data/anwendungsaufgabe_description_data.dart';
 import '../data/technique_media_data.dart';
+import '../data/technique_video_data.dart';
+import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
-import '../screens/technique_media_screen.dart';
 import '../theme/judo_theme.dart';
 
 /// Macht eine Technik-/Aufgaben-Zeile "doppelt antippbar": das erste
 /// Antippen klappt (falls vorhanden) eine Illustration und/oder eine kurze
 /// Erklaerung direkt unterhalb der Zeile auf, ohne den Bildschirm zu
 /// wechseln. Ein zweites Antippen - oder das erste, wenn es weder Bild
-/// noch Erklaerung gibt - oeffnet wie zuvor die Medien-Detailseite mit
-/// Video-Link.
+/// noch Erklaerung gibt - oeffnet direkt den passenden YouTube-Link (kein
+/// Bildschirmwechsel).
 ///
 /// [rowBuilder] baut die eigentliche Zeile (z.B. ein ListTile) und bekommt
 /// den fertigen onTap-Handler sowie den aktuellen Aufklapp-Zustand (um z.B.
@@ -40,11 +42,20 @@ class _ExpandableTechniqueRowState extends State<ExpandableTechniqueRow> {
       setState(() => _expanded = true);
       return;
     }
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => TechniqueMediaScreen(technique: widget.technique),
-      ),
-    );
+    _openYoutube();
+  }
+
+  Future<void> _openYoutube() async {
+    final curated = findTechniqueVideo(widget.technique);
+    final uri = curated != null
+        ? Uri.parse(curated)
+        : youtubeSearchUrl(widget.technique);
+    final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!opened && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text(AppStrings.couldNotOpenLink)),
+      );
+    }
   }
 
   @override
@@ -62,7 +73,7 @@ class _ExpandableTechniqueRowState extends State<ExpandableTechniqueRow> {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             child: Column(
               children: [
-                if (image != null)
+                if (image != null) ...[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
@@ -72,6 +83,12 @@ class _ExpandableTechniqueRowState extends State<ExpandableTechniqueRow> {
                           const SizedBox.shrink(),
                     ),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${AppStrings.imageAttributionPrefix}${image.attribution}',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
                 if (image != null && description != null)
                   const SizedBox(height: 10),
                 if (description != null)
