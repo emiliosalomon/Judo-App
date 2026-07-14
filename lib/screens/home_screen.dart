@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../l10n/strings.dart';
 import '../models/category.dart';
+import '../services/auth_controller.dart';
+import '../services/auth_scope.dart';
 import '../services/streak_scope.dart';
 import '../theme/judo_theme.dart';
 import '../widgets/category_wheel.dart';
@@ -47,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
               MaterialPageRoute(builder: (_) => const LeaderboardScreen()),
             ),
           ),
+          const _AccountButton(),
         ],
       ),
       body: SafeArea(
@@ -100,6 +103,80 @@ class _HomeScreenState extends State<HomeScreen> {
       _ => CategoryPlaceholderScreen(category: category),
     };
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+  }
+}
+
+/// Zeigt den Anmeldestatus und bietet Abmelden bzw. (im Gast-Modus) den
+/// Wechsel zurueck zum Auswahlbildschirm an. Bleibt unsichtbar, solange
+/// kein Firebase-Projekt konfiguriert ist (AuthStatus.disabled) - dann
+/// gibt es kein Anmeldesystem, das man anzeigen koennte.
+class _AccountButton extends StatelessWidget {
+  const _AccountButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final auth = AuthScope.of(context);
+    switch (auth.status) {
+      case AuthStatus.disabled:
+      case AuthStatus.loading:
+      case AuthStatus.needsChoice:
+        return const SizedBox.shrink();
+      case AuthStatus.guest:
+        return IconButton(
+          icon: const Icon(Icons.person_outline),
+          tooltip: AppStrings.authAccountTooltip,
+          onPressed: () => _showGuestSheet(context, auth),
+        );
+      case AuthStatus.signedIn:
+        return IconButton(
+          icon: const Icon(Icons.account_circle),
+          tooltip: AppStrings.authAccountTooltip,
+          onPressed: () => _showSignedInSheet(context, auth),
+        );
+    }
+  }
+
+  void _showGuestSheet(BuildContext context, AuthController auth) {
+    showModalBottomSheet(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: ListTile(
+          leading: const Icon(Icons.login),
+          title: const Text(AppStrings.authGuestRegisterHint),
+          subtitle: const Text(AppStrings.authGuestBanner),
+          onTap: () {
+            Navigator.of(sheetContext).pop();
+            auth.leaveGuestMode();
+          },
+        ),
+      ),
+    );
+  }
+
+  void _showSignedInSheet(BuildContext context, AuthController auth) {
+    showModalBottomSheet(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.email_outlined),
+              title: const Text(AppStrings.authSignedInAs),
+              subtitle: Text(auth.userEmail ?? ''),
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text(AppStrings.authSignOut),
+              onTap: () {
+                Navigator.of(sheetContext).pop();
+                auth.signOut();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
