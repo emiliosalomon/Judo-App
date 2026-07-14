@@ -7,6 +7,32 @@ class AppStrings {
 
   static const bullet = '•  ';
 
+  // Anmeldesystem
+  static const authWelcomeTitle = 'Willkommen bei der Judo App';
+  static const authWelcomeSubtitle =
+      'Mit Konto bleibt dein Fortschritt geräteübergreifend gespeichert. '
+      'Ohne Anmeldung kannst du sofort loslegen — deine Daten werden dann '
+      'aber nicht gespeichert.';
+  static const authLoginButton = 'Anmelden';
+  static const authRegisterButton = 'Registrieren';
+  static const authContinueAsGuestButton = 'Ohne Anmeldung fortfahren';
+  static const authEmailLabel = 'E-Mail-Adresse';
+  static const authPasswordLabel = 'Passwort';
+  static const authLoginTitle = 'Anmelden';
+  static const authRegisterTitle = 'Registrieren';
+  static const authLoginSubmit = 'Anmelden';
+  static const authRegisterSubmit = 'Konto erstellen';
+  static const authSwitchToRegister = 'Noch kein Konto? Registrieren';
+  static const authSwitchToLogin = 'Schon ein Konto? Anmelden';
+  static const authEmailRequired = 'Bitte E-Mail-Adresse eingeben.';
+  static const authPasswordTooShort = 'Mindestens 6 Zeichen.';
+  static const authGuestBanner =
+      'Gast-Modus: Fortschritt wird nicht gespeichert.';
+  static const authGuestRegisterHint = 'Jetzt registrieren';
+  static const authSignedInAs = 'Angemeldet als';
+  static const authSignOut = 'Abmelden';
+  static const authAccountTooltip = 'Konto';
+
   // Home
   static const appTitle = 'Judo App';
   static const wheelHint = 'Ziehen zum Drehen, antippen zum Auswählen';

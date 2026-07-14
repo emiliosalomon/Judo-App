@@ -15,8 +15,11 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
+    // Zusaetzlicher Pump fuer den AuthGate-Ladezustand (GuestChoiceStore +
+    // Stores werden nacheinander asynchron geladen), danach wie gehabt:
     // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
     // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
@@ -37,8 +40,11 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
+    // Zusaetzlicher Pump fuer den AuthGate-Ladezustand (GuestChoiceStore +
+    // Stores werden nacheinander asynchron geladen), danach wie gehabt:
     // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
     // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
@@ -63,8 +69,11 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
+    // Zusaetzlicher Pump fuer den AuthGate-Ladezustand (GuestChoiceStore +
+    // Stores werden nacheinander asynchron geladen), danach wie gehabt:
     // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
     // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
@@ -83,8 +92,11 @@ void main() {
   testWidgets('Suche ist keine Rad-Kategorie mehr, sondern eine Leiste unten, '
       'die die Suchseite oeffnet', (WidgetTester tester) async {
     await tester.pumpWidget(const JudoApp());
+    // Zusaetzlicher Pump fuer den AuthGate-Ladezustand (GuestChoiceStore +
+    // Stores werden nacheinander asynchron geladen), danach wie gehabt:
     // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
     // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
@@ -106,8 +118,11 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
+    // Zusaetzlicher Pump fuer den AuthGate-Ladezustand (GuestChoiceStore +
+    // Stores werden nacheinander asynchron geladen), danach wie gehabt:
     // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
     // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
+    await tester.pump();
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
