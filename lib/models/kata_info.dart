@@ -15,16 +15,11 @@ class KataInfo {
   final String description;
   final List<KataSection> sections;
 
-  /// Wenn true, ist die Technik-Liste in [sections] nur strukturell
-  /// (Gruppen/Anzahl), keine vollstaendige Aufzaehlung.
-  final bool sectionsAreSummaryOnly;
-
   const KataInfo({
     required this.name,
     required this.meaning,
     required this.description,
     this.sections = const [],
-    this.sectionsAreSummaryOnly = false,
   });
 }
 
@@ -108,14 +103,40 @@ const judoKataInfos = <String, KataInfo>{
         'zusammengestellt: 21 Techniken gegen unbewaffnete und bewaffnete '
         'Angriffe. Anders als die aelteren Kata bezieht sie explizit Angriffe '
         'mit Messer (Tanto), Stock (Jo) und Pistole (Kenju) ein.',
-    sectionsAreSummaryOnly: true,
     sections: [
-      KataSection(title: 'Kumitsuki (Angriffe im Griff, 5 Techniken)'),
-      KataSection(title: 'Hanarete (Angriffe auf Abstand, 7 Techniken)'),
-      KataSection(title: 'Tanto-Dori (Verteidigung gegen Messer, 3 Techniken)'),
-      KataSection(title: 'Jo-Dori (Verteidigung gegen Stock, 3 Techniken)'),
+      KataSection(
+        title: 'Kumitsuki (Angriffe im Griff, 7 Techniken)',
+        techniques: [
+          'Ryote-dori',
+          'Hidari-eri-dori',
+          'Migi-eri-dori',
+          'Kata-ude-dori',
+          'Ushiro-eri-dori',
+          'Ushiro-jime',
+          'Kakae-dori',
+        ],
+      ),
+      KataSection(
+        title: 'Hanarete (Angriffe auf Abstand, 5 Techniken)',
+        techniques: [
+          'Naname-uchi',
+          'Ago-tsuki',
+          'Gammen-tsuki',
+          'Mae-geri',
+          'Yoko-geri',
+        ],
+      ),
+      KataSection(
+        title: 'Tanto-Dori (Verteidigung gegen Messer, 3 Techniken)',
+        techniques: ['Tsukkake', 'Choku-tsuki', 'Naname-tsuki'],
+      ),
+      KataSection(
+        title: 'Jo-Dori (Verteidigung gegen Stock, 3 Techniken)',
+        techniques: ['Furiage', 'Furioroshi', 'Morote-tsuki'],
+      ),
       KataSection(
         title: 'Kenju-Dori (Verteidigung gegen Pistole, 3 Techniken)',
+        techniques: ['Shomen-zuke', 'Koshi-gamae', 'Haimen-zuke'],
       ),
     ],
   ),
@@ -127,11 +148,37 @@ const judoKataInfos = <String, KataInfo>{
         'harte Wuerfe — Tori fuehrt und leitet die Kraft von Uke, statt sie '
         'zu brechen. Urspruenglich fuer Judoka konzipiert, die keine '
         'Fallschule (mehr) ueben koennen/sollen.',
-    sectionsAreSummaryOnly: true,
     sections: [
-      KataSection(title: '1. Gruppe (Ikkyo, 5 Formen)'),
-      KataSection(title: '2. Gruppe (Nikyo, 5 Formen)'),
-      KataSection(title: '3. Gruppe (Sankyo, 5 Formen)'),
+      KataSection(
+        title: '1. Gruppe (Ikkyo, 5 Formen)',
+        techniques: [
+          'Tsuki-dashi',
+          'Kata-oshi',
+          'Ryote-dori',
+          'Kata-mawashi',
+          'Ago-oshi',
+        ],
+      ),
+      KataSection(
+        title: '2. Gruppe (Nikyo, 5 Formen)',
+        techniques: [
+          'Naname-uchi',
+          'Katate-dori',
+          'Kiri-oroshi',
+          'Ryokata-oshi',
+          'Katate-age',
+        ],
+      ),
+      KataSection(
+        title: '3. Gruppe (Sankyo, 5 Formen)',
+        techniques: [
+          'Uchi-oroshi',
+          'Mune-oshi',
+          'Ryogan-tsuki',
+          'Tsuki-age',
+          'Obi-tori',
+        ],
+      ),
     ],
   ),
   'Kime-no-Kata': KataInfo(
@@ -142,10 +189,37 @@ const judoKataInfos = <String, KataInfo>{
         'kniend (Idori) und stehend (Tachiai). Historisch aeltere und '
         'haertere Kata als Goshin-Jutsu, mit Schlag-, Stoss- und '
         'Waffenangriffen.',
-    sectionsAreSummaryOnly: true,
     sections: [
-      KataSection(title: 'Idori (kniend, 8 Formen)'),
-      KataSection(title: 'Tachiai (stehend, 12 Formen)'),
+      KataSection(
+        title: 'Idori (kniend, 8 Formen)',
+        techniques: [
+          'Ryote-dori',
+          'Tsukkake',
+          'Suri-age',
+          'Yoko-uchi',
+          'Ushiro-dori',
+          'Tsukkomi',
+          'Kiri-komi',
+          'Yoko-tsuki',
+        ],
+      ),
+      KataSection(
+        title: 'Tachiai (stehend, 12 Formen)',
+        techniques: [
+          'Ryote-dori',
+          'Sode-tori',
+          'Tsukkake',
+          'Tsuki-age',
+          'Suri-age',
+          'Yoko-uchi',
+          'Ke-age',
+          'Ushiro-dori',
+          'Tsukkomi',
+          'Kiri-komi',
+          'Nuki-gake',
+          'Kiri-oroshi',
+        ],
+      ),
     ],
   ),
   'Koshiki-no-Kata': KataInfo(
@@ -156,10 +230,38 @@ const judoKataInfos = <String, KataInfo>{
         'Tradition uebernommen und von Jigoro Kano bewahrt. Simuliert '
         'Kampf in Ruestung — daher die ungewoehnlich langsamen, '
         'kontrollierten Bewegungen ohne die uebliche Kuzushi-Dynamik.',
-    sectionsAreSummaryOnly: true,
     sections: [
-      KataSection(title: 'Omote (14 Formen)'),
-      KataSection(title: 'Ura (7 Formen)'),
+      KataSection(
+        title: 'Omote (14 Formen)',
+        techniques: [
+          'Tai',
+          'Yume-no-uchi',
+          'Ryokuhi',
+          'Mizu-guruma',
+          'Mizu-nagare',
+          'Hiki-otoshi',
+          'Ko-daore',
+          'Uchikudaki',
+          'Tani-otoshi',
+          'Kuruma-daore',
+          'Shikoro-dori',
+          'Shikoro-gaeshi',
+          'Yudachi',
+          'Taki-otoshi',
+        ],
+      ),
+      KataSection(
+        title: 'Ura (7 Formen)',
+        techniques: [
+          'Mi-kudaki',
+          'Kuruma-gaeshi',
+          'Mizu-iri',
+          'Ryusetsu',
+          'Sakaotoshi',
+          'Yukiore',
+          'Iwa-nami',
+        ],
+      ),
     ],
   ),
 };

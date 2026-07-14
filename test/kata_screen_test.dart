@@ -40,4 +40,26 @@ void main() {
       expect(techniqueRow, findsOneWidget);
     },
   );
+
+  testWidgets(
+    'Auch die vier zuvor nur zusammengefassten Kata (Goshin-Jutsu, Ju-no-'
+    'Kata, Kime-no-Kata, Koshiki-no-Kata) zeigen jetzt Einzeltechniken '
+    'statt nur Gruppen-Zusammenfassungen',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: KataScreen()));
+
+      await tester.tap(find.text('Ju-no-Kata'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.textContaining('Ryote-dori', skipOffstage: false),
+        findsWidgets,
+      );
+      final techniqueRow = find.ancestor(
+        of: find.textContaining('Tsuki-dashi', skipOffstage: false),
+        matching: find.byType(InkWell),
+      );
+      expect(techniqueRow, findsOneWidget);
+    },
+  );
 }

@@ -53,22 +53,15 @@ class KataDetailScreen extends StatelessWidget {
           const SizedBox(height: 16),
           Text(info.description),
           const SizedBox(height: 20),
-          if (info.sectionsAreSummaryOnly)
-            const Text(
-              AppStrings.kataStructureSummaryOnly,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            )
-          else ...[
-            const Text(
-              AppStrings.kataTechniquesLabel,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              AppStrings.kataTechniqueVideoHint,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
+          const Text(
+            AppStrings.kataTechniquesLabel,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            AppStrings.kataTechniqueVideoHint,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
           const SizedBox(height: 8),
           for (final section in info.sections)
             Padding(
