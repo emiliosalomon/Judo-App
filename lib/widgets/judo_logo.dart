@@ -48,7 +48,12 @@ class _JudoLogoState extends State<JudoLogo> with TickerProviderStateMixin {
   Future<void> _handleTap() async {
     _playBow();
     try {
-      await _hajimePlayer.stop();
+      // Kein manuelles stop() davor: play() uebernimmt das Stoppen/
+      // Neustarten schon selbst (setSource + resume). Ein stop() auf einem
+      // Player ohne bisherige Quelle kann je nach Plattform werfen - dann
+      // wuerde dieser try-Block schon vor play() abbrechen und nie Ton
+      // ausgeben, ohne dass davon ausserhalb des Debug-Logs etwas sichtbar
+      // waere.
       await _hajimePlayer.play(AssetSource('audio/hajime.m4a'));
     } catch (error) {
       // Ton ist reine Zugabe – Wiedergabefehler (z.B. kein Audio-Output)
