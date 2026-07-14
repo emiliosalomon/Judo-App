@@ -83,8 +83,6 @@ class AppStrings {
       'Dan-Pruefung laut OeJV-Danordnung.';
   static String requiredForGrade(String gradeTitle) =>
       'Pflicht-Kata für den $gradeTitle';
-  static const kataStructureSummaryOnly =
-      'Struktur (ausführliche Technik-Liste folgt):';
   static const kataTechniquesLabel = 'Techniken';
   static const watchFullKataOnYoutube = 'Gesamten Ablauf ansehen';
   static const kataVideoAttribution =
