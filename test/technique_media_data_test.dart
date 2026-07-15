@@ -1,7 +1,23 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:judo_app/data/technique_media_data.dart';
 
 void main() {
+  test('TechniqueImage.asset baut ein Image.asset-Widget, .network ein '
+      'Image.network-Widget', () {
+    const asset = TechniqueImage.asset('assets/images/techniques/x.jpg');
+    expect(asset.build(), isA<Image>());
+    expect((asset.build() as Image).image, isA<AssetImage>());
+    expect(asset.attribution, isNull);
+
+    const network = TechniqueImage.network(
+      url: 'https://example.com/x.jpg',
+      attribution: 'Test',
+    );
+    expect((network.build() as Image).image, isA<NetworkImage>());
+    expect(network.attribution, 'Test');
+  });
+
   test('findTechniqueImage findet Treffer trotz Suffixen wie " RL"', () {
     expect(findTechniqueImage('O-soto-gari RL'), isNotNull);
     expect(findTechniqueImage('Tai-otoshi RL'), isNotNull);
