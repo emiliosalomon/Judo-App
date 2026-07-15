@@ -51,6 +51,11 @@ class _QuizScreenState extends State<QuizScreen> {
   late final HajimeSoundPlayer _hajimeSound;
   _QuizStage _stage = _QuizStage.intro;
   List<String> _techniques = const [];
+  // Pro Frage-Index zwischengespeichert (statt bei jedem Besuch neu
+  // generiert), damit "vorherige Frage" exakt dieselbe Frage samt
+  // Antwortoptionen zeigt, die man vorhin schon gesehen/beantwortet hat.
+  List<QuizQuestion?> _questionsByIndex = [];
+  List<String?> _answersByIndex = [];
   QuizQuestion? _question;
   int _index = 0;
   int _score = 0;
@@ -81,12 +86,34 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {
       _showingHajime = false;
       _techniques = techniques;
+      _questionsByIndex = List<QuizQuestion?>.filled(techniques.length, null);
+      _answersByIndex = List<String?>.filled(techniques.length, null);
       _index = 0;
       _score = 0;
       _stage = _QuizStage.playing;
       _question = generateQuestion(techniques[0], _random);
+      _questionsByIndex[0] = _question;
       _selectedAnswer = null;
     });
+  }
+
+  /// Wechselt zu Frage [index] - vor- oder rueckwaerts. Bereits besuchte
+  /// Fragen (und eine dort schon gegebene Antwort) werden aus dem Cache
+  /// wiederhergestellt statt neu generiert, damit "vorherige Frage" die
+  /// Technik unveraendert nochmal zeigt.
+  void _goToIndex(int index) {
+    setState(() {
+      _index = index;
+      _question = _questionsByIndex[index] ??= generateQuestion(
+        _techniques[index],
+        _random,
+      );
+      _selectedAnswer = _answersByIndex[index];
+    });
+  }
+
+  void _previousQuestion() {
+    if (_index > 0) _goToIndex(_index - 1);
   }
 
   void _startRound() {
@@ -124,7 +151,10 @@ class _QuizScreenState extends State<QuizScreen> {
     } else {
       progress.markLearned(wrongId);
     }
-    setState(() => _selectedAnswer = answer);
+    setState(() {
+      _selectedAnswer = answer;
+      _answersByIndex[_index] = answer;
+    });
   }
 
   void _resolvePendingMilestone() {
@@ -158,11 +188,7 @@ class _QuizScreenState extends State<QuizScreen> {
       setState(() => _stage = _QuizStage.finished);
       return;
     }
-    setState(() {
-      _index++;
-      _question = generateQuestion(_techniques[_index], _random);
-      _selectedAnswer = null;
-    });
+    _goToIndex(_index + 1);
   }
 
   @override
@@ -198,6 +224,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     selectedAnswer: _selectedAnswer,
                     onSelect: _selectAnswer,
                     onNext: _nextQuestion,
+                    onPrevious: _index > 0 ? _previousQuestion : null,
                   ),
                   _QuizStage.finished => _ResultView(
                     score: _score,
@@ -308,6 +335,7 @@ class _QuestionView extends StatelessWidget {
   final String? selectedAnswer;
   final void Function(String answer, Offset tapPosition) onSelect;
   final VoidCallback onNext;
+  final VoidCallback? onPrevious;
 
   const _QuestionView({
     required this.question,
@@ -316,6 +344,7 @@ class _QuestionView extends StatelessWidget {
     required this.selectedAnswer,
     required this.onSelect,
     required this.onNext,
+    required this.onPrevious,
   });
 
   @override
@@ -324,13 +353,21 @@ class _QuestionView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: TextButton.icon(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.arrow_back, size: 18),
-            label: const Text(AppStrings.quizExitButton),
-          ),
+        Row(
+          children: [
+            TextButton.icon(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(Icons.arrow_back, size: 18),
+              label: const Text(AppStrings.quizExitButton),
+            ),
+            const Spacer(),
+            if (onPrevious != null)
+              TextButton.icon(
+                onPressed: onPrevious,
+                icon: const Icon(Icons.undo, size: 18),
+                label: const Text(AppStrings.quizPreviousQuestionButton),
+              ),
+          ],
         ),
         Text(
           AppStrings.quizQuestionProgress(index + 1, total),

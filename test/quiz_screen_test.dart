@@ -242,4 +242,47 @@ void main() {
       }
     },
   );
+
+  testWidgets('"Vorherige Technik" fuehrt zur zuvor schon beantworteten Frage '
+      'zurueck (Feedback + Weiter-Button sofort sichtbar, kein erneutes '
+      'Zaehlen beim Antippen der - gesperrten - Optionen)', (
+    WidgetTester tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    final store = await ProgressStore.load();
+    final controller = ProgressController(store);
+
+    await tester.pumpWidget(
+      ProgressScope(
+        controller: controller,
+        child: const MaterialApp(home: QuizScreen()),
+      ),
+    );
+
+    // Auf der ersten Frage gibt es noch keine vorherige - der Button
+    // fehlt.
+    await _tapAndAwaitHajime(tester, find.text(AppStrings.quizStartButton));
+    expect(find.text(AppStrings.quizPreviousQuestionButton), findsNothing);
+
+    await tester.tap(_answerOptions().first);
+    await tester.pump();
+    final scoreBefore = controller.countCompletedWithPrefix('quiz:');
+
+    await _tapNextAndDismissAnyReward(tester);
+    expect(find.text(AppStrings.quizQuestionProgress(2, 10)), findsOneWidget);
+    expect(find.text(AppStrings.quizPreviousQuestionButton), findsOneWidget);
+
+    // Zurueck zur ersten Frage: schon beantwortet, also sofort Feedback
+    // + Weiter-Button statt antippbarer Optionen.
+    await tester.tap(find.text(AppStrings.quizPreviousQuestionButton));
+    await tester.pump();
+    expect(find.text(AppStrings.quizQuestionProgress(1, 10)), findsOneWidget);
+    expect(find.text(AppStrings.quizNextButton), findsOneWidget);
+
+    // Erneutes Antippen einer (gesperrten) Option darf den Fortschritt
+    // nicht veraendern.
+    await tester.tap(_answerOptions().first);
+    await tester.pump();
+    expect(controller.countCompletedWithPrefix('quiz:'), scoreBefore);
+  });
 }
