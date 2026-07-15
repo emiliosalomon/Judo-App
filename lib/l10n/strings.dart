@@ -135,7 +135,8 @@ class AppStrings {
   static const quizIntro =
       'Welche deutsche Übersetzung passt zur Technik? Bei jeder Runde '
       'werden zufällige Techniken aus dem gesamten Programm abgefragt.';
-  static const quizStartButton = 'Runde starten';
+  static const quizStartButton = 'Zeig mir, was du kannst';
+  static const quizHajimeAnnouncement = 'Hajime!';
   static String quizQuestionProgress(int current, int total) =>
       'Frage $current/$total';
   static const quizTechniqueVideoHint = 'Technik antippen fürs Video';
