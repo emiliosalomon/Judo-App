@@ -145,6 +145,7 @@ class AppStrings {
       'Leider falsch — richtig wäre: $correctAnswer';
   static const quizNextButton = 'Weiter';
   static const quizFinishButton = 'Ergebnis ansehen';
+  static const quizPreviousQuestionButton = 'Vorherige Technik';
   static const quizFinishedTitle = 'Runde geschafft!';
   static String quizScoreSummary(int correct, int total) =>
       '$correct von $total richtig';
