@@ -18,6 +18,15 @@ Finder _answerOptions() => find.descendant(
   matching: find.byType(GestureDetector),
 );
 
+/// Rundenstart (Intro-Button, "Nochmal spielen", "Falsche wiederholen")
+/// zeigt erst kurz "Hajime!" an (siehe QuizScreen._beginRound), bevor die
+/// Frage erscheint - [finder] antippen und die Verzoegerung abwarten.
+Future<void> _tapAndAwaitHajime(WidgetTester tester, Finder finder) async {
+  await tester.tap(finder);
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 700));
+}
+
 /// Tippt den "Weiter"/"Ergebnis ansehen"-Button an und schliesst danach
 /// eine ggf. aufpoppende Medaillen-/Pokal-Belohnung wieder, damit der
 /// naechste Test-Schritt nicht durch den Dialog blockiert wird.
@@ -49,8 +58,7 @@ void main() {
       );
 
       expect(find.text(AppStrings.quizStartButton), findsOneWidget);
-      await tester.tap(find.text(AppStrings.quizStartButton));
-      await tester.pump();
+      await _tapAndAwaitHajime(tester, find.text(AppStrings.quizStartButton));
 
       expect(find.text(AppStrings.quizQuestionProgress(1, 10)), findsOneWidget);
       final options = _answerOptions();
@@ -88,8 +96,7 @@ void main() {
         await wrapWithProgress(const MaterialApp(home: QuizScreen())),
       );
 
-      await tester.tap(find.text(AppStrings.quizStartButton));
-      await tester.pump();
+      await _tapAndAwaitHajime(tester, find.text(AppStrings.quizStartButton));
 
       expect(find.text(AppStrings.quizTechniqueVideoHint), findsOneWidget);
       expect(find.byIcon(Icons.play_circle_outline), findsOneWidget);
@@ -103,8 +110,7 @@ void main() {
         await wrapWithProgress(const MaterialApp(home: QuizScreen())),
       );
 
-      await tester.tap(find.text(AppStrings.quizStartButton));
-      await tester.pump();
+      await _tapAndAwaitHajime(tester, find.text(AppStrings.quizStartButton));
 
       for (var i = 0; i < 10; i++) {
         await tester.tap(_answerOptions().first);
@@ -154,8 +160,7 @@ void main() {
       // Beantwortens ueber den Zurueck-Button aussteigen.
       await tester.tap(find.text('Quiz oeffnen'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(AppStrings.quizStartButton));
-      await tester.pump();
+      await _tapAndAwaitHajime(tester, find.text(AppStrings.quizStartButton));
       await tester.tap(find.text(AppStrings.quizExitButton));
       await tester.pumpAndSettle();
       expect(find.text('Quiz oeffnen'), findsOneWidget);
@@ -175,8 +180,7 @@ void main() {
       ),
     );
 
-    await tester.tap(find.text(AppStrings.quizStartButton));
-    await tester.pump();
+    await _tapAndAwaitHajime(tester, find.text(AppStrings.quizStartButton));
 
     var safetyLimit = 60;
     while (controller.countCompletedWithPrefix('quiz:') < 5 &&
@@ -186,8 +190,10 @@ void main() {
       await tester.pump();
       await _tapNextAndDismissAnyReward(tester);
       if (find.text(AppStrings.quizPlayAgainButton).evaluate().isNotEmpty) {
-        await tester.tap(find.text(AppStrings.quizPlayAgainButton));
-        await tester.pump();
+        await _tapAndAwaitHajime(
+          tester,
+          find.text(AppStrings.quizPlayAgainButton),
+        );
       }
     }
 
@@ -216,8 +222,10 @@ void main() {
       );
 
       expect(find.text(AppStrings.quizReviewButton(1)), findsOneWidget);
-      await tester.tap(find.text(AppStrings.quizReviewButton(1)));
-      await tester.pump();
+      await _tapAndAwaitHajime(
+        tester,
+        find.text(AppStrings.quizReviewButton(1)),
+      );
 
       // Die Wiederholungsrunde hat genau 1 Frage - und zwar zur zuvor als
       // falsch markierten Technik.

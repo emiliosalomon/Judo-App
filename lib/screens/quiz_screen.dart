@@ -7,6 +7,7 @@ import '../data/quiz_data.dart';
 import '../data/technique_video_data.dart';
 import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
+import '../services/hajime_sound_player.dart';
 import '../services/progress_scope.dart';
 import '../theme/judo_theme.dart';
 import '../widgets/confetti_burst.dart';
@@ -47,6 +48,7 @@ class _QuizScreenState extends State<QuizScreen> {
   static const _roundSize = 10;
 
   final _random = Random();
+  late final HajimeSoundPlayer _hajimeSound;
   _QuizStage _stage = _QuizStage.intro;
   List<String> _techniques = const [];
   QuizQuestion? _question;
@@ -54,9 +56,30 @@ class _QuizScreenState extends State<QuizScreen> {
   int _score = 0;
   String? _selectedAnswer;
   _Milestone? _pendingMilestone;
+  // Waehrend true zeigt der Screen statt Intro/Frage kurz "Hajime!" an,
+  // bevor die Runde tatsaechlich beginnt - wie beim echten Rundenstart im
+  // Judo.
+  bool _showingHajime = false;
 
-  void _beginRound(List<String> techniques) {
+  @override
+  void initState() {
+    super.initState();
+    _hajimeSound = HajimeSoundPlayer();
+  }
+
+  @override
+  void dispose() {
+    _hajimeSound.dispose();
+    super.dispose();
+  }
+
+  Future<void> _beginRound(List<String> techniques) async {
+    setState(() => _showingHajime = true);
+    _hajimeSound.play(context);
+    await Future.delayed(const Duration(milliseconds: 700));
+    if (!mounted) return;
     setState(() {
+      _showingHajime = false;
       _techniques = techniques;
       _index = 0;
       _score = 0;
@@ -150,32 +173,59 @@ class _QuizScreenState extends State<QuizScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: switch (_stage) {
-            _QuizStage.intro => _IntroView(
-              onStart: _startRound,
-              onReview: () => _startReviewRound(
-                progress
-                    .idsWithPrefix(_wrongPrefix)
-                    .map((id) => id.substring(_wrongPrefix.length))
-                    .toList(),
-              ),
-              reviewCount: progress.countCompletedWithPrefix(_wrongPrefix),
-              masteredCount: progress.countCompletedWithPrefix(_masteredPrefix),
-            ),
-            _QuizStage.playing => _QuestionView(
-              question: _question!,
-              index: _index,
-              total: _techniques.length,
-              selectedAnswer: _selectedAnswer,
-              onSelect: _selectAnswer,
-              onNext: _nextQuestion,
-            ),
-            _QuizStage.finished => _ResultView(
-              score: _score,
-              total: _techniques.length,
-              onPlayAgain: _startRound,
-            ),
-          },
+          child: _showingHajime
+              ? const _HajimeAnnouncement()
+              : switch (_stage) {
+                  _QuizStage.intro => _IntroView(
+                    onStart: _startRound,
+                    onReview: () => _startReviewRound(
+                      progress
+                          .idsWithPrefix(_wrongPrefix)
+                          .map((id) => id.substring(_wrongPrefix.length))
+                          .toList(),
+                    ),
+                    reviewCount: progress.countCompletedWithPrefix(
+                      _wrongPrefix,
+                    ),
+                    masteredCount: progress.countCompletedWithPrefix(
+                      _masteredPrefix,
+                    ),
+                  ),
+                  _QuizStage.playing => _QuestionView(
+                    question: _question!,
+                    index: _index,
+                    total: _techniques.length,
+                    selectedAnswer: _selectedAnswer,
+                    onSelect: _selectAnswer,
+                    onNext: _nextQuestion,
+                  ),
+                  _QuizStage.finished => _ResultView(
+                    score: _score,
+                    total: _techniques.length,
+                    onPlayAgain: _startRound,
+                  ),
+                },
+        ),
+      ),
+    );
+  }
+}
+
+/// Kurze Zwischenanzeige zwischen Rundenstart und erster Frage - wie beim
+/// echten Judo-Kampf ruft der Schiedsrichter erst "Hajime!", bevor es
+/// losgeht.
+class _HajimeAnnouncement extends StatelessWidget {
+  const _HajimeAnnouncement();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        AppStrings.quizHajimeAnnouncement,
+        style: TextStyle(
+          fontSize: 56,
+          fontWeight: FontWeight.w900,
+          color: JudoColors.red,
         ),
       ),
     );

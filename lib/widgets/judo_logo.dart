@@ -1,6 +1,6 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import '../l10n/strings.dart';
+import '../services/hajime_sound_player.dart';
 import '../theme/judo_theme.dart';
 
 /// App-Logo: eigenes Bild (Wurfszene, vom Nutzer per KI-Bildtool erstellt).
@@ -28,7 +28,7 @@ class JudoLogo extends StatefulWidget {
 class _JudoLogoState extends State<JudoLogo> with TickerProviderStateMixin {
   late final AnimationController _rotationSettleController;
   late final AnimationController _bowController;
-  late final AudioPlayer _hajimePlayer;
+  late final HajimeSoundPlayer _hajimeSound;
   double _rotationAtRelease = 0;
 
   @override
@@ -42,31 +42,12 @@ class _JudoLogoState extends State<JudoLogo> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(milliseconds: 220),
     );
-    _hajimePlayer = AudioPlayer();
+    _hajimeSound = HajimeSoundPlayer();
   }
 
-  Future<void> _handleTap() async {
+  void _handleTap() {
     _playBow();
-    try {
-      // Kein manuelles stop() davor: play() uebernimmt das Stoppen/
-      // Neustarten schon selbst (setSource + resume). Ein stop() auf einem
-      // Player ohne bisherige Quelle kann je nach Plattform werfen - dann
-      // wuerde dieser try-Block schon vor play() abbrechen und nie Ton
-      // ausgeben, ohne dass davon ausserhalb des Debug-Logs etwas sichtbar
-      // waere.
-      await _hajimePlayer.play(AssetSource('audio/hajime.m4a'));
-    } catch (error) {
-      // Ton ist reine Zugabe – Wiedergabefehler (z.B. kein Audio-Output)
-      // duerfen die Bedienung nicht stoeren. Zusaetzlich zum Debug-Log auch
-      // sichtbar auf dem Screen (SnackBar), da auf einem Geraet ohne
-      // angeschlossene Entwickler-Konsole sonst niemand den Fehler sieht.
-      debugPrint('Hajime-Sound konnte nicht abgespielt werden: $error');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Hajime-Sound-Fehler: $error')),
-        );
-      }
-    }
+    _hajimeSound.play(context);
   }
 
   @override
@@ -91,7 +72,7 @@ class _JudoLogoState extends State<JudoLogo> with TickerProviderStateMixin {
   void dispose() {
     _rotationSettleController.dispose();
     _bowController.dispose();
-    _hajimePlayer.dispose();
+    _hajimeSound.dispose();
     super.dispose();
   }
 
