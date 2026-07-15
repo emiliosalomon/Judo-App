@@ -67,6 +67,10 @@ flutter:
   assets:
     - assets/images/judo_logo.png
     - assets/audio/hajime.m4a
+    # Eigene Technik-Fotos - Ordner bewusst als Ganzes deklariert (statt
+    # jede Datei einzeln), damit neu hinzugefuegte Bilder ohne Aenderung an
+    # dieser Datei erfasst werden (nur `flutter pub get`/Neustart noetig).
+    - assets/images/techniques/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

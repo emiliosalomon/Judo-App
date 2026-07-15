@@ -76,18 +76,15 @@ class _ExpandableTechniqueRowState extends State<ExpandableTechniqueRow> {
                 if (image != null) ...[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      image.url,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const SizedBox.shrink(),
+                    child: image.build(),
+                  ),
+                  if (image.attribution != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      '${AppStrings.imageAttributionPrefix}${image.attribution}',
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${AppStrings.imageAttributionPrefix}${image.attribution}',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                  ],
                 ],
                 if (image != null && description != null)
                   const SizedBox(height: 10),
