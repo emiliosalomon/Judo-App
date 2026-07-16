@@ -129,7 +129,7 @@ class AppStrings {
   static const imageAttributionPrefix = 'Bild: ';
   static const couldNotOpenLink = 'Link konnte nicht geöffnet werden.';
   static const tapAgainForVideoHint = 'Nochmal antippen fürs Video';
-  static const videoChoiceMomentOption = 'Entscheidenden Moment ansehen';
+  static const videoChoiceStandbildOption = 'Video-Standbild ansehen';
   static const videoChoiceFullOption = 'Ganzes Video ansehen';
 
   // Technik-Quiz

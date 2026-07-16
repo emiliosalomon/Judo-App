@@ -127,19 +127,18 @@ const techniqueVideos = <String, String>{
 String? findTechniqueVideo(String technique) =>
     findBestTechniqueMatch(technique, techniqueVideos);
 
-/// Zeitstempel (Sekunde im Video, siehe [techniqueVideos]) fuer den Moment,
-/// in dem die Technik am klarsten zu erkennen ist ("entscheidender
-/// Moment") - z.B. der Wurf-/Ansatzpunkt bei einer Wurftechnik. Nur ein
-/// Link (`&t=Ns`), kein Bild-/Videoausschnitt: das Video bleibt beim
-/// Rechteinhaber gehostet, es wird nichts kopiert.
-///
-/// Ein Zeitstempel darf hier nur eingetragen werden, wenn er durch
-/// tatsaechliches Ansehen des Videos verifiziert wurde - kein Schaetzen.
-/// Techniken ohne verifizierten Zeitstempel fehlen hier bewusst; fuer sie
-/// oeffnet ein Tap direkt das ganze Video (siehe openTechniqueVideo in
-/// widgets/video_choice_sheet.dart).
-const techniqueVideoMoments = <String, int>{'O-soto-gari': 13};
-
-/// Sucht wie [findTechniqueVideo], aber in [techniqueVideoMoments].
-int? findTechniqueVideoMoment(String technique) =>
-    findBestTechniqueMatch(technique, techniqueVideoMoments);
+/// Baut aus einem kuratierten Video-Link automatisch die Standbild-URL:
+/// YouTube liefert zu jedem Video ueber eine stabile, oeffentliche URL ein
+/// offizielles Vorschaubild aus - kein selbst erstellter Screenshot und
+/// keine Kopie, das Bild wird direkt von YouTube ausgeliefert, genau fuer
+/// diesen Verlinkungszweck (dieselbe Vorschau, die z.B. auch beim Teilen
+/// eines YouTube-Links in Chat-Apps erscheint). Deckt automatisch jede
+/// Technik mit kuratiertem Video ab, ohne dass jedes Video einzeln
+/// angesehen werden muesste.
+String? findTechniqueVideoThumbnail(String technique) {
+  final url = findTechniqueVideo(technique);
+  if (url == null) return null;
+  final videoId = Uri.parse(url).queryParameters['v'];
+  if (videoId == null) return null;
+  return 'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
+}
