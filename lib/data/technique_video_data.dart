@@ -20,6 +20,12 @@ const techniqueVideos = <String, String>{
   'O-soto-gari': 'https://www.youtube.com/watch?v=c-A_nP7mKAc',
   'O-goshi': 'https://www.youtube.com/watch?v=yhu1mfy2vJ4',
   'O-uchi-gari': 'https://www.youtube.com/watch?v=0itJFhV9pDQ',
+  // OeJV-Kyu-Programm (6. Kyu) benennt die Technik als kombinierten
+  // Programmpunkt "O-uchi (Barai/Gari)"/"Ko-uchi (Barai/Gari)" - der
+  // Teilstring-Abgleich faende ohne diese eigenen Schluessel keinen
+  // Treffer, obwohl mit O-uchi-gari/Ko-uchi-gari ein passendes Video
+  // vorliegt.
+  'O-uchi (Barai/Gari)': 'https://www.youtube.com/watch?v=0itJFhV9pDQ',
   // 'Seoi-nage' ist im Kodokan-Gokyo die generische/beidhaendige Ausfuehrung
   // (= OeJV "Morote-seoi-nage"). Die einhaendige Variante "Ippon-seoi-nage"
   // ist ein eigener, offizieller Kodokan-Eintrag mit eigenem Video - beide
@@ -30,6 +36,7 @@ const techniqueVideos = <String, String>{
   'Ippon-seoi-nage': 'https://www.youtube.com/watch?v=FQnOlCxo4oI',
   'Ko-soto-gari': 'https://www.youtube.com/watch?v=jeQ541ScLB4',
   'Ko-uchi-gari': 'https://www.youtube.com/watch?v=3Jb3tZvr9Ng',
+  'Ko-uchi (Barai/Gari)': 'https://www.youtube.com/watch?v=3Jb3tZvr9Ng',
   'Koshi-guruma': 'https://www.youtube.com/watch?v=SU7Id6uVJ44',
   'Tsuri-komi-goshi': 'https://www.youtube.com/watch?v=McfzA0yRVt4',
   'Okuri-ashi-barai': 'https://www.youtube.com/watch?v=nw1ZdRjrdRI',
