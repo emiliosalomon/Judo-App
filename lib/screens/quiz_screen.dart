@@ -1,17 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../data/quiz_data.dart';
-import '../data/technique_video_data.dart';
-import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
 import '../services/hajime_sound_player.dart';
 import '../services/progress_scope.dart';
 import '../theme/judo_theme.dart';
 import '../widgets/confetti_burst.dart';
 import '../widgets/milestone_reward.dart';
+import '../widgets/video_choice_sheet.dart';
 
 enum _QuizStage { intro, playing, finished }
 
@@ -375,7 +373,7 @@ class _QuestionView extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         GestureDetector(
-          onTap: () => _openTechniqueVideo(context, question.technique),
+          onTap: () => openTechniqueVideo(context, question.technique),
           child: Column(
             children: [
               Text(
@@ -457,23 +455,6 @@ class _QuestionView extends StatelessWidget {
         ],
       ],
     );
-  }
-}
-
-/// Oeffnet das kuratierte YouTube-Video zu [technique] (oder eine
-/// Suche, falls kein kuratierter Link hinterlegt ist) - fuer den Fall,
-/// dass man die Technik im Quiz nicht kennt und sie sich kurz ansehen
-/// will. Dieselbe Verlinkungslogik wie in expandable_technique_row.dart.
-Future<void> _openTechniqueVideo(BuildContext context, String technique) async {
-  final curated = findTechniqueVideo(technique);
-  final uri = curated != null
-      ? Uri.parse(curated)
-      : youtubeSearchUrl(technique);
-  final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-  if (!opened && context.mounted) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text(AppStrings.couldNotOpenLink)));
   }
 }
 

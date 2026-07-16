@@ -101,6 +101,30 @@ void main() {
     }
   });
 
+  test(
+    'findTechniqueVideoMoment liefert null, solange kein Zeitstempel '
+    'verifiziert wurde (siehe Doc-Kommentar in technique_video_data.dart)',
+    () {
+      expect(findTechniqueVideoMoment('O-soto-gari'), isNull);
+    },
+  );
+
+  test('jeder Schluessel mit hinterlegtem Zeitstempel hat auch einen '
+      'kuratierten Video-Link (ein Zeitstempel ohne Video waere sinnlos)', () {
+    for (final key in techniqueVideoMoments.keys) {
+      expect(
+        techniqueVideos.containsKey(key),
+        isTrue,
+        reason: '"$key" hat einen Zeitstempel, aber keinen Video-Link',
+      );
+      expect(
+        techniqueVideoMoments[key],
+        greaterThanOrEqualTo(0),
+        reason: '"$key" hat einen negativen Zeitstempel',
+      );
+    }
+  });
+
   test('Namen im Gokyo-/Katame-waza-Katalog stimmen mit vorhandenen '
       'kuratierten Links ueberein (keine Tippfehler in den Schluesseln)', () {
     final catalog = [

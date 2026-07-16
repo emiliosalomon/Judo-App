@@ -126,3 +126,20 @@ const techniqueVideos = <String, String>{
 /// haben.
 String? findTechniqueVideo(String technique) =>
     findBestTechniqueMatch(technique, techniqueVideos);
+
+/// Zeitstempel (Sekunde im Video, siehe [techniqueVideos]) fuer den Moment,
+/// in dem die Technik am klarsten zu erkennen ist ("entscheidender
+/// Moment") - z.B. der Wurf-/Ansatzpunkt bei einer Wurftechnik. Nur ein
+/// Link (`&t=Ns`), kein Bild-/Videoausschnitt: das Video bleibt beim
+/// Rechteinhaber gehostet, es wird nichts kopiert.
+///
+/// Ein Zeitstempel darf hier nur eingetragen werden, wenn er durch
+/// tatsaechliches Ansehen des Videos verifiziert wurde - kein Schaetzen.
+/// Techniken ohne verifizierten Zeitstempel fehlen hier bewusst; fuer sie
+/// oeffnet ein Tap direkt das ganze Video (siehe openTechniqueVideo in
+/// widgets/video_choice_sheet.dart).
+const techniqueVideoMoments = <String, int>{};
+
+/// Sucht wie [findTechniqueVideo], aber in [techniqueVideoMoments].
+int? findTechniqueVideoMoment(String technique) =>
+    findBestTechniqueMatch(technique, techniqueVideoMoments);

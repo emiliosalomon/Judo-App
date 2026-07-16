@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../data/anwendungsaufgabe_description_data.dart';
 import '../data/technique_media_data.dart';
-import '../data/technique_video_data.dart';
-import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
 import '../theme/judo_theme.dart';
+import 'video_choice_sheet.dart';
 
 /// Macht eine Technik-/Aufgaben-Zeile "doppelt antippbar": das erste
 /// Antippen klappt (falls vorhanden) eine Illustration und/oder eine kurze
@@ -42,20 +40,7 @@ class _ExpandableTechniqueRowState extends State<ExpandableTechniqueRow> {
       setState(() => _expanded = true);
       return;
     }
-    _openYoutube();
-  }
-
-  Future<void> _openYoutube() async {
-    final curated = findTechniqueVideo(widget.technique);
-    final uri = curated != null
-        ? Uri.parse(curated)
-        : youtubeSearchUrl(widget.technique);
-    final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    if (!opened && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(AppStrings.couldNotOpenLink)),
-      );
-    }
+    openTechniqueVideo(context, widget.technique);
   }
 
   @override
