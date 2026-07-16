@@ -88,7 +88,8 @@ class AppStrings {
   static const kataVideoAttribution =
       'Video: offizieller YouTube-Kanal des Kodokan';
   static const kataTechniqueVideoHint =
-      'Antippen öffnet eine Suche im offiziellen Kodokan-YouTube-Kanal.';
+      'Antippen zeigt Video-Optionen (oder, ohne kuratierten Link, eine '
+      'Suche im offiziellen Kodokan-YouTube-Kanal).';
 
   // Standardsituationen
   static const standardSituationsTitle = 'Standardsituationen';
@@ -128,7 +129,7 @@ class AppStrings {
   // Technik-Medien (Bild + YouTube-Link)
   static const imageAttributionPrefix = 'Bild: ';
   static const couldNotOpenLink = 'Link konnte nicht geöffnet werden.';
-  static const tapAgainForVideoHint = 'Nochmal antippen fürs Video';
+  static const tapAgainForVideoHint = 'Nochmal antippen für Video-Optionen';
   static const videoChoiceStandbildOption = 'Video-Standbild ansehen';
   static const videoChoiceFullOption = 'Ganzes Video ansehen';
 
@@ -141,7 +142,7 @@ class AppStrings {
   static const quizHajimeAnnouncement = 'Hajime!';
   static String quizQuestionProgress(int current, int total) =>
       'Frage $current/$total';
-  static const quizTechniqueVideoHint = 'Technik antippen fürs Video';
+  static const quizTechniqueVideoHint = 'Technik antippen für Video-Optionen';
   static const quizCorrectFeedback = 'Richtig!';
   static String quizWrongFeedback(String correctAnswer) =>
       'Leider falsch — richtig wäre: $correctAnswer';

@@ -1,13 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'fuzzy_technique_match.dart';
-import 'technique_video_data.dart';
 
-/// Zuordnung Technik-Name -> Bild: entweder ein eigenes Foto
-/// ([TechniqueImage.asset], lokal im Repo unter assets/images/techniques/,
-/// bevorzugt sobald vorhanden - siehe CLAUDE.md zur Bevorzugung eigenen
-/// Bildmaterials) oder, als automatischer Fallback ohne manuelle Pflege,
-/// das offizielle YouTube-Vorschaubild des kuratierten Technik-Videos
-/// (siehe [findTechniqueVideoThumbnail] in technique_video_data.dart).
+/// Zuordnung Technik-Name -> eigenes Foto ([TechniqueImage.asset], lokal
+/// im Repo unter assets/images/techniques/...) - siehe CLAUDE.md zur
+/// Bevorzugung eigenen Bildmaterials. Das automatische YouTube-Standbild
+/// des kuratierten Technik-Videos wird nicht hier, sondern direkt im
+/// Auswahlmenue angeboten (siehe chooseTechniqueVideo in
+/// widgets/video_choice_sheet.dart) - so ist "Video-Standbild ansehen"
+/// und "Ganzes Video ansehen" ueberall im selben Menue auswaehlbar,
+/// unabhaengig davon, ob zusaetzlich ein eigenes Foto vorliegt.
 class TechniqueImage {
   final String? assetPath;
   final String? networkUrl;
@@ -42,21 +43,15 @@ class TechniqueImage {
   }
 }
 
-const _videoStandbildAttribution = 'Standbild aus dem verlinkten YouTube-Video';
-
 /// Eigene Fotos kommen hier rein, sobald sie vorliegen (assets/images/
-/// techniques/...). Bis dahin liefert [findTechniqueImage] automatisch
-/// das YouTube-Standbild des kuratierten Videos als Bild.
+/// techniques/...).
 const techniqueImages = <String, TechniqueImage>{};
 
 /// Diese Technik-Namen enthalten zwar einen kuerzeren, kuratierten
 /// Schluessel als wortgrenzen-gueltigen Teilstring (z.B. "Ushiro-kesa-
 /// gatame" enthaelt "Kesa-gatame"), bezeichnen aber eine eigenstaendige,
 /// andere Technik - ein per Fuzzy-Match geerbtes Foto des kuerzeren
-/// Schluessels waere hier irrefuehrend. Gilt nur fuer [techniqueImages]
-/// (eigene Fotos); das YouTube-Standbild hat dieses Problem nicht, da
-/// techniqueVideos fuer diese Faelle eigene, unverwechselbare Eintraege
-/// hat (siehe technique_video_data_test.dart).
+/// Schluessels waere hier irrefuehrend.
 final _noFallbackImage = RegExp(
   r'\b(ushiro-kesa-gatame|harai-goshi-gaeshi|yoko-tomoe-nage)\b',
   caseSensitive: false,
@@ -64,19 +59,8 @@ final _noFallbackImage = RegExp(
 
 /// Sucht per wortgrenzen-bewusstem Teilstring-Abgleich (siehe
 /// fuzzy_technique_match.dart; Kyu-Programm-Namen haben oft Suffixe wie
-/// " RL" oder "oder ..."), nicht per exaktem Schluessel. Ohne eigenes Foto
-/// faellt die Suche automatisch auf das YouTube-Standbild des kuratierten
-/// Videos zurueck (deckt so jede Technik mit Video-Link ab, ohne fuer
-/// jede einzeln ein Bild pflegen zu muessen).
+/// " RL" oder "oder ..."), nicht per exaktem Schluessel.
 TechniqueImage? findTechniqueImage(String technique) {
-  if (!_noFallbackImage.hasMatch(technique.toLowerCase())) {
-    final ownPhoto = findBestTechniqueMatch(technique, techniqueImages);
-    if (ownPhoto != null) return ownPhoto;
-  }
-  final thumbnailUrl = findTechniqueVideoThumbnail(technique);
-  if (thumbnailUrl == null) return null;
-  return TechniqueImage.network(
-    url: thumbnailUrl,
-    attribution: _videoStandbildAttribution,
-  );
+  if (_noFallbackImage.hasMatch(technique.toLowerCase())) return null;
+  return findBestTechniqueMatch(technique, techniqueImages);
 }

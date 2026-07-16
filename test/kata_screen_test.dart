@@ -25,7 +25,7 @@ void main() {
 
   testWidgets(
     'Kata-Detailseite zeigt oben einen Button fuer den gesamten Ablauf und '
-    'jede Einzeltechnik ist antippbar (Kodokan-Kanalsuche)',
+    'jede Einzeltechnik ist antippbar (Video-Auswahlmenue)',
     (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: KataScreen()));
       await tester.tap(find.text('Nage-no-Kata'));

@@ -6,11 +6,11 @@ import '../theme/judo_theme.dart';
 import 'video_choice_sheet.dart';
 
 /// Macht eine Technik-/Aufgaben-Zeile "doppelt antippbar": das erste
-/// Antippen klappt (falls vorhanden) eine Illustration und/oder eine kurze
+/// Antippen klappt (falls vorhanden) ein eigenes Foto und/oder eine kurze
 /// Erklaerung direkt unterhalb der Zeile auf, ohne den Bildschirm zu
-/// wechseln. Ein zweites Antippen - oder das erste, wenn es weder Bild
-/// noch Erklaerung gibt - oeffnet direkt den passenden YouTube-Link (kein
-/// Bildschirmwechsel).
+/// wechseln. Ein zweites Antippen - oder das erste, wenn es weder Foto
+/// noch Erklaerung gibt - oeffnet das Video-Auswahlmenue (Standbild/
+/// ganzes Video, siehe chooseTechniqueVideo).
 ///
 /// [rowBuilder] baut die eigentliche Zeile (z.B. ein ListTile) und bekommt
 /// den fertigen onTap-Handler sowie den aktuellen Aufklapp-Zustand (um z.B.
@@ -40,7 +40,7 @@ class _ExpandableTechniqueRowState extends State<ExpandableTechniqueRow> {
       setState(() => _expanded = true);
       return;
     }
-    launchTechniqueVideo(context, widget.technique);
+    chooseTechniqueVideo(context, widget.technique);
   }
 
   @override
