@@ -1,0 +1,747 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "meta": {
+    "title": "Kodokan Gokyo no Waza – 40 Wurftechniken",
+    "description": "Datengrundlage für die geplante Anzeige-Funktion: pro Technik ein Referenzvideo mit Zeitstempel des Moments, in dem die Technik am besten sichtbar ist, sowie der geplante Ablagepfad des zugehörigen Screenshots in Google Drive.",
+    "screenshotDriveFolder": "Judo/Screenshots Judo App",
+    "screenshotNamingConvention": "<id>.jpg",
+    "videoResearchStatus": "unverified",
+    "videoResearchNote": "Techniknamen, Gruppen und Kategorien sind aus etabliertem Judo-Fachwissen und per Websuche gegenprueft (u.a. Kodokan x IJF Academy '100 Techniques' Playlist, siehe suggestedSources). Individuelle Video-URLs und timestampSeconds pro Technik konnten in dieser Session NICHT verifiziert werden, da der Seitenabruf (WebFetch) durchgehend blockiert war (403 fuer alle Ziel-Domains, auch Testseiten). Diese Felder sind bewusst auf null belassen statt erfunden - vor Nutzung manuell pruefen und befuellen.",
+    "suggestedSources": [
+      {
+        "label": "Kodokan x IJF Academy – 100 Techniques (offizielle Playlist, ein Video je Technik)",
+        "url": "https://www.youtube.com/playlist?list=PLtz539PTepc16H2iu5F3Q3D7_He1EYlIQ"
+      },
+      {
+        "label": "Gokyo-no-Waza – Right Handed Version (Kompilation, 40 Techniken in 5 Achtergruppen)",
+        "url": "https://www.youtube.com/watch?v=eSZZ86v06hE"
+      },
+      {
+        "label": "Kodokan Throwing Techniques (Nagewaza) – alle 67 Techniken dynamisch demonstriert",
+        "url": "https://www.youtube.com/watch?v=RTPxyhdy4qs"
+      }
+    ]
+  },
+  "techniques": [
+    {
+      "id": "01-de-ashi-barai",
+      "group": "dai-ikkyo",
+      "groupOrder": 1,
+      "nameRomaji": "De-ashi-barai",
+      "nameEn": "Advancing Foot Sweep",
+      "nameDe": "Vorwärtsfußfeger",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "01-de-ashi-barai.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "02-hiza-guruma",
+      "group": "dai-ikkyo",
+      "groupOrder": 2,
+      "nameRomaji": "Hiza-guruma",
+      "nameEn": "Knee Wheel",
+      "nameDe": "Kniewurf",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "02-hiza-guruma.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "03-sasae-tsurikomi-ashi",
+      "group": "dai-ikkyo",
+      "groupOrder": 3,
+      "nameRomaji": "Sasae-tsurikomi-ashi",
+      "nameEn": "Propping Drawing Ankle Throw",
+      "nameDe": "Sperrender Zug-Fußwurf",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "03-sasae-tsurikomi-ashi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "04-uki-goshi",
+      "group": "dai-ikkyo",
+      "groupOrder": 4,
+      "nameRomaji": "Uki-goshi",
+      "nameEn": "Floating Hip Throw",
+      "nameDe": "Schwebehüftwurf",
+      "category": "koshi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "04-uki-goshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "05-o-soto-gari",
+      "group": "dai-ikkyo",
+      "groupOrder": 5,
+      "nameRomaji": "O-soto-gari",
+      "nameEn": "Major Outer Reap",
+      "nameDe": "Große Außensichel",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "05-o-soto-gari.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "06-o-goshi",
+      "group": "dai-ikkyo",
+      "groupOrder": 6,
+      "nameRomaji": "O-goshi",
+      "nameEn": "Major Hip Throw",
+      "nameDe": "Großer Hüftwurf",
+      "category": "koshi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "06-o-goshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "07-o-uchi-gari",
+      "group": "dai-ikkyo",
+      "groupOrder": 7,
+      "nameRomaji": "O-uchi-gari",
+      "nameEn": "Major Inner Reap",
+      "nameDe": "Große Innensichel",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "07-o-uchi-gari.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "08-seoi-nage",
+      "group": "dai-ikkyo",
+      "groupOrder": 8,
+      "nameRomaji": "Seoi-nage",
+      "nameEn": "Shoulder Throw",
+      "nameDe": "Schulterwurf",
+      "category": "te-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "08-seoi-nage.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "09-ko-soto-gari",
+      "group": "dai-nikyo",
+      "groupOrder": 1,
+      "nameRomaji": "Ko-soto-gari",
+      "nameEn": "Minor Outer Reap",
+      "nameDe": "Kleine Außensichel",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "09-ko-soto-gari.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "10-ko-uchi-gari",
+      "group": "dai-nikyo",
+      "groupOrder": 2,
+      "nameRomaji": "Ko-uchi-gari",
+      "nameEn": "Minor Inner Reap",
+      "nameDe": "Kleine Innensichel",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "10-ko-uchi-gari.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "11-koshi-guruma",
+      "group": "dai-nikyo",
+      "groupOrder": 3,
+      "nameRomaji": "Koshi-guruma",
+      "nameEn": "Hip Wheel",
+      "nameDe": "Hüftrad",
+      "category": "koshi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "11-koshi-guruma.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "12-tsurikomi-goshi",
+      "group": "dai-nikyo",
+      "groupOrder": 4,
+      "nameRomaji": "Tsurikomi-goshi",
+      "nameEn": "Lift-Pull Hip Throw",
+      "nameDe": "Zughüftwurf",
+      "category": "koshi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "12-tsurikomi-goshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "13-okuri-ashi-barai",
+      "group": "dai-nikyo",
+      "groupOrder": 5,
+      "nameRomaji": "Okuri-ashi-barai",
+      "nameEn": "Sweeping Ankle Throw",
+      "nameDe": "Begleitender Fußfeger",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "13-okuri-ashi-barai.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "14-tai-otoshi",
+      "group": "dai-nikyo",
+      "groupOrder": 6,
+      "nameRomaji": "Tai-otoshi",
+      "nameEn": "Body Drop",
+      "nameDe": "Körperfall",
+      "category": "te-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "14-tai-otoshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "15-harai-goshi",
+      "group": "dai-nikyo",
+      "groupOrder": 7,
+      "nameRomaji": "Harai-goshi",
+      "nameEn": "Sweeping Hip Throw",
+      "nameDe": "Hüftfeger",
+      "category": "koshi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "15-harai-goshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "16-uchi-mata",
+      "group": "dai-nikyo",
+      "groupOrder": 8,
+      "nameRomaji": "Uchi-mata",
+      "nameEn": "Inner Thigh Throw",
+      "nameDe": "Innenschenkelwurf",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "16-uchi-mata.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "17-ko-soto-gake",
+      "group": "dai-sankyo",
+      "groupOrder": 1,
+      "nameRomaji": "Ko-soto-gake",
+      "nameEn": "Minor Outer Hook",
+      "nameDe": "Kleiner Außenhaken",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "17-ko-soto-gake.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "18-tsuri-goshi",
+      "group": "dai-sankyo",
+      "groupOrder": 2,
+      "nameRomaji": "Tsuri-goshi",
+      "nameEn": "Lifting Hip Throw",
+      "nameDe": "Hebehüftwurf",
+      "category": "koshi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "18-tsuri-goshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "19-yoko-otoshi",
+      "group": "dai-sankyo",
+      "groupOrder": 3,
+      "nameRomaji": "Yoko-otoshi",
+      "nameEn": "Side Drop",
+      "nameDe": "Seitfall",
+      "category": "yoko-sutemi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "19-yoko-otoshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "20-ashi-guruma",
+      "group": "dai-sankyo",
+      "groupOrder": 4,
+      "nameRomaji": "Ashi-guruma",
+      "nameEn": "Leg Wheel",
+      "nameDe": "Fußrad",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "20-ashi-guruma.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "21-hane-goshi",
+      "group": "dai-sankyo",
+      "groupOrder": 5,
+      "nameRomaji": "Hane-goshi",
+      "nameEn": "Spring Hip Throw",
+      "nameDe": "Hüftspringer",
+      "category": "koshi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "21-hane-goshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "22-harai-tsurikomi-ashi",
+      "group": "dai-sankyo",
+      "groupOrder": 6,
+      "nameRomaji": "Harai-tsurikomi-ashi",
+      "nameEn": "Lift-Pull Sweeping Ankle Throw",
+      "nameDe": "Zugfußfeger",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "22-harai-tsurikomi-ashi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "23-tomoe-nage",
+      "group": "dai-sankyo",
+      "groupOrder": 7,
+      "nameRomaji": "Tomoe-nage",
+      "nameEn": "Circle Throw",
+      "nameDe": "Kreiswurf",
+      "category": "ma-sutemi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "23-tomoe-nage.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "24-kata-guruma",
+      "group": "dai-sankyo",
+      "groupOrder": 8,
+      "nameRomaji": "Kata-guruma",
+      "nameEn": "Shoulder Wheel",
+      "nameDe": "Schulterrad",
+      "category": "te-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "24-kata-guruma.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "25-sumi-gaeshi",
+      "group": "dai-yonkyo",
+      "groupOrder": 1,
+      "nameRomaji": "Sumi-gaeshi",
+      "nameEn": "Corner Reversal",
+      "nameDe": "Eckenwurf",
+      "category": "ma-sutemi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "25-sumi-gaeshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "26-tani-otoshi",
+      "group": "dai-yonkyo",
+      "groupOrder": 2,
+      "nameRomaji": "Tani-otoshi",
+      "nameEn": "Valley Drop",
+      "nameDe": "Talfall",
+      "category": "yoko-sutemi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "26-tani-otoshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "27-hane-makikomi",
+      "group": "dai-yonkyo",
+      "groupOrder": 3,
+      "nameRomaji": "Hane-makikomi",
+      "nameEn": "Spring Hip Winding Throw",
+      "nameDe": "Federwickelwurf",
+      "category": "yoko-sutemi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "27-hane-makikomi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "28-sukui-nage",
+      "group": "dai-yonkyo",
+      "groupOrder": 4,
+      "nameRomaji": "Sukui-nage",
+      "nameEn": "Scooping Throw",
+      "nameDe": "Schaufelwurf",
+      "category": "te-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "28-sukui-nage.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "29-utsuri-goshi",
+      "group": "dai-yonkyo",
+      "groupOrder": 5,
+      "nameRomaji": "Utsuri-goshi",
+      "nameEn": "Hip Shift",
+      "nameDe": "Wechselhüftwurf",
+      "category": "koshi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "29-utsuri-goshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "30-o-guruma",
+      "group": "dai-yonkyo",
+      "groupOrder": 6,
+      "nameRomaji": "O-guruma",
+      "nameEn": "Major Wheel",
+      "nameDe": "Großes Rad",
+      "category": "koshi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "30-o-guruma.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "31-soto-makikomi",
+      "group": "dai-yonkyo",
+      "groupOrder": 7,
+      "nameRomaji": "Soto-makikomi",
+      "nameEn": "Outer Winding Throw",
+      "nameDe": "Außenwickelwurf",
+      "category": "yoko-sutemi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "31-soto-makikomi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "32-uki-otoshi",
+      "group": "dai-yonkyo",
+      "groupOrder": 8,
+      "nameRomaji": "Uki-otoshi",
+      "nameEn": "Floating Drop",
+      "nameDe": "Schwebefall",
+      "category": "te-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "32-uki-otoshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "33-o-soto-guruma",
+      "group": "dai-gokyo",
+      "groupOrder": 1,
+      "nameRomaji": "O-soto-guruma",
+      "nameEn": "Major Outer Wheel",
+      "nameDe": "Großes Außenrad",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "33-o-soto-guruma.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "34-uki-waza",
+      "group": "dai-gokyo",
+      "groupOrder": 2,
+      "nameRomaji": "Uki-waza",
+      "nameEn": "Floating Technique",
+      "nameDe": "Schwebetechnik",
+      "category": "yoko-sutemi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "34-uki-waza.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "35-yoko-wakare",
+      "group": "dai-gokyo",
+      "groupOrder": 3,
+      "nameRomaji": "Yoko-wakare",
+      "nameEn": "Side Separation",
+      "nameDe": "Seitliche Trennung",
+      "category": "yoko-sutemi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "35-yoko-wakare.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "36-yoko-guruma",
+      "group": "dai-gokyo",
+      "groupOrder": 4,
+      "nameRomaji": "Yoko-guruma",
+      "nameEn": "Side Wheel",
+      "nameDe": "Seitrad",
+      "category": "yoko-sutemi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "36-yoko-guruma.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "37-ushiro-goshi",
+      "group": "dai-gokyo",
+      "groupOrder": 5,
+      "nameRomaji": "Ushiro-goshi",
+      "nameEn": "Rear Hip Throw",
+      "nameDe": "Rückwärtshüftwurf",
+      "category": "koshi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "37-ushiro-goshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "38-ura-nage",
+      "group": "dai-gokyo",
+      "groupOrder": 6,
+      "nameRomaji": "Ura-nage",
+      "nameEn": "Rear Throw",
+      "nameDe": "Rückwurf",
+      "category": "ma-sutemi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "38-ura-nage.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "39-sumi-otoshi",
+      "group": "dai-gokyo",
+      "groupOrder": 7,
+      "nameRomaji": "Sumi-otoshi",
+      "nameEn": "Corner Drop",
+      "nameDe": "Eckfall",
+      "category": "te-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "39-sumi-otoshi.jpg",
+        "status": "pending"
+      }
+    },
+    {
+      "id": "40-yoko-gake",
+      "group": "dai-gokyo",
+      "groupOrder": 8,
+      "nameRomaji": "Yoko-gake",
+      "nameEn": "Side Hook",
+      "nameDe": "Seithaken",
+      "category": "ashi-waza",
+      "video": {
+        "url": null,
+        "timestampSeconds": null,
+        "verified": false
+      },
+      "screenshot": {
+        "fileName": "40-yoko-gake.jpg",
+        "status": "pending"
+      }
+    }
+  ]
+}
