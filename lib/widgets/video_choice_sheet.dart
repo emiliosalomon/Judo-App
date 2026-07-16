@@ -4,38 +4,26 @@ import '../data/technique_video_data.dart';
 import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
 
-/// Oeffnet direkt das Video zu [technique] (kuratierter Link oder eine
-/// YouTube-Suche) - ohne Auswahlmenue. Fuer Stellen, an denen die Wahl
-/// zwischen Standbild und Video schon anderweitig getroffen wurde (z.B.
-/// ExpandableTechniqueRow: erstes Antippen zeigt das Standbild inline,
-/// zweites Antippen oeffnet direkt das Video).
-Future<void> launchTechniqueVideo(
-  BuildContext context,
-  String technique,
-) async {
-  final curated = findTechniqueVideo(technique);
-  final uri = curated != null
-      ? Uri.parse(curated)
-      : youtubeSearchUrl(technique);
-  await _launch(context, uri);
-}
-
-/// Fragt vor dem Oeffnen erst per Auswahlmenue, ob das YouTube-Standbild
-/// oder das ganze Video geoeffnet werden soll - fuer Stellen ohne eigene
-/// Inline-Vorschau (z.B. das Quiz). Gibt es kein Standbild (kein
-/// kuratiertes Video hinterlegt), entfaellt die Auswahl und der Tap
-/// oeffnet direkt eine YouTube-Suche.
+/// Fragt per Auswahlmenue, ob das YouTube-Standbild (Video auf dem
+/// entsprechenden Frame pausiert) oder das ganze Video geoeffnet werden
+/// soll - einheitlich an jeder Stelle der App, an der eine Technik
+/// antippbar ist (Guertelpruefung, Techniken-Katalog, Kata,
+/// Standardsituationen, Quiz). Gibt es kein Standbild (kein kuratiertes
+/// Video hinterlegt), entfaellt die Auswahl und der Tap oeffnet direkt
+/// [noCuratedMatchFallback] (Standard: eine allgemeine YouTube-Suche).
 Future<void> chooseTechniqueVideo(
   BuildContext context,
-  String technique,
-) async {
+  String technique, {
+  Uri Function(String technique)? noCuratedMatchFallback,
+}) async {
   final curated = findTechniqueVideo(technique);
   final thumbnail = curated != null
       ? findTechniqueVideoThumbnail(technique)
       : null;
 
   if (curated == null || thumbnail == null) {
-    await _launch(context, youtubeSearchUrl(technique));
+    final fallback = noCuratedMatchFallback ?? youtubeSearchUrl;
+    await _launch(context, fallback(technique));
     return;
   }
 
@@ -73,7 +61,7 @@ class _VideoChoiceSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            leading: const Icon(Icons.image_outlined),
+            leading: const Icon(Icons.pause_circle_outline),
             title: const Text(AppStrings.videoChoiceStandbildOption),
             onTap: () => Navigator.of(context).pop(_VideoChoice.standbild),
           ),

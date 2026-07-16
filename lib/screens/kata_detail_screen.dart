@@ -6,6 +6,7 @@ import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
 import '../models/kata_info.dart';
 import '../theme/judo_theme.dart';
+import '../widgets/video_choice_sheet.dart';
 
 class KataDetailScreen extends StatelessWidget {
   final KataInfo info;
@@ -78,9 +79,11 @@ class KataDetailScreen extends StatelessWidget {
                       builder: (context) {
                         final translation = translateTechnique(technique);
                         return InkWell(
-                          onTap: () => _open(
+                          onTap: () => chooseTechniqueVideo(
                             context,
-                            kodokanChannelSearchUrl('$technique ${info.name}'),
+                            technique,
+                            noCuratedMatchFallback: (t) =>
+                                kodokanChannelSearchUrl('$t ${info.name}'),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(12, 4, 0, 4),
