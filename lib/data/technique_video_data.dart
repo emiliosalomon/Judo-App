@@ -138,7 +138,7 @@ String? findTechniqueVideo(String technique) =>
 /// Techniken ohne verifizierten Zeitstempel fehlen hier bewusst; fuer sie
 /// oeffnet ein Tap direkt das ganze Video (siehe openTechniqueVideo in
 /// widgets/video_choice_sheet.dart).
-const techniqueVideoMoments = <String, int>{};
+const techniqueVideoMoments = <String, int>{'O-soto-gari': 13};
 
 /// Sucht wie [findTechniqueVideo], aber in [techniqueVideoMoments].
 int? findTechniqueVideoMoment(String technique) =>
