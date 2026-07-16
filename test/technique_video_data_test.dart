@@ -102,12 +102,18 @@ void main() {
   });
 
   test(
-    'findTechniqueVideoMoment liefert null, solange kein Zeitstempel '
-    'verifiziert wurde (siehe Doc-Kommentar in technique_video_data.dart)',
+    'findTechniqueVideoMoment liefert null fuer Techniken ohne verifizierten '
+    'Zeitstempel (siehe Doc-Kommentar in technique_video_data.dart)',
     () {
-      expect(findTechniqueVideoMoment('O-soto-gari'), isNull);
+      expect(findTechniqueVideoMoment('O-uchi-gari'), isNull);
     },
   );
+
+  test('findTechniqueVideoMoment findet den Zeitstempel fuer O-soto-gari '
+      'trotz Suffix wie " RL"', () {
+    expect(findTechniqueVideoMoment('O-soto-gari'), 13);
+    expect(findTechniqueVideoMoment('O-soto-gari RL'), 13);
+  });
 
   test('jeder Schluessel mit hinterlegtem Zeitstempel hat auch einen '
       'kuratierten Video-Link (ein Zeitstempel ohne Video waere sinnlos)', () {
