@@ -101,6 +101,20 @@ void main() {
     }
   });
 
+  test('findTechniqueVideo findet die OeJV-Kyu-Programmpunkte "O-uchi '
+      '(Barai/Gari)" und "Ko-uchi (Barai/Gari)" (6. Kyu) - ohne eigenen '
+      'Schluessel faende der Teilstring-Abgleich hier keinen Treffer, '
+      'obwohl mit O-uchi-gari/Ko-uchi-gari ein passendes Video vorliegt', () {
+    expect(
+      findTechniqueVideo('O-uchi (Barai/Gari)'),
+      techniqueVideos['O-uchi-gari'],
+    );
+    expect(
+      findTechniqueVideo('Ko-uchi (Barai/Gari)'),
+      techniqueVideos['Ko-uchi-gari'],
+    );
+  });
+
   test('findTechniqueVideoThumbnail liefert null fuer unbekannte Technik', () {
     expect(findTechniqueVideoThumbnail('Voellig-unbekannte-Technik'), isNull);
   });
