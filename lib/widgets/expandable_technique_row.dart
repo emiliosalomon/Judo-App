@@ -40,7 +40,7 @@ class _ExpandableTechniqueRowState extends State<ExpandableTechniqueRow> {
       setState(() => _expanded = true);
       return;
     }
-    openTechniqueVideo(context, widget.technique);
+    launchTechniqueVideo(context, widget.technique);
   }
 
   @override

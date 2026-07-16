@@ -373,7 +373,7 @@ class _QuestionView extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         GestureDetector(
-          onTap: () => openTechniqueVideo(context, question.technique),
+          onTap: () => chooseTechniqueVideo(context, question.technique),
           child: Column(
             children: [
               Text(

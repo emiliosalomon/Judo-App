@@ -4,30 +4,55 @@ import '../data/technique_video_data.dart';
 import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
 
-/// Oeffnet das Video zu [technique]. Gibt es dafuer sowohl einen
-/// kuratierten Link als auch einen verifizierten Zeitstempel fuer den
-/// "entscheidenden Moment" (siehe technique_video_data.dart), fragt vorher
-/// ein Auswahlmenue, welcher der beiden geoeffnet werden soll. Sonst
-/// oeffnet der Tap direkt den kuratierten Link bzw. eine YouTube-Suche.
-Future<void> openTechniqueVideo(BuildContext context, String technique) async {
+/// Oeffnet direkt das Video zu [technique] (kuratierter Link oder eine
+/// YouTube-Suche) - ohne Auswahlmenue. Fuer Stellen, an denen die Wahl
+/// zwischen Standbild und Video schon anderweitig getroffen wurde (z.B.
+/// ExpandableTechniqueRow: erstes Antippen zeigt das Standbild inline,
+/// zweites Antippen oeffnet direkt das Video).
+Future<void> launchTechniqueVideo(
+  BuildContext context,
+  String technique,
+) async {
   final curated = findTechniqueVideo(technique);
-  final moment = curated != null ? findTechniqueVideoMoment(technique) : null;
+  final uri = curated != null
+      ? Uri.parse(curated)
+      : youtubeSearchUrl(technique);
+  await _launch(context, uri);
+}
 
-  Uri uri;
-  if (curated != null && moment != null) {
-    final choice = await showModalBottomSheet<_VideoChoice>(
-      context: context,
-      showDragHandle: true,
-      builder: (context) => const _VideoChoiceSheet(),
-    );
-    if (choice == null) return;
-    uri = choice == _VideoChoice.moment
-        ? Uri.parse('$curated&t=${moment}s')
-        : Uri.parse(curated);
-  } else {
-    uri = curated != null ? Uri.parse(curated) : youtubeSearchUrl(technique);
+/// Fragt vor dem Oeffnen erst per Auswahlmenue, ob das YouTube-Standbild
+/// oder das ganze Video geoeffnet werden soll - fuer Stellen ohne eigene
+/// Inline-Vorschau (z.B. das Quiz). Gibt es kein Standbild (kein
+/// kuratiertes Video hinterlegt), entfaellt die Auswahl und der Tap
+/// oeffnet direkt eine YouTube-Suche.
+Future<void> chooseTechniqueVideo(
+  BuildContext context,
+  String technique,
+) async {
+  final curated = findTechniqueVideo(technique);
+  final thumbnail = curated != null
+      ? findTechniqueVideoThumbnail(technique)
+      : null;
+
+  if (curated == null || thumbnail == null) {
+    await _launch(context, youtubeSearchUrl(technique));
+    return;
   }
 
+  final choice = await showModalBottomSheet<_VideoChoice>(
+    context: context,
+    showDragHandle: true,
+    builder: (context) => const _VideoChoiceSheet(),
+  );
+  if (choice == null) return;
+  final uri = choice == _VideoChoice.standbild
+      ? Uri.parse(thumbnail)
+      : Uri.parse(curated);
+  if (!context.mounted) return;
+  await _launch(context, uri);
+}
+
+Future<void> _launch(BuildContext context, Uri uri) async {
   final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
   if (!opened && context.mounted) {
     ScaffoldMessenger.of(
@@ -36,7 +61,7 @@ Future<void> openTechniqueVideo(BuildContext context, String technique) async {
   }
 }
 
-enum _VideoChoice { moment, full }
+enum _VideoChoice { standbild, full }
 
 class _VideoChoiceSheet extends StatelessWidget {
   const _VideoChoiceSheet();
@@ -48,9 +73,9 @@ class _VideoChoiceSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            leading: const Icon(Icons.center_focus_strong_outlined),
-            title: const Text(AppStrings.videoChoiceMomentOption),
-            onTap: () => Navigator.of(context).pop(_VideoChoice.moment),
+            leading: const Icon(Icons.image_outlined),
+            title: const Text(AppStrings.videoChoiceStandbildOption),
+            onTap: () => Navigator.of(context).pop(_VideoChoice.standbild),
           ),
           ListTile(
             leading: const Icon(Icons.play_circle_outline),

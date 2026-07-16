@@ -101,33 +101,29 @@ void main() {
     }
   });
 
-  test(
-    'findTechniqueVideoMoment liefert null fuer Techniken ohne verifizierten '
-    'Zeitstempel (siehe Doc-Kommentar in technique_video_data.dart)',
-    () {
-      expect(findTechniqueVideoMoment('O-uchi-gari'), isNull);
-    },
-  );
-
-  test('findTechniqueVideoMoment findet den Zeitstempel fuer O-soto-gari '
-      'trotz Suffix wie " RL"', () {
-    expect(findTechniqueVideoMoment('O-soto-gari'), 13);
-    expect(findTechniqueVideoMoment('O-soto-gari RL'), 13);
+  test('findTechniqueVideoThumbnail liefert null fuer unbekannte Technik', () {
+    expect(findTechniqueVideoThumbnail('Voellig-unbekannte-Technik'), isNull);
   });
 
-  test('jeder Schluessel mit hinterlegtem Zeitstempel hat auch einen '
-      'kuratierten Video-Link (ein Zeitstempel ohne Video waere sinnlos)', () {
-    for (final key in techniqueVideoMoments.keys) {
-      expect(
-        techniqueVideos.containsKey(key),
-        isTrue,
-        reason: '"$key" hat einen Zeitstempel, aber keinen Video-Link',
-      );
-      expect(
-        techniqueVideoMoments[key],
-        greaterThanOrEqualTo(0),
-        reason: '"$key" hat einen negativen Zeitstempel',
-      );
+  test('findTechniqueVideoThumbnail leitet aus dem kuratierten Video-Link '
+      'automatisch die YouTube-Standbild-URL ab (trotz Suffix wie " RL")', () {
+    final thumbnail = findTechniqueVideoThumbnail('O-soto-gari RL');
+    expect(thumbnail, isNotNull);
+    final uri = Uri.parse(thumbnail!);
+    expect(uri.host, 'img.youtube.com');
+    expect(
+      uri.path,
+      contains(
+        Uri.parse(techniqueVideos['O-soto-gari']!).queryParameters['v']!,
+      ),
+    );
+  });
+
+  test('jede kuratierte Video-URL liefert eine gueltige Standbild-URL', () {
+    for (final key in techniqueVideos.keys) {
+      final thumbnail = findTechniqueVideoThumbnail(key);
+      expect(thumbnail, isNotNull, reason: '"$key" liefert kein Standbild');
+      expect(Uri.parse(thumbnail!).host, 'img.youtube.com');
     }
   });
 

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:judo_app/data/technique_media_data.dart';
+import 'package:judo_app/data/technique_video_data.dart';
 
 void main() {
   test('TechniqueImage.asset baut ein Image.asset-Widget, .network ein '
@@ -20,7 +21,7 @@ void main() {
 
   test('findTechniqueImage findet Treffer trotz Suffixen wie " RL"', () {
     expect(findTechniqueImage('O-soto-gari RL'), isNotNull);
-    expect(findTechniqueImage('Tai-otoshi RL'), isNotNull);
+    expect(findTechniqueImage('O-uchi-gari RL'), isNotNull);
     expect(
       findTechniqueImage('Hiza-guruma oder Sasae-tsuri-komi-ashi RL'),
       isNotNull,
@@ -48,10 +49,30 @@ void main() {
     }
   });
 
-  test('Techniken ohne eigene Illustration erben nicht faelschlich das Bild '
-      'einer aehnlich benannten, aber eigenstaendigen anderen Technik', () {
-    expect(findTechniqueImage('Ushiro-kesa-gatame'), isNull);
-    expect(findTechniqueImage('Harai-goshi-gaeshi'), isNull);
+  test('Techniken ohne eigenes Foto/Video erben nicht faelschlich das Bild '
+      'einer aehnlich benannten, aber eigenstaendigen anderen Technik '
+      '(Yoko-tomoe-nage hat weder eigenes Foto noch kuratiertes Video)', () {
     expect(findTechniqueImage('Yoko-tomoe-nage'), isNull);
+  });
+
+  test('Ushiro-kesa-gatame und Harai-goshi-gaeshi haben eigene, '
+      'unverwechselbare kuratierte Video-Eintraege - das automatische '
+      'Standbild darf hier also nicht per Sperrliste unterdrueckt werden', () {
+    final ushiro = findTechniqueImage('Ushiro-kesa-gatame');
+    final haraiGaeshi = findTechniqueImage('Harai-goshi-gaeshi');
+    expect(ushiro, isNotNull);
+    expect(haraiGaeshi, isNotNull);
+    expect(
+      ushiro!.networkUrl,
+      contains(
+        Uri.parse(techniqueVideos['Ushiro-kesa-gatame']!).queryParameters['v']!,
+      ),
+    );
+    expect(
+      haraiGaeshi!.networkUrl,
+      contains(
+        Uri.parse(techniqueVideos['Harai-goshi-gaeshi']!).queryParameters['v']!,
+      ),
+    );
   });
 }
