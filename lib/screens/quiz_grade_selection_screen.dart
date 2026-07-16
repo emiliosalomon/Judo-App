@@ -6,9 +6,16 @@ import '../data/quiz_data.dart';
 import '../l10n/strings.dart';
 import '../theme/judo_theme.dart';
 
+/// Ergebnis der Guertelstufen-Auswahl: die aktuelle Auswahl, und ob direkt
+/// eine Runde damit gestartet werden soll (Start-Button auf diesem
+/// Bildschirm) statt nur zum Quiz-Intro zurueckzukehren (Zurueck-Pfeil/
+/// Systemzurueck).
+typedef QuizGradeSelectionResult = (Set<String> selection, bool startNow);
+
 /// Checkbox-Auswahl, welche Guertelstufen (und ggf. weiterfuehrende/Kata-
 /// Techniken) im Quiz abgefragt werden sollen. Gibt beim Verlassen (Zurueck-
-/// Pfeil oder Systemzurueck) immer die aktuelle Auswahl zurueck.
+/// Pfeil, Systemzurueck oder Start-Button) immer die aktuelle Auswahl
+/// zurueck.
 class QuizGradeSelectionScreen extends StatefulWidget {
   final Set<String> initialSelection;
 
@@ -28,7 +35,11 @@ class _QuizGradeSelectionScreenState extends State<QuizGradeSelectionScreen> {
     _selected = {...widget.initialSelection};
   }
 
-  void _leave() => Navigator.of(context).pop(_selected);
+  void _leave() =>
+      Navigator.of(context).pop<QuizGradeSelectionResult>((_selected, false));
+
+  void _startNow() =>
+      Navigator.of(context).pop<QuizGradeSelectionResult>((_selected, true));
 
   void _toggle(String label, bool value) {
     setState(() {
@@ -60,7 +71,7 @@ class _QuizGradeSelectionScreenState extends State<QuizGradeSelectionScreen> {
     ];
     final hasOther = quizTechniquesWithoutGrade.isNotEmpty;
 
-    return PopScope<Set<String>>(
+    return PopScope<QuizGradeSelectionResult>(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) _leave();
@@ -72,6 +83,29 @@ class _QuizGradeSelectionScreenState extends State<QuizGradeSelectionScreen> {
             onPressed: _leave,
           ),
           title: const Text(AppStrings.quizGradeSelectionTitle),
+        ),
+        bottomNavigationBar: SafeArea(
+          minimum: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FilledButton(
+                onPressed: _selected.isEmpty ? null : _startNow,
+                style: FilledButton.styleFrom(backgroundColor: JudoColors.red),
+                child: const Text(AppStrings.quizStartButton),
+              ),
+              if (_selected.isEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  AppStrings.quizNoGradesSelectedHint,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: JudoColors.red),
+                ),
+              ],
+            ],
+          ),
         ),
         body: SafeArea(
           child: ListView(

@@ -144,15 +144,16 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Future<void> _openGradeSelection() async {
-    final result = await Navigator.of(context).push<Set<String>>(
+    final result = await Navigator.of(context).push<QuizGradeSelectionResult>(
       MaterialPageRoute(
         builder: (_) =>
             QuizGradeSelectionScreen(initialSelection: _selectedGrades),
       ),
     );
-    if (result != null && mounted) {
-      setState(() => _selectedGrades = result);
-    }
+    if (result == null || !mounted) return;
+    final (selection, startNow) = result;
+    setState(() => _selectedGrades = selection);
+    if (startNow) _startRound();
   }
 
   void _selectAnswer(String answer, Offset tapPosition) {

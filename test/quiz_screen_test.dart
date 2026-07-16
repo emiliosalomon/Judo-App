@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:judo_app/data/quiz_data.dart';
 import 'package:judo_app/l10n/strings.dart';
+import 'package:judo_app/screens/quiz_grade_selection_screen.dart';
 import 'package:judo_app/screens/quiz_screen.dart';
 import 'package:judo_app/services/progress_controller.dart';
 import 'package:judo_app/services/progress_scope.dart';
@@ -328,6 +329,36 @@ void main() {
       expect(find.text(AppStrings.quizQuestionProgress(1, 2)), findsOneWidget);
     },
   );
+
+  testWidgets('Start-Button auf dem Guertelstufen-Bildschirm startet die Runde '
+      'direkt, ohne vorher zum Quiz-Intro zurueckkehren zu muessen', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      await wrapWithProgress(const MaterialApp(home: QuizScreen())),
+    );
+
+    await tester.tap(find.text(AppStrings.quizGradeSelectionButton));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppStrings.quizGradeSelectionSelectNone).first);
+    await tester.pump();
+    await tester.tap(find.text('10. Kyu – Weiß-Gelb'));
+    await tester.pump();
+
+    final startButtonOnSelectionScreen = find.descendant(
+      of: find.byType(QuizGradeSelectionScreen),
+      matching: find.text(AppStrings.quizStartButton),
+    );
+    await _tapAndAwaitHajime(tester, startButtonOnSelectionScreen);
+
+    // Direkt in der Frage gelandet (kein Umweg ueber das Intro), und nur
+    // die 2 Techniken von 10. Kyu sind moeglich.
+    expect(find.text(AppStrings.quizQuestionProgress(1, 2)), findsOneWidget);
+    final showsUkiGoshi = find.text('Uki-goshi').evaluate().isNotEmpty;
+    final showsOSotoOtoshi = find.text('O-soto-otoshi').evaluate().isNotEmpty;
+    expect(showsUkiGoshi || showsOSotoOtoshi, isTrue);
+  });
 
   testWidgets(
     'Ohne ausgewaehlte Guertelstufe ist der Start-Button deaktiviert und '
