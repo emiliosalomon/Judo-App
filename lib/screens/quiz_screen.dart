@@ -10,6 +10,7 @@ import '../theme/judo_theme.dart';
 import '../widgets/confetti_burst.dart';
 import '../widgets/milestone_reward.dart';
 import '../widgets/video_choice_sheet.dart';
+import 'quiz_grade_selection_screen.dart';
 
 enum _QuizStage { intro, playing, finished }
 
@@ -63,6 +64,15 @@ class _QuizScreenState extends State<QuizScreen> {
   // bevor die Runde tatsaechlich beginnt - wie beim echten Rundenstart im
   // Judo.
   bool _showingHajime = false;
+  // Welche Guertelstufen (siehe quiz_grade_selection_screen.dart) im Quiz
+  // vorkommen sollen - Standard: das gesamte Kyu-Programm, ohne Dan-
+  // Zusatztechniken/Kata (siehe quizDefaultGradeSelection).
+  Set<String> _selectedGrades = quizDefaultGradeSelection;
+  // Pool der aktuell laufenden Runde (fuer falsche Antwortmoeglichkeiten,
+  // siehe generateQuestion) - null bei der "Falsche wiederholen"-Runde, da
+  // die dort abgefragten Techniken aus mehreren Guertelstufen stammen
+  // koennen.
+  List<String>? _currentPool;
 
   @override
   void initState() {
@@ -76,7 +86,10 @@ class _QuizScreenState extends State<QuizScreen> {
     super.dispose();
   }
 
-  Future<void> _beginRound(List<String> techniques) async {
+  Future<void> _beginRound(
+    List<String> techniques, {
+    List<String>? pool,
+  }) async {
     setState(() => _showingHajime = true);
     _hajimeSound.play(context);
     await Future.delayed(const Duration(milliseconds: 700));
@@ -84,12 +97,13 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {
       _showingHajime = false;
       _techniques = techniques;
+      _currentPool = pool;
       _questionsByIndex = List<QuizQuestion?>.filled(techniques.length, null);
       _answersByIndex = List<String?>.filled(techniques.length, null);
       _index = 0;
       _score = 0;
       _stage = _QuizStage.playing;
-      _question = generateQuestion(techniques[0], _random);
+      _question = generateQuestion(techniques[0], _random, pool: pool);
       _questionsByIndex[0] = _question;
       _selectedAnswer = null;
     });
@@ -105,6 +119,7 @@ class _QuizScreenState extends State<QuizScreen> {
       _question = _questionsByIndex[index] ??= generateQuestion(
         _techniques[index],
         _random,
+        pool: _currentPool,
       );
       _selectedAnswer = _answersByIndex[index];
     });
@@ -115,14 +130,29 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   void _startRound() {
+    final pool = quizPoolForGrades(_selectedGrades);
+    if (pool.isEmpty) return;
     _beginRound(
-      pickQuizTechniques(min(_roundSize, quizTechniquePool.length), _random),
+      pickQuizTechniques(min(_roundSize, pool.length), _random, pool: pool),
+      pool: pool,
     );
   }
 
   void _startReviewRound(List<String> wrongTechniques) {
     if (wrongTechniques.isEmpty) return;
     _beginRound(wrongTechniques.toList()..shuffle(_random));
+  }
+
+  Future<void> _openGradeSelection() async {
+    final result = await Navigator.of(context).push<Set<String>>(
+      MaterialPageRoute(
+        builder: (_) =>
+            QuizGradeSelectionScreen(initialSelection: _selectedGrades),
+      ),
+    );
+    if (result != null && mounted) {
+      setState(() => _selectedGrades = result);
+    }
   }
 
   void _selectAnswer(String answer, Offset tapPosition) {
@@ -214,6 +244,9 @@ class _QuizScreenState extends State<QuizScreen> {
                     masteredCount: progress.countCompletedWithPrefix(
                       _masteredPrefix,
                     ),
+                    onSelectGrades: _openGradeSelection,
+                    selectedGradeCount: _selectedGrades.length,
+                    canStart: quizPoolForGrades(_selectedGrades).isNotEmpty,
                   ),
                   _QuizStage.playing => _QuestionView(
                     question: _question!,
@@ -262,12 +295,18 @@ class _IntroView extends StatelessWidget {
   final VoidCallback onReview;
   final int reviewCount;
   final int masteredCount;
+  final VoidCallback onSelectGrades;
+  final int selectedGradeCount;
+  final bool canStart;
 
   const _IntroView({
     required this.onStart,
     required this.onReview,
     required this.reviewCount,
     required this.masteredCount,
+    required this.onSelectGrades,
+    required this.selectedGradeCount,
+    required this.canStart,
   });
 
   @override
@@ -275,52 +314,75 @@ class _IntroView extends StatelessWidget {
     final medals = masteredCount ~/ _medalInterval;
     final trophies = masteredCount ~/ _trophyInterval;
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.quiz, size: 72, color: JudoColors.red),
-          const SizedBox(height: 20),
-          Text(
-            AppStrings.quizIntro,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          if (masteredCount > 0) ...[
-            const SizedBox(height: 16),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.quiz, size: 72, color: JudoColors.red),
+            const SizedBox(height: 20),
             Text(
-              AppStrings.quizProgressSummary(masteredCount, medals, trophies),
+              AppStrings.quizIntro,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: JudoColors.black,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
-          ],
-          const SizedBox(height: 28),
-          FilledButton(
-            onPressed: onStart,
-            style: FilledButton.styleFrom(backgroundColor: JudoColors.red),
-            child: const Text(AppStrings.quizStartButton),
-          ),
-          if (reviewCount > 0) ...[
-            const SizedBox(height: 12),
-            OutlinedButton(
-              onPressed: onReview,
-              child: Text(AppStrings.quizReviewButton(reviewCount)),
+            if (masteredCount > 0) ...[
+              const SizedBox(height: 16),
+              Text(
+                AppStrings.quizProgressSummary(masteredCount, medals, trophies),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: JudoColors.black,
+                ),
+              ),
+            ],
+            const SizedBox(height: 20),
+            OutlinedButton.icon(
+              onPressed: onSelectGrades,
+              icon: const Icon(Icons.checklist),
+              label: const Text(AppStrings.quizGradeSelectionButton),
             ),
             const SizedBox(height: 4),
             Text(
-              AppStrings.quizReviewIntro,
-              textAlign: TextAlign.center,
+              AppStrings.quizGradeSelectionSummary(selectedGradeCount),
               style: Theme.of(context).textTheme.bodySmall,
             ),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: canStart ? onStart : null,
+              style: FilledButton.styleFrom(backgroundColor: JudoColors.red),
+              child: const Text(AppStrings.quizStartButton),
+            ),
+            if (!canStart) ...[
+              const SizedBox(height: 4),
+              Text(
+                AppStrings.quizNoGradesSelectedHint,
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: JudoColors.red),
+              ),
+            ],
+            if (reviewCount > 0) ...[
+              const SizedBox(height: 12),
+              OutlinedButton(
+                onPressed: onReview,
+                child: Text(AppStrings.quizReviewButton(reviewCount)),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                AppStrings.quizReviewIntro,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(AppStrings.quizExitButton),
+            ),
           ],
-          const SizedBox(height: 12),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(AppStrings.quizExitButton),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -137,8 +137,25 @@ class AppStrings {
   static const quizTitle = 'Technik-Quiz';
   static const quizIntro =
       'Welche deutsche Übersetzung passt zur Technik? Bei jeder Runde '
-      'werden zufällige Techniken aus dem gesamten Programm abgefragt.';
+      'werden zufällige Techniken aus den ausgewählten Gürtelstufen '
+      'abgefragt.';
   static const quizStartButton = 'Zeig mir, was du kannst';
+  static const quizGradeSelectionButton = 'Gürtelstufen auswählen';
+  static const quizGradeSelectionTitle = 'Gürtelstufen auswählen';
+  static const quizGradeSelectionIntro =
+      'Nur ausgewählte Stufen kommen im Quiz vor — so werden z.B. '
+      'Anfänger nicht mit Dan-Zusatztechniken abgefragt.';
+  static const quizGradeSelectionSelectAll = 'Alle';
+  static const quizGradeSelectionSelectNone = 'Keine';
+  static const quizGradeSelectionOtherSubtitle =
+      'Techniken ohne eigenen Kyu-/Dan-Programmpunkt, u.a. Kata-Techniken';
+  static String quizGradeSelectionSummary(int count) => count == 0
+      ? 'Keine Gürtelstufe ausgewählt'
+      : count == 1
+      ? '1 Gürtelstufe ausgewählt'
+      : '$count Gürtelstufen ausgewählt';
+  static const quizNoGradesSelectedHint =
+      'Bitte mindestens eine Gürtelstufe auswählen.';
   static const quizHajimeAnnouncement = 'Hajime!';
   static String quizQuestionProgress(int current, int total) =>
       'Frage $current/$total';
