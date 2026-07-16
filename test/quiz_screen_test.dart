@@ -285,4 +285,72 @@ void main() {
     await tester.pump();
     expect(controller.countCompletedWithPrefix('quiz:'), scoreBefore);
   });
+
+  testWidgets(
+    'Guertelstufen-Auswahl schraenkt die Runde auf die gewaehlten Stufen '
+    'ein: nur "10. Kyu" ausgewaehlt zeigt nur dessen Techniken',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        await wrapWithProgress(const MaterialApp(home: QuizScreen())),
+      );
+
+      await tester.tap(find.text(AppStrings.quizGradeSelectionButton));
+      await tester.pumpAndSettle();
+      expect(find.text(AppStrings.quizGradeSelectionTitle), findsOneWidget);
+      expect(find.text('10. Kyu – Weiß-Gelb'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('1. Dan'), 300);
+      expect(find.text('1. Dan'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('10. Kyu – Weiß-Gelb'), -300);
+
+      // Kyu-Sektion abwaehlen, dann nur 10. Kyu wieder anhaken.
+      final kyuSectionNone = find
+          .text(AppStrings.quizGradeSelectionSelectNone)
+          .first;
+      await tester.tap(kyuSectionNone);
+      await tester.pump();
+      await tester.tap(find.text('10. Kyu – Weiß-Gelb'));
+      await tester.pump();
+
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.pumpAndSettle();
+      expect(
+        find.text(AppStrings.quizGradeSelectionSummary(1)),
+        findsOneWidget,
+      );
+
+      await _tapAndAwaitHajime(tester, find.text(AppStrings.quizStartButton));
+      // 10. Kyu hat nur 2 Techniken (Uki-goshi, O-soto-otoshi) - die
+      // erste Frage muss eine davon zeigen, und die Runde hat nur 2
+      // Fragen statt der sonst ueblichen 10.
+      final showsUkiGoshi = find.text('Uki-goshi').evaluate().isNotEmpty;
+      final showsOSotoOtoshi = find.text('O-soto-otoshi').evaluate().isNotEmpty;
+      expect(showsUkiGoshi || showsOSotoOtoshi, isTrue);
+      expect(find.text(AppStrings.quizQuestionProgress(1, 2)), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Ohne ausgewaehlte Guertelstufe ist der Start-Button deaktiviert und '
+    'ein Hinweis erscheint',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        await wrapWithProgress(const MaterialApp(home: QuizScreen())),
+      );
+
+      await tester.tap(find.text(AppStrings.quizGradeSelectionButton));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.text(AppStrings.quizGradeSelectionSelectNone).first,
+      );
+      await tester.pump();
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.pumpAndSettle();
+
+      expect(find.text(AppStrings.quizNoGradesSelectedHint), findsOneWidget);
+      final startButton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, AppStrings.quizStartButton),
+      );
+      expect(startButton.onPressed, isNull);
+    },
+  );
 }

@@ -39,6 +39,19 @@ T? findBestTechniqueMatch<T>(String query, Map<String, T> table) {
   return bestValue;
 }
 
+/// Wie [findBestTechniqueMatch], aber liefert ALLE passenden Schluessel aus
+/// [keys] statt nur den laengsten - fuer Faelle, in denen ein einzelner
+/// Programmpunkt mehrere Techniken auf einmal nennt (z.B. "Ashi-guruma
+/// oder O-guruma RL" oder "Hiza-guruma oder Sasae-tsuri-komi-ashi RL").
+Set<String> findAllTechniqueMatches(String query, Iterable<String> keys) {
+  if (_scenarioIndicators.hasMatch(query)) return {};
+  final normalized = query.toLowerCase();
+  return {
+    for (final key in keys)
+      if (_matchesAsWord(normalized, key.toLowerCase())) key,
+  };
+}
+
 final _letter = RegExp(r'[a-zà-ÿ]');
 
 bool _matchesAsWord(String haystack, String needle) {
