@@ -6,11 +6,13 @@ import '../models/rules_topic.dart';
 /// verstreuten Regel-Theoriefragen im Kyu-Programm (kyu_grades_data.dart)
 /// um eine gebuendelte Nachschlage-Uebersicht.
 ///
-/// Manche Details (v.a. die genauen, sich jaehrlich aendernden
-/// Gewichtsklassen-Grenzen und die vollstaendigen OeJV-Kinderregeln) waren
-/// ueber die in dieser Umgebung erreichbaren Quellen nicht verlaesslich
-/// abrufbar - dort steht bewusst kein Text (null), statt Zahlen zu raten;
-/// die App zeigt dann einen Verweis auf die offizielle OeJV-Quelle.
+/// Kinderregeln, Alters-/Gewichtsklassen und Judogiregeln basieren auf den
+/// vom OeJV bereitgestellten Original-Dokumenten ("Kinderregeln - Revision
+/// und Update 2025", "Alters- & Gewichtsklassen 2026", "OeJV-Judogiregeln"):
+/// Zahlenwerte (Altersgrenzen, Gewichtsklassen, Kampfzeiten) wurden direkt
+/// uebernommen, da es sich um Fakten und keine schuetzenswerten
+/// Beschreibungstexte handelt; alle erklaerenden Saetze sind eigenstaendig
+/// formuliert.
 const judoRulesTopics = <RulesTopic>[
   RulesTopic(
     id: 'general',
@@ -122,24 +124,68 @@ const judoRulesTopics = <RulesTopic>[
         title: 'Eigenes Regelwerk fuer Kinder',
         text:
             'Der OeJV hat ein eigenes, alters-angepasstes Kinderregelwerk '
-            '(zuletzt ueberarbeitet mit Gueltigkeit ab 1. Jaenner 2025), '
-            'das in mehreren Punkten von den allgemeinen IJF-'
-            'Wettkampfregeln fuer Erwachsene abweicht - u.a. bei '
-            'zugelassenen Techniken je Altersstufe und bei der Golden-'
-            'Score-Dauer.',
+            'fuer die Altersklassen U8, U10 und U12 (Update mit Gueltigkeit '
+            'ab 1. Jaenner 2025), das in mehreren Punkten von den '
+            'allgemeinen IJF-Wettkampfregeln fuer Erwachsene abweicht - u.a. '
+            'bei zugelassenen Techniken je Altersstufe, bei der '
+            'Grifffassung und bei der Golden-Score-Regelung.',
       ),
       RulesSection(
-        title: 'Bekannte Abweichungen (Auszug)',
+        title: 'Eingeschraenkte/verbotene Techniken (U8-U12)',
         bullets: [
-          'Golden Score ist bei Kindern auf 2 Minuten begrenzt (statt '
-              'zeitlich unbegrenzt wie bei Erwachsenen).',
-          'In der Altersklasse U12 ist Sankaku-waza nur mit dem Ziel '
-              'Osae-komi-waza erlaubt - wird stattdessen in eine Wuerge- '
-              'oder Hebeltechnik uebergegangen, unterbricht der '
-              'Kampfrichter mit "Mate".',
+          'Wuerge- (Shime-waza) und Hebeltechniken (Kansetsu-waza) werden '
+              'in U8, U10 und U12 grundsaetzlich mit "Mate" abgebrochen, '
+              'statt bis zur Aufgabe fortgesetzt zu werden.',
+          'Dreieckstechniken (Sankaku-waza) werden in U8 und U10 immer mit '
+              '"Mate" unterbrochen. In U12 sind sie nur mit dem Ziel eines '
+              'Haltegriffs (Osae-komi-waza) erlaubt - wird stattdessen zu '
+              'einer Wuerge- oder Hebeltechnik gewechselt, folgt "Mate".',
+          'Tomoe-nage, Sumi-gaeshi und verwandte Techniken (z.B. Hikkomi-'
+              'gaeshi) sind in U8 und U10 komplett verboten - Versuch '
+              'bedeutet Shido und keine Wertung.',
+          'Ura-nage: Angriff oder Konterversuch mit Ura-nage bedeutet '
+              'Shido. Geht danach Uke in einen Haltegriff ueber, zaehlt '
+              'dieser (Shido bleibt bestehen); geht stattdessen Tori in '
+              'einen Haltegriff ueber, folgt "Mate" und ebenfalls Shido.',
+          'Direkte Seoi-nage/Seoi-otoshi-Angriffe auf beiden Knien '
+              'bedeuten in U8 und U10 Shido; ein misslungener Angriff '
+              'allein loest dagegen kein Shido aus.',
+          'Tani-otoshi und Ko-soto-gake gelten in U8 und U10 nur als '
+              'Uebergang in den Bodenkampf: keine Wertung, aber auch kein '
+              '"Mate" - der Kampf laeuft direkt in Ne-waza weiter.',
         ],
       ),
-      RulesSection(title: 'Vollstaendige, aktuelle Kinderregeln', text: null),
+      RulesSection(
+        title: 'Grifffassung (Kumikata) in U8/U10',
+        bullets: [
+          'Erlaubt ist ausschliesslich die Standardfassart unterhalb des '
+              'Schluesselbeins.',
+          'Fassart oberhalb des Schluesselbeins wird mit "Mate" '
+              'unterbrochen; wiederholte Versuche fuehren zu Shido.',
+        ],
+      ),
+      RulesSection(
+        title: 'Golden Score bei Kindern',
+        bullets: [
+          'U8: bei Wertungsgleichstand max. 2 Minuten Golden Score, danach '
+              'Unentschieden (Hiki-wake).',
+          'U10 und U12: ebenfalls max. 2 Minuten Golden Score, ist der '
+              'Kampf danach weiter unentschieden, entscheidet das '
+              'Kampfgericht per Mehrheitsentscheid (Hantei).',
+        ],
+      ),
+      RulesSection(
+        title: 'Turnierrahmen fuer die Altersklasse U8',
+        bullets: [
+          'Nur ein Jahrgang (7-Jaehrige) darf in der U8 teilnehmen, kein '
+              'Aufstieg in eine hoehere Altersklasse.',
+          'Maximal 5 Starter pro Kampfklasse, keine Titelkaempfe, kein '
+              'Startgeld.',
+          'Am selben Tag/Ort duerfen maximal 4 weitere Altersklassen '
+              'ausgetragen werden; teilnehmen duerfen nur bei einem '
+              'oesterreichischen Verein gemeldete Sportler.',
+        ],
+      ),
     ],
   ),
   RulesTopic(
@@ -150,11 +196,76 @@ const judoRulesTopics = <RulesTopic>[
         title: 'Einteilung nach Altersklassen',
         text:
             'Wettkaempfe werden nach Altersklassen getrennt ausgetragen '
-            '(von den juengsten Kindern bis zu den Senioren), innerhalb '
-            'jeder Altersklasse zusaetzlich nach Gewichtsklassen getrennt '
-            'nach Geschlecht.',
+            '(von den juengsten Kindern bis zu den Senioren/Veteranen), '
+            'innerhalb jeder Altersklasse zusaetzlich nach Gewichtsklassen '
+            'getrennt nach Geschlecht. Massgeblich ist der Jahrgang, nicht '
+            'das exakte Geburtsdatum. Stand: OeJV-Festlegung fuer 2026.',
       ),
-      RulesSection(title: 'Aktuelle Grenzen', text: null),
+      RulesSection(
+        title: 'Gewichtsklassen Frauen',
+        bullets: [
+          'U8 (7 Jahre, Jg. 2019, 2 min): 18-20, 20-22, 22-25, 25-28, '
+              '28-32, 32-36, 36-40, 40-44, 44-48, +48 kg',
+          'U10 (8-9 Jahre, Jg. 2018/2017, 2 min): 18-20, 20-22, 22-25, '
+              '25-28, 28-32, 32-36, 36-40, 40-44, 44-48, +48 kg',
+          'U12 (10-11 Jahre, Jg. 2016/2015, 2 min): 20-22, 22-25, 25-28, '
+              '28-32, 32-36, 36-40, 40-44, 44-48, 48-52, +52 kg',
+          'U14 (12-13 Jahre, Jg. 2014/2013, 2 min): 22-25, 25-28, 28-32, '
+              '32-36, 36-40, 40-44, 44-48, 48-52, 52-57, +57 kg',
+          'U16 (13-15 Jahre, Jg. 2013-2011, 3 min): 28-32, 32-36, 36-40, '
+              '40-44, 44-48, 48-52, 52-57, 57-63, 63-70, +70 kg',
+          'U18 (15-17 Jahre, Jg. 2011-2009, 4 min): 36-40, 40-44, 44-48, '
+              '48-52, 52-57, 57-63, 63-70, +70 kg',
+          'U21 (15-20 Jahre, Jg. 2011-2006, 4 min): 40-44, 44-48, 48-52, '
+              '52-57, 57-63, 63-70, 70-78, +78 kg',
+          'U23 (15-22 Jahre, Jg. 2011-2004, 4 min): 44-48, 48-52, 52-57, '
+              '57-63, 63-70, 70-78, +78 kg',
+          'AK+/Veteranen (ab 15 Jahre, Jg. 2011 und aelter, 4 min): 44-48, '
+              '48-52, 52-57, 57-63, 63-70, 70-78, +78 kg',
+        ],
+      ),
+      RulesSection(
+        title: 'Gewichtsklassen Maenner',
+        bullets: [
+          'U8 (7 Jahre, Jg. 2019, 2 min): 18-20, 20-22, 22-24, 24-27, '
+              '27-30, 30-34, 34-38, 38-42, 42-46, +46 kg',
+          'U10 (8-9 Jahre, Jg. 2018/2017, 2 min): 18-20, 20-22, 22-24, '
+              '24-27, 27-30, 30-34, 34-38, 38-42, 42-46, +46 kg',
+          'U12 (10-11 Jahre, Jg. 2016/2015, 2 min): 22-24, 24-27, 27-30, '
+              '30-34, 34-38, 38-42, 42-46, 46-50, 50-55, +55 kg',
+          'U14 (12-13 Jahre, Jg. 2014/2013, 2 min): 27-30, 30-34, 34-38, '
+              '38-42, 42-46, 46-50, 50-55, 55-60, 60-66, +66 kg',
+          'U16 (13-15 Jahre, Jg. 2013-2011, 3 min): 34-38, 38-42, 42-46, '
+              '46-50, 50-55, 55-60, 60-66, 66-73, 73-81, +81 kg',
+          'U18 (15-17 Jahre, Jg. 2011-2009, 4 min): 42-46, 46-50, 50-55, '
+              '55-60, 60-66, 66-73, 73-81, 81-90, +90 kg',
+          'U21 (15-20 Jahre, Jg. 2011-2006, 4 min): 50-55, 55-60, 60-66, '
+              '66-73, 73-81, 81-90, 90-100, +100 kg',
+          'U23 (15-22 Jahre, Jg. 2011-2004, 4 min): 55-60, 60-66, 66-73, '
+              '73-81, 81-90, 90-100, +100 kg',
+          'AK+/Veteranen (ab 15 Jahre, Jg. 2011 und aelter, 4 min): 55-60, '
+              '60-66, 66-73, 73-81, 81-90, 90-100, +100 kg',
+        ],
+      ),
+      RulesSection(
+        title: 'Weitere Bestimmungen',
+        bullets: [
+          'Golden Score ohne zeitliches Limit gilt bei Einzelbewerben ab '
+              'U14; fuer U8-U12 gelten die eigenen OeJV-Kinderregeln zum '
+              'Golden Score (siehe Regelwerk Kinder).',
+          'Bis einschliesslich U18 ist eine Abwaage im nackten Zustand '
+              'verboten - Maenner werden in Unterwaesche, Frauen in '
+              'Unterwaesche mit zusaetzlichem T-Shirt abgewogen, mit einer '
+              'Toleranz von 0,1 kg (m) bzw. 0,2 kg (w).',
+          'Ab der Altersklasse U16 muessen Judoka bei Meisterschaften/'
+              'Turnieren in Oesterreich ihre Nationalitaet vorab vom OeJV '
+              'bestaetigen lassen.',
+          'In der jeweils untersten und obersten Gewichtsklasse von U8, '
+              'U10, U12 und U14 kann bei Einzelturnieren die Turnierleitung '
+              'das tatsaechliche Koerpergewicht ermitteln und im Bedarfsfall '
+              'weitere Gewichtsklassen ergaenzen.',
+        ],
+      ),
     ],
   ),
   RulesTopic(
@@ -172,7 +283,8 @@ const judoRulesTopics = <RulesTopic>[
       RulesSection(
         title: 'Passform',
         bullets: [
-          'Die Aermel muessen den ganzen Arm bis zum Handgelenk bedecken.',
+          'Die Aermel muessen den ganzen Arm bis zum Handgelenk bedecken '
+              '(Sokuteiki-Regel).',
           'Die Guertelenden muessen nach dem Knoten zwischen 20 und 30 cm '
               'lang sein; der Guertel darf nicht aus steifem oder '
               'rutschigem Material sein, der Knoten muss fest sitzen.',
@@ -186,6 +298,18 @@ const judoRulesTopics = <RulesTopic>[
             'Bei Zweifeln an der Regelkonformitaet misst der Kampfrichter '
             'den Judogi mit dem Sokuteiki (Judogi-Messgeraet) nach, '
             'gemeinsam mit den beiden Eckrichtern.',
+      ),
+      RulesSection(
+        title: 'EJU/IJF- vs. OeJV-Veranstaltungen',
+        bullets: [
+          'Bei EJU-/IJF-Veranstaltungen (auch wenn sie in Oesterreich '
+              'ausgetragen werden) gelten die vollen EJU-/IJF-Judogi-'
+              'Regeln.',
+          'Bei OeJV-Veranstaltungen (Oesterreichische Meisterschaften '
+              'inkl. Bundesliga) gilt in allen Altersklassen die Aermel-'
+              'laenge nach EJU/IJF (Sokuteiki-Regel), ein IJF-Label ist '
+              'dort bis auf weiteres nicht erforderlich.',
+        ],
       ),
     ],
   ),

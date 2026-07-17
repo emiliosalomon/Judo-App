@@ -5,6 +5,7 @@ import 'anwendungsaufgabe_description_data.dart';
 import 'kyu_grades_data.dart';
 import 'rules_data.dart';
 import 'technique_translations_data.dart';
+import 'zusatztechnik_description_data.dart';
 
 /// App-weiter Frage-Antwort-Index fuer die KI-Suche: baut aus allen
 /// bereits vorhandenen Inhalts-Datenquellen eine durchsuchbare, flache
@@ -78,6 +79,16 @@ List<QaEntry> _buildQaIndex() {
         question: 'Was bedeutet $japanisch auf Deutsch?',
         answer: '$japanisch heißt auf Deutsch: $deutsch.',
         source: 'Technik-Übersetzung',
+      ),
+    );
+  });
+
+  zusatztechnikDescriptions.forEach((technik, description) {
+    entries.add(
+      QaEntry(
+        question: 'Wie funktioniert $technik?',
+        answer: description,
+        source: 'Zusatztechniken (Dan-Prüfung)',
       ),
     );
   });

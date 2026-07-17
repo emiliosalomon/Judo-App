@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../data/anwendungsaufgabe_description_data.dart';
+import '../data/technique_description_lookup.dart';
 import '../data/technique_media_data.dart';
 import '../l10n/strings.dart';
 import '../theme/judo_theme.dart';
@@ -35,7 +35,7 @@ class _ExpandableTechniqueRowState extends State<ExpandableTechniqueRow> {
 
   void _handleTap() {
     final image = findTechniqueImage(widget.technique);
-    final description = findAnwendungsaufgabeDescription(widget.technique);
+    final description = findTechniqueDescription(widget.technique);
     if (!_expanded && (image != null || description != null)) {
       setState(() => _expanded = true);
       return;
@@ -47,7 +47,7 @@ class _ExpandableTechniqueRowState extends State<ExpandableTechniqueRow> {
   Widget build(BuildContext context) {
     final image = _expanded ? findTechniqueImage(widget.technique) : null;
     final description = _expanded
-        ? findAnwendungsaufgabeDescription(widget.technique)
+        ? findTechniqueDescription(widget.technique)
         : null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

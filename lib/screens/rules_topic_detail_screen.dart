@@ -33,7 +33,7 @@ class RulesTopicDetailScreen extends StatelessWidget {
                   const SizedBox(height: 6),
                   if (section.text != null)
                     Text(section.text!)
-                  else
+                  else if (section.bullets.isEmpty)
                     Text(
                       AppStrings.rulesPendingNote,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
