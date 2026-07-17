@@ -49,4 +49,12 @@ const judoCategories = <JudoCategory>[
     kanji: '問',
     icon: Icons.quiz,
   ),
+  JudoCategory(
+    id: 'rules',
+    titleDe: 'Regelwerk',
+    // 規則 (kisoku, "Regeln/Vorschriften") — Standardwort, kein
+    // offizieller Kodokan-Fachbegriff.
+    kanji: '規則',
+    icon: Icons.gavel,
+  ),
 ];
