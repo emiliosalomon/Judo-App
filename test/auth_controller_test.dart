@@ -9,17 +9,15 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  test(
-    'ist disabled, solange kein Firebase-Projekt konfiguriert ist - App '
-    'verhaelt sich wie vor dem Anmeldesystem, kein Auswahlbildschirm',
-    () async {
-      final guestChoiceStore = await GuestChoiceStore.load();
-      final controller = AuthController(AuthService(), guestChoiceStore);
+  test('ist disabled, solange kein Firebase-Projekt konfiguriert ist (und in '
+      'der Free-Edition sowieso, siehe app_edition.dart) - App verhaelt '
+      'sich wie vor dem Anmeldesystem, kein Auswahlbildschirm', () async {
+    final guestChoiceStore = await GuestChoiceStore.load();
+    final controller = AuthController(AuthService(), guestChoiceStore);
 
-      expect(controller.status, AuthStatus.disabled);
-      controller.dispose();
-    },
-  );
+    expect(controller.status, AuthStatus.disabled);
+    controller.dispose();
+  });
 
   test('Gast-Wahl wird lokal gemerkt', () async {
     final guestChoiceStore = await GuestChoiceStore.load();

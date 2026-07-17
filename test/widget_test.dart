@@ -2,14 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:judo_app/l10n/strings.dart';
 import 'package:judo_app/main.dart';
 import 'package:judo_app/models/category.dart';
+import 'package:judo_app/services/app_edition.dart';
 import 'package:judo_app/widgets/category_wheel.dart';
 
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
   });
+
+  testWidgets(
+    '"Meine Kämpfe"-Button ist ein Pro-Feature (siehe app_edition.dart) '
+    'und in der Free-Edition (Standard beim Testen ohne '
+    '--dart-define=PRO_EDITION=true) nicht sichtbar',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(const JudoApp());
+      await tester.pump();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+
+      expect(
+        find.text(AppStrings.myFightsButtonLabel),
+        isProEdition ? findsOneWidget : findsNothing,
+      );
+    },
+  );
 
   testWidgets('Home zeigt Titel und alle Kategorien im Auswahlrad', (
     WidgetTester tester,
