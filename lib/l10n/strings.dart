@@ -76,6 +76,17 @@ class AppStrings {
   static const answerPending =
       'Antwort wird noch ergänzt — dazu fehlt uns bislang eine verlässliche Quelle.';
 
+  // Regelwerk
+  static const rulesTitle = 'Regelwerk';
+  static const rulesIntro =
+      'Überblick über die wichtigsten Judo- und Wettkampfregeln nach '
+      'IJF- und OeJV-Vorgaben.';
+  static const rulesPendingNote =
+      'Die genauen, aktuellen Angaben dazu ändern sich gelegentlich und '
+      'waren über keine verlässliche, frei zugängliche Quelle abrufbar — '
+      'bitte auf judoaustria.at nachsehen, statt sich auf geratene Werte '
+      'zu verlassen.';
+
   // Kata
   static const kataTitle = 'Kata';
   static const kataIntro =
