@@ -137,6 +137,21 @@ class AppStrings {
   static const searchEmptyState =
       'Antippen zeigt Vorschläge, Tippen grenzt sie weiter ein.';
 
+  // KI-Frage-Antwort-Suche (durchsucht lokal alle App-Inhalte, ohne Server)
+  static const aiSearchSectionTitle = 'Frag mich etwas';
+  static const aiSearchHint =
+      'z.B. "Wie lang muss der Gürtel sein?" oder "Was ist Kuzushi?"';
+  static const aiSearchEmptyState =
+      'Stell eine Frage zu Technik, Regeln, Kata oder Prüfungsprogramm — '
+      'die Suche durchsucht alle Inhalte der App danach.';
+  static const aiSearchNoMatch =
+      'Dazu wurde in den App-Inhalten noch keine passende Antwort gefunden. '
+      'Versuch es mit anderen Begriffen oder nutze die Direktsuche weiter '
+      'unten.';
+  static const aiSearchSourcePrefix = 'Quelle: ';
+  static const aiSearchOpenSource = 'Mehr dazu ansehen';
+  static const quickJumpLabel = 'Direkt zu Technik, Kata oder Prüfungsstufe';
+
   // Technik-Medien (Bild + YouTube-Link)
   static const imageAttributionPrefix = 'Bild: ';
   static const couldNotOpenLink = 'Link konnte nicht geöffnet werden.';
