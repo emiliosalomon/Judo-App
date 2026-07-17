@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../data/technique_video_data.dart';
 import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
+import '../services/app_edition.dart';
 
 /// Fragt per Auswahlmenue, ob das YouTube-Standbild (Video auf dem
 /// entsprechenden Frame pausiert) oder das ganze Video geoeffnet werden
@@ -11,19 +12,26 @@ import '../l10n/strings.dart';
 /// Standardsituationen, Quiz). Gibt es kein Standbild (kein kuratiertes
 /// Video hinterlegt), entfaellt die Auswahl und der Tap oeffnet direkt
 /// [noCuratedMatchFallback] (Standard: eine allgemeine YouTube-Suche).
+///
+/// Das Standbild ist ein Pro-Feature (siehe app_edition.dart) - in der
+/// Free-Edition oeffnet der Tap immer direkt das ganze Video, ohne
+/// Auswahlmenue.
 Future<void> chooseTechniqueVideo(
   BuildContext context,
   String technique, {
   Uri Function(String technique)? noCuratedMatchFallback,
 }) async {
   final curated = findTechniqueVideo(technique);
-  final thumbnail = curated != null
+  final thumbnail = isProEdition && curated != null
       ? findTechniqueVideoThumbnail(technique)
       : null;
 
   if (curated == null || thumbnail == null) {
     final fallback = noCuratedMatchFallback ?? youtubeSearchUrl;
-    await _launch(context, fallback(technique));
+    await _launch(
+      context,
+      curated != null ? Uri.parse(curated) : fallback(technique),
+    );
     return;
   }
 

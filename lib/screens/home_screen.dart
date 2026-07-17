@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/strings.dart';
 import '../models/category.dart';
+import '../services/app_edition.dart';
 import '../services/auth_controller.dart';
 import '../services/auth_scope.dart';
 import '../services/streak_scope.dart';
@@ -83,8 +84,10 @@ class _HomeScreenState extends State<HomeScreen> {
               // etwas ueber die eigene Kreisflaeche hinausragt) nicht mit
               // den Buttons darunter kollidiert.
               const SizedBox(height: 28),
-              const _MyFightsButton(),
-              const SizedBox(height: 10),
+              if (isProEdition) ...[
+                const _MyFightsButton(),
+                const SizedBox(height: 10),
+              ],
               const _HomeSearchBar(),
             ],
           ),
@@ -108,8 +111,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
 /// Zeigt den Anmeldestatus und bietet Abmelden bzw. (im Gast-Modus) den
 /// Wechsel zurueck zum Auswahlbildschirm an. Bleibt unsichtbar, solange
-/// kein Firebase-Projekt konfiguriert ist (AuthStatus.disabled) - dann
-/// gibt es kein Anmeldesystem, das man anzeigen koennte.
+/// kein Firebase-Projekt konfiguriert ist oder die Free-Edition laeuft
+/// (AuthStatus.disabled, siehe auth_controller.dart) - dann gibt es kein
+/// Anmeldesystem, das man anzeigen koennte.
 class _AccountButton extends StatelessWidget {
   const _AccountButton();
 

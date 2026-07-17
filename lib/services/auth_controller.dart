@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'app_edition.dart';
 import 'auth_service.dart';
 import 'guest_choice_store.dart';
 
-/// - [disabled]: kein Firebase-Projekt konfiguriert - App verhaelt sich wie
-///   vor Einfuehrung des Anmeldesystems (immer lokal persistiert, keine
-///   Auswahl-Abfrage).
+/// - [disabled]: kein Firebase-Projekt konfiguriert, oder die Free-Edition
+///   laeuft (Anmeldesystem ist ein Pro-Feature, siehe app_edition.dart) -
+///   App verhaelt sich wie vor Einfuehrung des Anmeldesystems (immer lokal
+///   persistiert, keine Auswahl-Abfrage).
 /// - [loading]: Anmeldestatus wird noch ermittelt.
 /// - [needsChoice]: Firebase ist verfuegbar, aber weder angemeldet noch
 ///   Gast-Modus gewaehlt - Auswahlbildschirm zeigen.
@@ -24,7 +26,7 @@ class AuthController extends ChangeNotifier {
   AuthStatus _status = AuthStatus.loading;
 
   AuthController(this._authService, this._guestChoiceStore) {
-    if (!_authService.isAvailable) {
+    if (!isProEdition || !_authService.isAvailable) {
       _status = AuthStatus.disabled;
       return;
     }
