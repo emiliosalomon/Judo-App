@@ -73,6 +73,9 @@ class AppStrings {
   static const requiredKataLabel = 'Pflicht-Kata';
   static const zusatztechnikenLabel = 'Zusatztechniken';
   static const theorieThemenbereicheLabel = 'Theorie-Themenbereiche';
+  static const gonosenGaeshiWazaLabel = 'Gonosen-/Gaeshi-Waza (Konterketten)';
+  static const renrakuRensokuWazaLabel =
+      'Renraku-/Rensoku-Waza (Kombinationsketten)';
   static const answerPending =
       'Antwort wird noch ergänzt — dazu fehlt uns bislang eine verlässliche Quelle.';
 

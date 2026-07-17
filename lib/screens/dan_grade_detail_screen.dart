@@ -76,6 +76,38 @@ class DanGradeDetailScreen extends StatelessWidget {
                 ),
               ),
           ],
+          if (grade.gonosenGaeshiWaza.isNotEmpty) ...[
+            const SizedBox(height: 20),
+            const Text(
+              AppStrings.gonosenGaeshiWazaLabel,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: JudoColors.red,
+              ),
+            ),
+            const SizedBox(height: 8),
+            for (final kette in grade.gonosenGaeshiWaza)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Text('${AppStrings.bullet}$kette'),
+              ),
+          ],
+          if (grade.renrakuRensokuWaza.isNotEmpty) ...[
+            const SizedBox(height: 20),
+            const Text(
+              AppStrings.renrakuRensokuWazaLabel,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: JudoColors.red,
+              ),
+            ),
+            const SizedBox(height: 8),
+            for (final kette in grade.renrakuRensokuWaza)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Text('${AppStrings.bullet}$kette'),
+              ),
+          ],
           const SizedBox(height: 20),
           const Text(
             AppStrings.theorieThemenbereicheLabel,
