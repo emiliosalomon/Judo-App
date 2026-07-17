@@ -59,9 +59,16 @@ class _ExpandableTechniqueRowState extends State<ExpandableTechniqueRow> {
             child: Column(
               children: [
                 if (image != null) ...[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: image.build(),
+                  AspectRatio(
+                    // Feste Seitenverhaeltnis-Vorgabe, weil Image ohne
+                    // definierte Groesse innerhalb einer ListView
+                    // (unbegrenzte Hoehe) sonst auf Groesse 0 kollabiert
+                    // und gar nicht angezeigt wird.
+                    aspectRatio: 16 / 9,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: image.build(),
+                    ),
                   ),
                   if (image.attribution != null) ...[
                     const SizedBox(height: 4),

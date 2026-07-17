@@ -71,6 +71,7 @@ flutter:
     # jede Datei einzeln), damit neu hinzugefuegte Bilder ohne Aenderung an
     # dieser Datei erfasst werden (nur `flutter pub get`/Neustart noetig).
     - assets/images/techniques/
+    - assets/images/kata/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

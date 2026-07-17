@@ -1,3 +1,5 @@
+import '../data/technique_media_data.dart';
+
 /// Eine Gruppe von Techniken innerhalb einer Kata (z.B. "Te-waza").
 class KataSection {
   final String title;
@@ -15,11 +17,20 @@ class KataInfo {
   final String description;
   final List<KataSection> sections;
 
+  /// Uebersichtsbild (alle Techniken/Positionen der Kata auf einen Blick),
+  /// oberhalb der Beschreibung gezeigt. Bewusst nur eigene Fotos/Grafiken
+  /// (TechniqueImage.asset) - kein automatischer Fallback auf ein
+  /// YouTube-Standbild wie bei einzelnen Techniken, da es fuer eine ganze
+  /// Kata kein einzelnes "richtiges" Video-Frame gibt. Noch kein Eintrag
+  /// gesetzt, bis eigene Uebersichtsbilder vorliegen.
+  final TechniqueImage? overviewImage;
+
   const KataInfo({
     required this.name,
     required this.meaning,
     required this.description,
     this.sections = const [],
+    this.overviewImage,
   });
 }
 
