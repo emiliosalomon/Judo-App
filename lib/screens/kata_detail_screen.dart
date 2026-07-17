@@ -27,6 +27,26 @@ class KataDetailScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          if (info.overviewImage != null) ...[
+            AspectRatio(
+              // Feste Seitenverhaeltnis-Vorgabe, weil Image ohne definierte
+              // Groesse innerhalb einer ListView (unbegrenzte Hoehe) sonst
+              // auf Groesse 0 kollabiert und gar nicht angezeigt wird.
+              aspectRatio: 16 / 9,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: info.overviewImage!.build(),
+              ),
+            ),
+            if (info.overviewImage!.attribution != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                '${AppStrings.imageAttributionPrefix}${info.overviewImage!.attribution}',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+            const SizedBox(height: 16),
+          ],
           if (fullVideoUrl != null) ...[
             FilledButton.icon(
               onPressed: () => _open(context, Uri.parse(fullVideoUrl)),
