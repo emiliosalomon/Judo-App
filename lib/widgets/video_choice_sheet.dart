@@ -3,7 +3,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../data/technique_video_data.dart';
 import '../data/youtube_link.dart';
 import '../l10n/strings.dart';
-import '../services/app_edition.dart';
 
 /// Fragt per Auswahlmenue, ob das YouTube-Standbild (Video auf dem
 /// entsprechenden Frame pausiert) oder das ganze Video geoeffnet werden
@@ -13,16 +12,17 @@ import '../services/app_edition.dart';
 /// Video hinterlegt), entfaellt die Auswahl und der Tap oeffnet direkt
 /// [noCuratedMatchFallback] (Standard: eine allgemeine YouTube-Suche).
 ///
-/// Das Standbild ist ein Pro-Feature (siehe app_edition.dart) - in der
-/// Free-Edition oeffnet der Tap immer direkt das ganze Video, ohne
-/// Auswahlmenue.
+/// Bewusst (vorerst) nicht ans Pro-Feature-Flag gekoppelt (siehe
+/// app_edition.dart) - das Standbild soll allen zum Lernen zur Verfuegung
+/// stehen, bis die Bildrechte mit dem Kodokan geklaert sind und eine
+/// echte Free/Pro-Unterscheidung ansteht.
 Future<void> chooseTechniqueVideo(
   BuildContext context,
   String technique, {
   Uri Function(String technique)? noCuratedMatchFallback,
 }) async {
   final curated = findTechniqueVideo(technique);
-  final thumbnail = isProEdition && curated != null
+  final thumbnail = curated != null
       ? findTechniqueVideoThumbnail(technique)
       : null;
 
