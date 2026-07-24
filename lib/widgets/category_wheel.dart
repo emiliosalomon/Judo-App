@@ -10,7 +10,7 @@ import 'judo_logo.dart';
 /// mitten im Wort abgeschnitten zu werden.
 const _bubbleLabelBreaks = <String, String>{
   'belt-exam': 'Gürtel-\nprüfung',
-  'standard-situations': 'Standard-\nsituationen',
+  'techniques-az': 'Technik-\nABC',
   // "Weiterführende" allein ist selbst nach einem Umbruch noch zu breit fuer
   // den Button, deshalb hier zusaetzlich am Wort selbst getrennt (3 Zeilen).
   'techniques': 'Weiter-\nführende\nTechniken',

@@ -105,12 +105,14 @@ class AppStrings {
       'Antippen zeigt Video-Optionen (oder, ohne kuratierten Link, eine '
       'Suche im offiziellen Kodokan-YouTube-Kanal).';
 
-  // Standardsituationen
-  static const standardSituationsTitle = 'Standardsituationen';
-  static const standardSituationsIntro =
-      'Anwendungsaufgaben aus dem OeJV-Kyu-Programm, gebündelt über '
-      'alle Gürtelstufen. Dieselben Inhalte findest du auch direkt bei '
-      'der jeweiligen Gürtelstufe.';
+  // Technik-ABC
+  static const techniquesAZTitle = 'Technik-ABC';
+  static const techniquesAZIntro =
+      'Alle Basistechniken alphabetisch zum Nachschlagen. Antippen zeigt '
+      'deutsche Übersetzung, Erklärung und Video.';
+  static const standTechniquesSection = 'Standtechniken (Nage-waza)';
+  static const groundTechniquesSection =
+      'Bodentechniken (Osae-komi-, Shime-, Kansetsu-waza)';
 
   // Weiterführende Techniken
   static const techniquesTitle = 'Weiterführende Techniken';
