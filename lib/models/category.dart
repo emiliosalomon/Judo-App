@@ -34,12 +34,12 @@ const judoCategories = <JudoCategory>[
     icon: Icons.self_improvement,
   ),
   JudoCategory(
-    id: 'standard-situations',
-    titleDe: 'Standardsituationen',
-    // 応用 (ōyō, "Anwendung") — eigene Bezeichnung fuer die OeJV-
-    // "Anwendungsaufgaben", kein offizieller Kodokan-Fachbegriff.
-    kanji: '応用',
-    icon: Icons.compare_arrows,
+    id: 'techniques-az',
+    titleDe: 'Technik-ABC',
+    // 索引 (sakuin, "Register/Index") — passend zum alphabetischen
+    // Nachschlagewerk, kein offizieller Kodokan-Fachbegriff.
+    kanji: '索引',
+    icon: Icons.sort_by_alpha,
   ),
   JudoCategory(
     id: 'quiz',

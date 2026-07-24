@@ -16,7 +16,7 @@ import 'my_fights_screen.dart';
 import 'quiz_screen.dart';
 import 'rules_screen.dart';
 import 'search_screen.dart';
-import 'standard_situations_screen.dart';
+import 'techniques_az_screen.dart';
 import 'techniques_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'belt-exam' => const BeltExamScreen(),
       'techniques' => const TechniquesScreen(),
       'kata' => const KataScreen(),
-      'standard-situations' => const StandardSituationsScreen(),
+      'techniques-az' => const TechniquesAZScreen(),
       'quiz' => const QuizScreen(),
       'rules' => const RulesScreen(),
       _ => CategoryPlaceholderScreen(category: category),
