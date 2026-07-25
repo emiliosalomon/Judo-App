@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lüftungsassistent</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Lüftungsassistent</h1>
+  <p class="subtitle">
+    Trag die aktuellen Werte deiner Thermo-Hygrometer ein und erfahre, ob sich Lüften gerade lohnt.
+  </p>
+
+  <div class="card">
+    <h2>Außenbereich</h2>
+    <div class="field-row">
+      <div class="field">
+        <label>Temperatur (°C)</label>
+        <input type="number" step="0.1" id="outdoor-temp" value="25.2" />
+      </div>
+      <div class="field">
+        <label>Luftfeuchtigkeit (%)</label>
+        <input type="number" step="0.1" id="outdoor-humidity" value="48.8" />
+      </div>
+    </div>
+  </div>
+
+  <div id="rooms"></div>
+
+  <div class="actions">
+    <button class="add-room" id="add-room">+ Standort hinzufügen</button>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
