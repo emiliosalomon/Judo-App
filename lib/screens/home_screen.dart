@@ -17,7 +17,6 @@ import 'quiz_screen.dart';
 import 'rules_screen.dart';
 import 'search_screen.dart';
 import 'techniques_az_screen.dart';
-import 'techniques_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -100,7 +99,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openCategory(BuildContext context, JudoCategory category) {
     final Widget screen = switch (category.id) {
       'belt-exam' => const BeltExamScreen(),
-      'techniques' => const TechniquesScreen(),
       'kata' => const KataScreen(),
       'techniques-az' => const TechniquesAZScreen(),
       'quiz' => const QuizScreen(),

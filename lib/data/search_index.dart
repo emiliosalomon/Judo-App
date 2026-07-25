@@ -82,8 +82,8 @@ List<SearchEntry> _buildSearchIndex() {
     entries.add(
       SearchEntry(
         title: technique,
-        contextLabel: 'Weiterführende Techniken',
-        categoryId: 'techniques',
+        contextLabel: 'Technik-ABC',
+        categoryId: 'techniques-az',
         targetType: SearchTargetType.techniqueCatalog,
       ),
     );

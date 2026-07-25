@@ -55,7 +55,7 @@ void main() {
     expect(find.text('1'), findsOneWidget);
   });
 
-  testWidgets('Antippen von Weiterführende Techniken zeigt den Gokyo-Katalog', (
+  testWidgets('Antippen von Technik-ABC zeigt den alphabetischen Katalog', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const JudoApp());
@@ -67,8 +67,10 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
-    final techniques = judoCategories.firstWhere((c) => c.id == 'techniques');
-    await tester.tap(find.text(bubbleLabelForCategory(techniques)));
+    final techniquesAZ = judoCategories.firstWhere(
+      (c) => c.id == 'techniques-az',
+    );
+    await tester.tap(find.text(bubbleLabelForCategory(techniquesAZ)));
     // Kein pumpAndSettle(): das Rad hat einen dauerhaft pulsierenden
     // Leucht-Effekt (repeat()), der nie "zur Ruhe kommt".
     await tester.pump();
@@ -77,7 +79,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byType(AppBar),
-        matching: find.text('Weiterführende Techniken'),
+        matching: find.text('Technik-ABC'),
       ),
       findsOneWidget,
     );
