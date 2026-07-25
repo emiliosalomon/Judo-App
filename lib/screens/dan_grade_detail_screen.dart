@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import '../data/dan_grades_data.dart';
 import '../l10n/strings.dart';
 import '../models/dan_grade.dart';
+import '../services/progress_scope.dart';
 import '../theme/belt_colors.dart';
 import '../theme/judo_theme.dart';
 import '../widgets/belt_knot_icon.dart';
+import '../widgets/celebrating_checkbox.dart';
 import '../widgets/expandable_technique_row.dart';
 
 class DanGradeDetailScreen extends StatelessWidget {
@@ -15,6 +17,7 @@ class DanGradeDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final beltColors = beltColorsFromName(grade.beltDescription);
+    final progress = ProgressScope.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(grade.title)),
       body: ListView(
@@ -62,7 +65,21 @@ class DanGradeDetailScreen extends StatelessWidget {
                 rowBuilder: (context, onTap, expanded) => ListTile(
                   contentPadding: EdgeInsets.zero,
                   dense: true,
-                  leading: BeltKnotIcon(colors: beltColors, size: 30),
+                  leading: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CelebratingCheckbox(
+                        value: progress.isCompleted(
+                          'dan:${grade.dan}:$technik',
+                        ),
+                        activeColor: beltColors.first,
+                        onChanged: (_) =>
+                            progress.toggle('dan:${grade.dan}:$technik'),
+                      ),
+                      const SizedBox(width: 4),
+                      BeltKnotIcon(colors: beltColors, size: 30),
+                    ],
+                  ),
                   title: Text(
                     technik,
                     style: const TextStyle(

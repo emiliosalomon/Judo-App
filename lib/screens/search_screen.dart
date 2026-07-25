@@ -17,7 +17,7 @@ import 'kata_detail_screen.dart';
 import 'kata_screen.dart';
 import 'kyu_grade_detail_screen.dart';
 import 'rules_topic_detail_screen.dart';
-import 'techniques_screen.dart';
+import 'techniques_az_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -184,7 +184,7 @@ class _SearchScreenState extends State<SearchScreen> {
       SearchTargetType.danGrade => DanGradeDetailScreen(
         grade: judoDanGrades.firstWhere((g) => g.dan == entry.gradeNumber),
       ),
-      SearchTargetType.techniqueCatalog => const TechniquesScreen(),
+      SearchTargetType.techniqueCatalog => const TechniquesAZScreen(),
       SearchTargetType.kata => const KataScreen(),
     };
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));

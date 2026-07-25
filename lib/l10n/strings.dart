@@ -114,26 +114,8 @@ class AppStrings {
   static const groundTechniquesSection =
       'Bodentechniken (Osae-komi-, Shime-, Kansetsu-waza)';
 
-  // Weiterführende Techniken
-  static const techniquesTitle = 'Weiterführende Techniken';
-  static const techniquesIntro =
-      'Vollständiger Technik-Katalog nach dem klassischen Kodokan-'
-      'Gokyo. Techniken, die schon Teil deines Kyu-Programms sind, '
-      'sind entsprechend markiert.';
-  static const nageWazaGokyoSection = 'Nage-waza (Kodokan Gokyo)';
-  static const osaeKomiWazaSection = 'Osae-komi-waza';
-  static const shimeWazaSection = 'Shime-waza';
-  static const kansetsuWazaSection = 'Kansetsu-waza';
-  static const zusatztechnikenPerDanTitle = 'Zusatztechniken je Dan-Grad';
-  static const zusatztechnikenPerDanIntro =
-      'Weitere anerkannte Techniken (Shinmeisho-no-waza u.a.), die erst '
-      'ab bestimmten Dan-Prüfungen dazukommen.';
-  static String zusatztechnikenSectionTitle(String gradeTitle) =>
-      '$gradeTitle – Zusatztechniken';
   static String techniqueSectionTitle(String title, int count) =>
       '$title ($count)';
-  static String coveredFromGrade(int kyu) => 'ab $kyu. Kyu';
-  static const notCoveredLabel = 'weiterführend';
 
   // Suche
   static const searchTitle = 'Suche';

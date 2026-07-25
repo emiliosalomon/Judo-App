@@ -22,12 +22,6 @@ const judoCategories = <JudoCategory>[
     icon: Icons.military_tech,
   ),
   JudoCategory(
-    id: 'techniques',
-    titleDe: 'Weiterführende Techniken',
-    kanji: '技',
-    icon: Icons.sports_martial_arts,
-  ),
-  JudoCategory(
     id: 'kata',
     titleDe: 'Kata',
     kanji: '形',

@@ -12,9 +12,6 @@ import 'judo_logo.dart';
 const _bubbleLabelBreaks = <String, String>{
   'belt-exam': 'Gürtel-\nprüfung',
   'techniques-az': 'Technik-\nABC',
-  // "Weiterführende" allein ist selbst nach einem Umbruch noch zu breit fuer
-  // den Button, deshalb hier zusaetzlich am Wort selbst getrennt (3 Zeilen).
-  'techniques': 'Weiter-\nführende\nTechniken',
   'quiz': 'Technik-\nQuiz',
 };
 
@@ -37,7 +34,6 @@ const _categoryBorderColors = <String, Color>{
   'rules': BeltColors.gelb,
   'quiz': BeltColors.orange,
   'techniques-az': BeltColors.gruen,
-  'techniques': BeltColors.blau,
   'kata': BeltColors.braun,
   'belt-exam': _visibleBeltExamBlack,
 };
@@ -389,10 +385,9 @@ class _CategoryBubbleState extends State<_CategoryBubble>
                 Text(
                   bubbleLabelForCategory(category),
                   textAlign: TextAlign.center,
-                  // Bis zu 3 Zeilen: "Weiterführende Techniken" braucht
-                  // sowohl einen Umbruch zwischen den Woertern als auch
-                  // innerhalb von "Weiterführende" selbst, um lesbar zu
-                  // bleiben statt mitten im Wort abgeschnitten zu werden.
+                  // Bis zu 3 Zeilen, damit auch laengere Kategorienamen mit
+                  // manuellem Wortumbruch (siehe _bubbleLabelBreaks) Platz
+                  // haben, statt mitten im Wort abgeschnitten zu werden.
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

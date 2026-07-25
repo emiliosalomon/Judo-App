@@ -3,6 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:judo_app/l10n/strings.dart';
 import 'package:judo_app/models/dan_grade.dart';
 import 'package:judo_app/screens/dan_grade_detail_screen.dart';
+import 'package:judo_app/widgets/celebrating_checkbox.dart';
+
+import 'test_helpers.dart';
 
 void main() {
   testWidgets(
@@ -18,7 +21,9 @@ void main() {
       );
 
       await tester.pumpWidget(
-        const MaterialApp(home: DanGradeDetailScreen(grade: grade)),
+        await wrapWithProgress(
+          const MaterialApp(home: DanGradeDetailScreen(grade: grade)),
+        ),
       );
 
       expect(find.text(AppStrings.gonosenGaeshiWazaLabel), findsOneWidget);
@@ -38,7 +43,9 @@ void main() {
       );
 
       await tester.pumpWidget(
-        const MaterialApp(home: DanGradeDetailScreen(grade: grade)),
+        await wrapWithProgress(
+          const MaterialApp(home: DanGradeDetailScreen(grade: grade)),
+        ),
       );
 
       expect(find.text(AppStrings.gonosenGaeshiWazaLabel), findsNothing);
@@ -58,7 +65,9 @@ void main() {
       );
 
       await tester.pumpWidget(
-        const MaterialApp(home: DanGradeDetailScreen(grade: grade)),
+        await wrapWithProgress(
+          const MaterialApp(home: DanGradeDetailScreen(grade: grade)),
+        ),
       );
 
       await tester.tap(
@@ -67,6 +76,34 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Hara'), findsWidgets);
+    },
+  );
+
+  testWidgets(
+    'Zusatztechniken haben ein Fortschritts-Haekchen, das sich antippen '
+    'laesst (unabhaengig vom Zusatztechniken-Programm der Kyu-Stufen)',
+    (WidgetTester tester) async {
+      const grade = DanGrade(
+        dan: 2,
+        beltDescription: 'Schwarz',
+        kata: 'Katame-no-Kata',
+        zusatztechniken: ['Tama-guruma'],
+      );
+
+      await tester.pumpWidget(
+        await wrapWithProgress(
+          const MaterialApp(home: DanGradeDetailScreen(grade: grade)),
+        ),
+      );
+
+      final checkboxFinder = find.byType(CelebratingCheckbox);
+      expect(checkboxFinder, findsOneWidget);
+      expect(tester.widget<CelebratingCheckbox>(checkboxFinder).value, isFalse);
+
+      await tester.tap(checkboxFinder);
+      await tester.pump();
+
+      expect(tester.widget<CelebratingCheckbox>(checkboxFinder).value, isTrue);
     },
   );
 }
