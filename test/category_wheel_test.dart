@@ -2,7 +2,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:judo_app/models/category.dart';
-import 'package:judo_app/theme/judo_theme.dart';
 import 'package:judo_app/widgets/category_wheel.dart';
 
 void main() {
@@ -51,6 +50,50 @@ void main() {
       // Zeichen <-> Kategorie darf sich beim Drehen nie loesen.
       expect(kanjiLabelAfter, isNot(kanjiLabelBefore));
       expect(bubbleAfter, isNot(bubbleBefore));
+    },
+  );
+
+  testWidgets(
+    'Jeder Rad-Button ist in der Guertelfarbe seiner Kategorie umrandet '
+    '(Farbleitsystem)',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 360,
+              height: 360,
+              child: CategoryWheel(
+                categories: judoCategories,
+                onSelect: (_) {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+
+      final circleFinder = find.byWidgetPredicate((widget) {
+        if (widget is! Container || widget.decoration is! BoxDecoration) {
+          return false;
+        }
+        final decoration = widget.decoration! as BoxDecoration;
+        return decoration.shape == BoxShape.circle && decoration.border != null;
+      });
+      expect(circleFinder, findsNWidgets(judoCategories.length));
+
+      for (var i = 0; i < judoCategories.length; i++) {
+        final container = tester.widget<Container>(circleFinder.at(i));
+        final decoration = container.decoration! as BoxDecoration;
+        expect(
+          decoration.border?.top.color,
+          borderColorForCategory(judoCategories[i]),
+          reason:
+              '${judoCategories[i].titleDe} hat nicht die erwartete '
+              'Guertelfarbe als Rand.',
+        );
+      }
     },
   );
 
@@ -126,18 +169,20 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
-    // Die Rad-Buttons sind die einzigen kreisfoermigen Container mit
-    // rotem Rand im Baum (das zentrale Logo ist zwar auch kreisfoermig,
-    // hat aber keinen Rand) - darueber laesst sich ihr tatsaechlicher
-    // Kreis (Mittelpunkt + Radius) unabhaengig von der internen
-    // Positionierungs-Formel ermitteln.
+    // Die Rad-Buttons sind die einzigen kreisfoermigen Container mit einem
+    // Rand im Baum (das zentrale Logo ist zwar auch kreisfoermig, hat aber
+    // keinen Rand) - darueber laesst sich ihr tatsaechlicher Kreis
+    // (Mittelpunkt + Radius) unabhaengig von der internen
+    // Positionierungs-Formel ermitteln. Der Rand ist seit dem Farbleit-
+    // system je Kategorie unterschiedlich eingefaerbt (Guertelfarben),
+    // daher wird hier nur auf "hat einen Rand" geprueft, nicht auf eine
+    // feste Farbe.
     final circleFinder = find.byWidgetPredicate((widget) {
       if (widget is! Container || widget.decoration is! BoxDecoration) {
         return false;
       }
       final decoration = widget.decoration! as BoxDecoration;
-      return decoration.shape == BoxShape.circle &&
-          decoration.border?.top.color == JudoColors.red;
+      return decoration.shape == BoxShape.circle && decoration.border != null;
     });
     expect(circleFinder, findsNWidgets(judoCategories.length));
 
@@ -205,8 +250,7 @@ void main() {
         return false;
       }
       final decoration = widget.decoration! as BoxDecoration;
-      return decoration.shape == BoxShape.circle &&
-          decoration.border?.top.color == JudoColors.red;
+      return decoration.shape == BoxShape.circle && decoration.border != null;
     });
 
     // Ein willkuerlicher, nicht auf 90 Grad ausgerichteter Ziehweg -

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../models/category.dart';
+import '../theme/belt_colors.dart';
 import '../theme/judo_theme.dart';
 import 'category_belt_icon.dart';
 import 'judo_logo.dart';
@@ -22,6 +23,30 @@ const _bubbleLabelBreaks = <String, String>{
 /// Suchen/Antippen verwenden koennen wie das UI selbst.
 String bubbleLabelForCategory(JudoCategory category) =>
     _bubbleLabelBreaks[category.id] ?? category.titleDe;
+
+/// Aufgehelltes Schwarz nur fuer den Guertelpruefung-Rand: reines
+/// BeltColors.schwarz ist mit dem fast schwarzen Bubble-Hintergrund
+/// (siehe _CategoryBubbleState) identisch und waere als Rand unsichtbar.
+const _visibleBeltExamBlack = Color(0xFF4D4D4D);
+
+/// Farbleitsystem: jede Rad-Kategorie bekommt eine Umrandung in einer
+/// Guertelfarbe, von "frueh im Lernweg" (Gelb) bis "hoechste Stufe"
+/// (Guertelpruefung = Schwarz, Kata = Braun als Dan-nahe, aber eigene
+/// Farbe).
+const _categoryBorderColors = <String, Color>{
+  'rules': BeltColors.gelb,
+  'quiz': BeltColors.orange,
+  'techniques-az': BeltColors.gruen,
+  'techniques': BeltColors.blau,
+  'kata': BeltColors.braun,
+  'belt-exam': _visibleBeltExamBlack,
+};
+
+/// Randfarbe fuer den Rad-Button einer Kategorie (siehe
+/// _categoryBorderColors). Oeffentlich, damit Tests dieselbe Zuordnung
+/// verwenden koennen wie das UI selbst.
+Color borderColorForCategory(JudoCategory category) =>
+    _categoryBorderColors[category.id] ?? JudoColors.red;
 
 /// Kreisfoermiges Auswahlrad: Logo in der Mitte, Kategorien drumherum.
 /// Ziehen dreht das Rad - die Kreis-Buttons (mit deutscher Beschriftung und
@@ -312,6 +337,7 @@ class _CategoryBubbleState extends State<_CategoryBubble>
   Widget build(BuildContext context) {
     final size = widget.size;
     final category = widget.category;
+    final borderColor = borderColorForCategory(category);
     return AnimatedBuilder(
       animation: _pulse,
       builder: (context, child) {
@@ -326,10 +352,10 @@ class _CategoryBubbleState extends State<_CategoryBubble>
               radius: 0.95,
               colors: [Color(0xFF2E2E2E), JudoColors.black],
             ),
-            border: Border.all(color: JudoColors.red, width: 3),
+            border: Border.all(color: borderColor, width: 3),
             boxShadow: [
               BoxShadow(
-                color: JudoColors.red.withValues(alpha: 0.4 + glow * 0.4),
+                color: borderColor.withValues(alpha: 0.4 + glow * 0.4),
                 blurRadius: 12 + glow * 12,
                 spreadRadius: 1 + glow * 2,
               ),
