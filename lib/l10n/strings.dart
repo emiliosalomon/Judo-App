@@ -137,6 +137,7 @@ class AppStrings {
       'unten.';
   static const aiSearchSourcePrefix = 'Quelle: ';
   static const aiSearchOpenSource = 'Mehr dazu ansehen';
+  static const aiSearchRecentLabel = 'Zuletzt gesucht';
   static const quickJumpLabel = 'Direkt zu Technik, Kata oder Prüfungsstufe';
 
   // Technik-Medien (Bild + YouTube-Link)

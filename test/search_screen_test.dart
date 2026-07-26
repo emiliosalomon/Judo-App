@@ -131,4 +131,48 @@ void main() {
       expect(find.text('Nage-no-Kata'), findsWidgets);
     },
   );
+
+  testWidgets(
+    'Absenden einer Frage leert das Suchfeld und zeigt den Begriff als '
+    'Chip im Verlauf an',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        await wrapWithProgress(const MaterialApp(home: SearchScreen())),
+      );
+
+      await tester.enterText(aiSearchField, 'was ist judo');
+      await tester.pumpAndSettle();
+      tester.widget<TextField>(aiSearchField).onSubmitted!('was ist judo');
+      await tester.pumpAndSettle();
+
+      expect(tester.widget<TextField>(aiSearchField).controller!.text, '');
+      expect(find.text(AppStrings.aiSearchRecentLabel), findsOneWidget);
+      expect(find.widgetWithText(ActionChip, 'was ist judo'), findsOneWidget);
+      // Feld ist leer -> wieder der Hinweistext statt der vorherigen Treffer.
+      expect(find.text(AppStrings.aiSearchEmptyState), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Antippen eines Verlaufs-Chips fuehrt dieselbe Suche erneut aus',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        await wrapWithProgress(const MaterialApp(home: SearchScreen())),
+      );
+
+      await tester.enterText(aiSearchField, 'was ist judo');
+      await tester.pumpAndSettle();
+      tester.widget<TextField>(aiSearchField).onSubmitted!('was ist judo');
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(ActionChip, 'was ist judo'));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.widget<TextField>(aiSearchField).controller!.text,
+        'was ist judo',
+      );
+      expect(find.text('Was ist Judo?'), findsOneWidget);
+    },
+  );
 }
