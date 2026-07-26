@@ -30,11 +30,15 @@ class _SearchScreenState extends State<SearchScreen> {
   final Set<String> _selectedCategoryIds = {};
   final _aiController = TextEditingController();
   List<QaMatch> _aiMatches = const [];
+  final List<String> _recentAiQueries = [];
 
   // Anzahl Vorschlaege, die schon vor jeder Texteingabe angezeigt werden
   // (sobald das Suchfeld fokussiert wird), damit Nutzer nicht erst tippen
   // muessen, um zu sehen, was suchbar ist.
   static const _suggestionLimit = 8;
+
+  // Wie viele zuletzt gesuchte Begriffe als Chips angezeigt werden.
+  static const _recentQueriesLimit = 6;
 
   @override
   void dispose() {
@@ -44,6 +48,33 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void _onAiQueryChanged(String query) {
     setState(() {
+      _aiMatches = searchQa(query, judoQaIndex);
+    });
+  }
+
+  /// Beim Absenden (Enter/Suchen-Taste): Suchbegriff in den "Zuletzt
+  /// gesucht"-Verlauf aufnehmen und das Feld fuer eine neue Eingabe leeren -
+  /// der bisherige Begriff bleibt als Chip unterhalb sichtbar, statt im
+  /// Feld stehen zu bleiben und erst manuell geloescht werden zu muessen.
+  void _submitAiQuery(String rawQuery) {
+    final query = rawQuery.trim();
+    if (query.isEmpty) return;
+    setState(() {
+      _recentAiQueries.removeWhere(
+        (q) => q.toLowerCase() == query.toLowerCase(),
+      );
+      _recentAiQueries.insert(0, query);
+      if (_recentAiQueries.length > _recentQueriesLimit) {
+        _recentAiQueries.removeLast();
+      }
+      _aiController.clear();
+      _aiMatches = const [];
+    });
+  }
+
+  void _rerunAiQuery(String query) {
+    setState(() {
+      _aiController.text = query;
       _aiMatches = searchQa(query, judoQaIndex);
     });
   }
@@ -65,12 +96,37 @@ class _SearchScreenState extends State<SearchScreen> {
             key: const ValueKey('aiSearchField'),
             controller: _aiController,
             onChanged: _onAiQueryChanged,
+            onSubmitted: _submitAiQuery,
+            textInputAction: TextInputAction.search,
             decoration: const InputDecoration(
               hintText: AppStrings.aiSearchHint,
               prefixIcon: Icon(Icons.chat_bubble_outline),
               border: OutlineInputBorder(),
             ),
           ),
+          if (_recentAiQueries.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            const Text(
+              AppStrings.aiSearchRecentLabel,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: JudoColors.black,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final query in _recentAiQueries)
+                  ActionChip(
+                    label: Text(query),
+                    onPressed: () => _rerunAiQuery(query),
+                  ),
+              ],
+            ),
+          ],
           const SizedBox(height: 12),
           _AiSearchResults(query: _aiController.text, matches: _aiMatches),
           const SizedBox(height: 24),
