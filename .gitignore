@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Lokale Git-Worktrees (Claude Code Worktree-first-Workflow, siehe CLAUDE.md)
+# - eigene verschachtelte Checkouts, nicht Teil des Repo-Inhalts.
+.claude/worktrees/
