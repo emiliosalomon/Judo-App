@@ -1,0 +1,151 @@
+import 'fuzzy_technique_match.dart';
+
+/// Kuratierte YouTube-Links zu einzelnen Techniken.
+///
+/// Quelle: eine vom Nutzer selbst zusammengestellte OeJV-Pruefungsunterlage
+/// ("1. Dan Zusammenfassung mit Videolinks") mit Verlinkungen zu Gokyo-no-waza
+/// (40 Wurftechniken), Katame-waza (Halte-/Wuerge-/Hebeltechniken) und den
+/// Renraku/Gonosen-Zusatztechniken des 1. Dan. Die Technik-Namen ueberschneiden
+/// sich mit vielen Kyu- und Dan-Programmpunkten, daher ist die Zuordnung hier
+/// nicht auf eine Guertelstufe beschraenkt.
+///
+/// Fuer Techniken ohne Eintrag hier faellt die App auf eine YouTube-Suche
+/// zurueck (siehe youtube_link.dart).
+const techniqueVideos = <String, String>{
+  // Gokyo-no-waza (Wurftechniken, Gruppe 1-5)
+  'De-ashi-barai': 'https://www.youtube.com/watch?v=4BUUvqxi_Kk',
+  'Hiza-guruma': 'https://www.youtube.com/watch?v=JPJx9-oAVns',
+  'Sasae-tsuri-komi-ashi': 'https://www.youtube.com/watch?v=699i--pvYmE',
+  'Uki-goshi': 'https://www.youtube.com/watch?v=bPKwtB4lyOQ',
+  'O-soto-gari': 'https://www.youtube.com/watch?v=c-A_nP7mKAc',
+  'O-goshi': 'https://www.youtube.com/watch?v=yhu1mfy2vJ4',
+  'O-uchi-gari': 'https://www.youtube.com/watch?v=0itJFhV9pDQ',
+  // OeJV-Kyu-Programm (6. Kyu) benennt die Technik als kombinierten
+  // Programmpunkt "O-uchi (Barai/Gari)"/"Ko-uchi (Barai/Gari)" - der
+  // Teilstring-Abgleich faende ohne diese eigenen Schluessel keinen
+  // Treffer, obwohl mit O-uchi-gari/Ko-uchi-gari ein passendes Video
+  // vorliegt.
+  'O-uchi (Barai/Gari)': 'https://www.youtube.com/watch?v=0itJFhV9pDQ',
+  // 'Seoi-nage' ist im Kodokan-Gokyo die generische/beidhaendige Ausfuehrung
+  // (= OeJV "Morote-seoi-nage"). Die einhaendige Variante "Ippon-seoi-nage"
+  // ist ein eigener, offizieller Kodokan-Eintrag mit eigenem Video - beide
+  // brauchen daher einen eigenen Schluessel, sonst wuerde der Teilstring-
+  // Abgleich "Morote-seoi-nage" faelschlich das Ippon-Video zeigen.
+  'Seoi-nage': 'https://www.youtube.com/watch?v=zIq0xI0ogxk',
+  'Morote-seoi-nage': 'https://www.youtube.com/watch?v=zIq0xI0ogxk',
+  'Ippon-seoi-nage': 'https://www.youtube.com/watch?v=FQnOlCxo4oI',
+  'Ko-soto-gari': 'https://www.youtube.com/watch?v=jeQ541ScLB4',
+  'Ko-uchi-gari': 'https://www.youtube.com/watch?v=3Jb3tZvr9Ng',
+  'Ko-uchi (Barai/Gari)': 'https://www.youtube.com/watch?v=3Jb3tZvr9Ng',
+  'Koshi-guruma': 'https://www.youtube.com/watch?v=SU7Id6uVJ44',
+  'Tsuri-komi-goshi': 'https://www.youtube.com/watch?v=McfzA0yRVt4',
+  'Okuri-ashi-barai': 'https://www.youtube.com/watch?v=nw1ZdRjrdRI',
+  'Ko-soto-gake': 'https://www.youtube.com/watch?v=8b6kY4s4zH4',
+  'Tsuri-goshi': 'https://www.youtube.com/watch?v=51Htlp7xEvE',
+  'Yoko-otoshi': 'https://www.youtube.com/watch?v=MnNG67pF_a0',
+  'Ashi-guruma': 'https://www.youtube.com/watch?v=ROeayhvom9U',
+  'Harai-tsuri-komi-ashi': 'https://www.youtube.com/watch?v=gGPXvWL8VbE',
+  'Sumi-gaeshi': 'https://www.youtube.com/watch?v=5VhduA5xkbA',
+  'Tani-otoshi': 'https://www.youtube.com/watch?v=3b9Me3Fohpk',
+  'Hane-maki-komi': 'https://www.youtube.com/watch?v=6CRBGLGz9j8',
+  'Sukui-nage': 'https://www.youtube.com/watch?v=vU6aJ2kFxoI',
+  'Utsuri-goshi': 'https://www.youtube.com/watch?v=4pQd_bEnlf0',
+  'O-guruma': 'https://www.youtube.com/watch?v=SnZciTAY9vc',
+  'Soto-maki-komi': 'https://www.youtube.com/watch?v=bWG9O1BVKtQ',
+  // Eigener Kodokan-Eintrag, keine Variante von 'Soto-maki-komi' - eigener
+  // Schluessel noetig, sonst greift derselbe Teilstring-Kollisionsfehler.
+  'O-soto-maki-komi': 'https://www.youtube.com/watch?v=DGDv2oMwmas',
+  'Uki-otoshi': 'https://www.youtube.com/watch?v=6H5tmncOY4Q',
+  'O-soto-guruma': 'https://www.youtube.com/watch?v=92KbCm6pQeI',
+  'Uki-waza': 'https://www.youtube.com/watch?v=weVOpJ63gII',
+  'Yoko-wakare': 'https://www.youtube.com/watch?v=bp1tscHlePI',
+  'Yoko-guruma': 'https://www.youtube.com/watch?v=MehP6I5cY2c',
+  'Ushiro-goshi': 'https://www.youtube.com/watch?v=ORIYstuxYT8',
+  'Ura-nage': 'https://www.youtube.com/watch?v=Fgi9b8DJ5sQ',
+  'Sumi-otoshi': 'https://www.youtube.com/watch?v=lLU9wv52ni0',
+  'Yoko-gake': 'https://www.youtube.com/watch?v=tP1Sj1uDfSo',
+
+  // Katame-waza: Osae-komi-waza (Festhaltegriffe)
+  'Kesa-gatame': 'https://www.youtube.com/watch?v=NDaQuJOFBYk',
+  'Kuzure-kesa-gatame': 'https://www.youtube.com/watch?v=Q2fb9jaoUFQ',
+  // Kein eigenes kuratiertes Video - dieselbe Zuordnung wie das Bild in
+  // technique_media_data.dart (Gyaku-kesa-gatame ist der Kuzure-Familie
+  // aehnlicher als der einfachen Kesa-gatame).
+  'Gyaku-kesa-gatame': 'https://www.youtube.com/watch?v=Q2fb9jaoUFQ',
+  'Ushiro-kesa-gatame': 'https://www.youtube.com/watch?v=SBapox2M2dE',
+  'Kata-gatame': 'https://www.youtube.com/watch?v=zQR3IOXxO_Q',
+  'Kami-shiho-gatame': 'https://www.youtube.com/watch?v=HFuMjOv0WN8',
+  'Kuzure-kami-shiho-gatame': 'https://www.youtube.com/watch?v=YUrogQWdwiY',
+  'Yoko-shiho-gatame': 'https://www.youtube.com/watch?v=TT7XJVSEQxA',
+  'Tate-shiho-gatame': 'https://www.youtube.com/watch?v=55-rFmBx53g',
+  'Uki-gatame': 'https://www.youtube.com/watch?v=e_lAjik1SUM',
+  'Ura-gatame': 'https://www.youtube.com/watch?v=eeAHZB0v3XY',
+
+  // OeJV-Kyu-Programm "Prinzip"-Uebungen (10./9. Kyu): Positions-Grundprinzip
+  // der jeweiligen Shiho-gatame-Familie, daher auf die Basistechnik verlinkt.
+  'Prinzip „Kesa"': 'https://www.youtube.com/watch?v=NDaQuJOFBYk',
+  'Prinzip „Yoko"': 'https://www.youtube.com/watch?v=TT7XJVSEQxA',
+  'Prinzip „Tate"': 'https://www.youtube.com/watch?v=55-rFmBx53g',
+  'Prinzip „Kami"': 'https://www.youtube.com/watch?v=HFuMjOv0WN8',
+
+  // Katame-waza: Shime-waza (Wuergetechniken)
+  'Nami-juji-jime': 'https://www.youtube.com/watch?v=k2cHry9HByQ',
+  'Gyaku-juji-jime': 'https://www.youtube.com/watch?v=t3tQriIPdlI',
+  'Kata-juji-jime': 'https://www.youtube.com/watch?v=3VZVUAmiMD8',
+  'Hadaka-jime': 'https://www.youtube.com/watch?v=9f0n8jez7iA',
+  'Okuri-eri-jime': 'https://www.youtube.com/watch?v=EiqyoVcIAi8',
+  'Kata-ha-jime': 'https://www.youtube.com/watch?v=yaTGgRjnwB8',
+  'Kata-te-jime': 'https://www.youtube.com/watch?v=cHeIs-fSqwE',
+  'Sode-guruma-jime': 'https://www.youtube.com/watch?v=E3nvQzClcAU',
+  'Tsukkomi-jime': 'https://www.youtube.com/watch?v=dKKpnD3eLcY',
+  'Sankaku-jime': 'https://www.youtube.com/watch?v=lq1CUBRAm7s',
+
+  // Katame-waza: Kansetsu-waza (Hebeltechniken)
+  'Ude-garami': 'https://www.youtube.com/watch?v=AIlTvZb4RlE',
+  'Ude-hishigi-juji-gatame': 'https://www.youtube.com/watch?v=OWgSOlCuMXw',
+  'Ude-hishigi-ude-gatame': 'https://www.youtube.com/watch?v=SBf0aTma1VI',
+  'Ude-hishigi-hiza-gatame': 'https://www.youtube.com/watch?v=H2HtAJdiJcE',
+  'Ude-hishigi-waki-gatame': 'https://www.youtube.com/watch?v=8F5p1zuJRG0',
+  'Ude-hishigi-hara-gatame': 'https://www.youtube.com/watch?v=ZzEycg8R_9M',
+  'Ude-hishigi-ashi-gatame': 'https://www.youtube.com/watch?v=ClY7g_pX-4s',
+  'Ude-hishigi-te-gatame': 'https://www.youtube.com/watch?v=6DnvhY0tQVM',
+  'Ude-hishigi-sankaku-gatame': 'https://www.youtube.com/watch?v=WefAmW4azhk',
+
+  // Renraku/Gonosen-Zusatztechniken (1. Dan)
+  'Seoi-otoshi': 'https://www.youtube.com/watch?v=vu1TMVNnq34',
+  'Sode-tsuri-komi-goshi': 'https://www.youtube.com/watch?v=QsmAxpmYLOI',
+  'Tsubame-gaeshi': 'https://www.youtube.com/watch?v=GwweWqqFB5g',
+  'Kubi-nage': 'https://www.youtube.com/watch?v=7zCgLqa1VbI',
+  'O-soto-otoshi': 'https://www.youtube.com/watch?v=2DsVvDw7b8g',
+  'Obi-otoshi': 'https://www.youtube.com/watch?v=ff8U2TVZIYI',
+  'Uchi-mata-sukashi': 'https://www.youtube.com/watch?v=V-RS3uhtVWM',
+  'O-soto-gaeshi': 'https://www.youtube.com/watch?v=8ZjM3X_EANo',
+  'Yama-arashi': 'https://www.youtube.com/watch?v=MGlyKmSuzdc',
+  'O-uchi-gaeshi': 'https://www.youtube.com/watch?v=dCyZTXyjIXE',
+  'Ko-uchi-gaeshi': 'https://www.youtube.com/watch?v=_MWAdYi_LC4',
+  'Harai-goshi-gaeshi': 'https://www.youtube.com/watch?v=4U3It-7PPsc',
+  'Ko-uchi-maki-komi': 'https://www.youtube.com/watch?v=_1eygIXLD_w',
+  'Hane-goshi-gaeshi': 'https://www.youtube.com/watch?v=9bZAZSBtnGs',
+};
+
+/// Sucht per wortgrenzen-bewusstem Teilstring-Abgleich (siehe
+/// fuzzy_technique_match.dart), da Programmnamen oft Suffixe/Varianten
+/// haben.
+String? findTechniqueVideo(String technique) =>
+    findBestTechniqueMatch(technique, techniqueVideos);
+
+/// Baut aus einem kuratierten Video-Link automatisch die Standbild-URL:
+/// YouTube liefert zu jedem Video ueber eine stabile, oeffentliche URL ein
+/// offizielles Vorschaubild aus - kein selbst erstellter Screenshot und
+/// keine Kopie, das Bild wird direkt von YouTube ausgeliefert, genau fuer
+/// diesen Verlinkungszweck (dieselbe Vorschau, die z.B. auch beim Teilen
+/// eines YouTube-Links in Chat-Apps erscheint). Deckt automatisch jede
+/// Technik mit kuratiertem Video ab, ohne dass jedes Video einzeln
+/// angesehen werden muesste.
+String? findTechniqueVideoThumbnail(String technique) {
+  final url = findTechniqueVideo(technique);
+  if (url == null) return null;
+  final videoId = Uri.parse(url).queryParameters['v'];
+  if (videoId == null) return null;
+  return 'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
+}
